@@ -16319,7 +16319,7 @@ video {
     padding: 0;
     border: 0;
     font: inherit;
-    font-size: 100%;
+    font-size: 99%;
     vertical-align: baseline
 }
 
@@ -17199,7 +17199,7 @@ abbr.ajax-changed {
 .region-header {
     text-align: center;
     padding: 2% 5px;
-    background: #003655;
+    /* background: #003655; */
     text-align: left;
 }
 
@@ -17844,7 +17844,8 @@ nav h2 {
 
 .uppertop {
     padding: 3px;
-    background: #0a6000;
+    /* background: #0a6000; */
+    background-image: linear-gradient(120deg, #417c8e 0%, #c2e9fb 100%);
 }
 
 .flex-pauseplay {
@@ -18216,6 +18217,7 @@ ul {
 
 #block-topmenu li a {
     color: #fff;
+    font-weight: bolder;
 }
 
 #block-topmenu li a:hover {
@@ -18842,7 +18844,7 @@ ul.sf-menu {
 }
 
 .region-primary-menu li a.icon-home {
-    background: url('assets/frontend/images/home24.png') no-repeat center;
+    background: url('/assets/frontend/images/home24.png') no-repeat center;
     width: 50px;
 }
 
@@ -19093,3 +19095,39 @@ ul.sf-menu.sf-navbar.sf-shadow ul ul {
         height: auto !important;
     }
 }
+
+.lang_style
+{
+    color:#fff; 
+    background:#1d5409;
+    padding:2px;
+    font-size:11px;
+    float:right;
+     width:110px; 
+     right:0px;
+}
+#app{
+    text-align:center;
+    font-size:50px;
+    background-image: linear-gradient(
+      -225deg,
+      #231557 0%,
+      #44107a 29%,
+      #ff1361 67%,
+      #fff800 100%
+    );
+    background-clip:border-box;
+     text-fill-color: transparent;
+    background-clip:text;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
+    animation: textclip 2s linear infinite;
+  }
+  
+  @keyframes textclip {
+    to {
+      background-position: 200% center;
+    }
+  }
+

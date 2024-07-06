@@ -8,11 +8,9 @@
   @elseif(Auth::user()->role_id==2)
    <a href="{{route('siteadminhome')}}">
    @elseif(Auth::user()->role_id==3)
-   <a href="{{route('planninghome')}}">
+   <a href="{{route('masterhome')}}">
    @elseif(Auth::user()->role_id==4)
-   <a href="{{route('secretaryhome')}}">
-   @elseif(Auth::user()->role_id==5)
-   <a href="{{route('Sbuadminhome')}}">
+   <a href="{{route('mediaadminhome')}}">
   @endif    
       <img src="{{asset('assets/frontend/images/nmptlogonew-14n2-en.png')}}" class="logo-size" alt="logo" />
     </a>
@@ -39,13 +37,10 @@
             @elseif(Auth::user()->role_id==2)
               <a href="{{route('siteadminhome')}}"> Main Dashboard </a>
             @elseif(Auth::user()->role_id==3)
-              <a href="{{route('planninghome')}}"> Main Dashboard </a>
+              <a href="{{route('masterhome')}}"> Main Dashboard </a>
             @elseif(Auth::user()->role_id==4)
-              <a href="{{route('secretaryhome')}}"> Main Dashboard </a>
-            @elseif(Auth::user()->role_id==5)
-              <a href="{{route('Sbuadminhome')}}"> Main Dashboard </a>
-            @endif  
-           
+              <a href="{{route('mediaadminhome')}}"> Main Dashboard </a>
+            @endif
           </li>
         </ul>
       </li>

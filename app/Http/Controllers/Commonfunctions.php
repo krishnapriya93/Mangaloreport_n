@@ -24,15 +24,28 @@ class Commonfunctions extends Controller
     }
 
   /*User informations*/
-        public function componentpermissionsetng()
+    public function componentpermissionsetng()
     {
        $role_id = Auth::user()->id;
 
-       $data=Componentpermission::with(['component' => function($query){
-            $query->where('delet_flag',0); $query->orderByDesc('name');
-        }])->with(['usertype' => function($query1){
-          $query1->where('delet_flag',0);
-        }])->where('delet_flag',0)->where('status_id',1)->where('role_id', Auth::user()->role_id)->get();
+    //    $data=Componentpermission::with(['component' => function($query){
+    //         $query->where('delet_flag',0);             
+    //         $query->orderBy('name'); // Changed to ascending order
+    //     }])->with(['usertype' => function($query1){
+    //       $query1->where('delet_flag',0);
+    //     }])->where('delet_flag',0)->where('status_id',1)
+    //     ->where('role_id', Auth::user()->role_id)
+    //     ->get();
+    $data = Componentpermission::with(['component' => function($query) {
+        $query->where('delet_flag', 0);
+    }, 'usertype' => function($query1) {
+        $query1->where('delet_flag', 0);
+    }])->where('delet_flag', 0)
+      ->where('status_id', 1)
+      ->where('role_id', Auth::user()->role_id)
+      ->orderBy(Component::select('name')
+      ->whereColumn('components.id', 'componentpermissions.componentid'))
+      ->get();
 
         return $data;
     }

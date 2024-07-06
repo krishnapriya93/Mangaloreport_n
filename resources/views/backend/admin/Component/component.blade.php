@@ -1,4 +1,4 @@
-@extends('layouts.htmlheader')
+@extends('backend.layouts.htmlheader')
 
 @section('content')
 <nav aria-label="breadcrumb">
@@ -93,7 +93,7 @@
                         </td>
                         <td>
                             <a class="btn btn-primary btn-sm" href="{{ route('editcomponent',\Crypt::encryptString($result->id)) }}">Edit</a>
-                            <a class="btn btn-danger btn-sm" href="{{ route('deletecomponent',\Crypt::encryptString($result->id)) }}">Delete</a>
+                            <a class="btn btn-danger btn-sm" href="{{ route('deletecomponent',\Crypt::encryptString($result->id)) }}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                         </td>
                     </tr>   
                     @endforeach    

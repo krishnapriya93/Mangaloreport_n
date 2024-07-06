@@ -25,10 +25,7 @@ class Submenu extends Model
     {
         return $this->hasMany(Submenusub::class, 'submenuid', 'id');
     }
-    public function sbu_type_user()
-    {
-        return $this->hasMany(Sbutype::class, 'id', 'sbu_type');
-    }
+   
     public function mainmenu_selected()
     {
         return $this->hasMany(Mainmenu::class, 'id', 'mainmenu_id');

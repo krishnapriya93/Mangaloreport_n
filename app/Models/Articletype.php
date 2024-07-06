@@ -21,12 +21,5 @@ class Articletype extends Model
     {
         return $this->hasMany(Articletypesub::class, 'articletypeid', 'id');
     }
-    public function sbu_type_user()
-    {
-        return $this->hasMany(Sbutype::class, 'id', 'sbu_type');
-    }
-    public function multi_user()
-    {
-        return $this->hasMany(User::class, 'id', 'multi_sbu');
-    }
+   
 }

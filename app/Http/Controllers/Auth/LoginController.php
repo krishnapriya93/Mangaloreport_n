@@ -95,7 +95,6 @@ class LoginController extends Controller
                     
                     //for prevent concurrent login
                     User::where('id', Auth::user()->id)->update(['session_id'=> session()->getId()]);
-
                     if (Auth::user()->role_id == 1) {
                         // \LogActivity::addToLog('Master admin login.');
                         return redirect()->route('masteradminhome');
@@ -103,15 +102,11 @@ class LoginController extends Controller
                          return redirect()->route('siteadminhome');
                     }
                     elseif (Auth::user()->role_id == 3){
-                         return redirect()->route('planninghome');
+                         return redirect()->route('masterhome');
                     }
                     elseif (Auth::user()->role_id == 4){
-                         return redirect()->route('secretaryhome');
-                    }elseif (Auth::user()->role_id == 5){
-                         return redirect()->route('Sbuadminhome');
-                    }elseif (Auth::user()->role_id == 11){
-                        return redirect()->route('Cmdadminhome');
-                   }
+                         return redirect()->route('mediaadminhome');
+                    }
 
                    
                 }
@@ -137,11 +132,11 @@ class LoginController extends Controller
         if(Auth::check() && Auth::user()->role_id == 1) {
            Auth::logout();
            Session::flash('success', 'Logout successfully.');
-           return redirect()->route('homepage');
+           return redirect()->route('main.index');
         }else{
           Auth::logout();
           Session::flash('success', 'Logout successfully.');
-          return redirect()->route('homepage');    
+          return redirect()->route('main.index');    
         }
     }   
     

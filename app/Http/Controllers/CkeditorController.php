@@ -10,8 +10,7 @@ class CkeditorController extends Controller
    //ck editior file upload
    public function articleckimageupload(Request $request)
    {
-    // dd($request->all());
-   
+
     try{
         $validator = Validator::make(
             $request->all(),
