@@ -562,27 +562,16 @@ class SiteadminController extends Controller
     /*Banner create*/
     public function createbanner()
     {
-
         $language = Language::where('delet_flag',0)->orderBy('name')->get();
         // $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
 
         $role_id=Auth::user()->role_id;
 
-        if($role_id==5)//SBU admin
-        {
-             $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/Sbuadminhome'),
-                1 => array('title' => 'Banner', 'message' => 'Banner', 'status' => 0, 'link' => '/banner'),
-                2 => array('title' => 'Create Banner', 'message' => 'Create Banner', 'status' => 1)
-             );
-        }else if($role_id==2){//Site admin
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-                1 => array('title' => 'Banner', 'message' => 'Banner', 'status' => 0, 'link' => '/banner'),
-                2 => array('title' => 'Create Banner', 'message' => 'Create Banner', 'status' => 1)
-             );
-        }
-
+        $breadcrumb = array(
+            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+            1 => array('title' => 'Banner', 'message' => 'Banner', 'status' => 0, 'link' => '/siteadmin/banner'),
+            2 => array('title' => 'Create Banner', 'message' => 'Create Banner', 'status' => 1)
+         );
 
         $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
         $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
@@ -590,25 +579,25 @@ class SiteadminController extends Controller
         $url = url()->previous();
         $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
         $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
-        return view('Siteadmin.Banner.createbanner',compact('breadcrumbarr','language','navbar','user','Navid'));
+        return view('backend.siteadmin.Banner.createbanner',compact('breadcrumbarr','language','navbar','user','Navid'));
     }
 
     /*Store banner*/
       public function storebanner(Request $request)
     {
-        // dd($request->all());
+
         $role_id = Auth::user()->id;
         // dd($role_id);
       
         try{
-            if($role_id == 2){
+           
                 $validator = Validator::make(
                     $request->all(),
                     [
                         'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
                         'sub_title.*'   => 'sometimes',
                         'alt_title.*'   => 'sometimes',
-                        'poster.*'      => app('App\Http\Controllers\Commonfunctions')->getImage_mainslider_val(),
+                        'poster.*'      => 'required',
                    ],[
                         'title.required' => 'Title is required',
                         'title.min' => 'Title  minimum lenght is 2',
@@ -625,44 +614,18 @@ class SiteadminController extends Controller
                         'alt_title.max' => 'Alternative text  maximum lenght is 50',
                         'alt_title.regex' => 'Invalid characters not allowed for alternative text',
         
-                        'poster.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 1090 x 400 (w x h). ',
-                        'poster.mimes'   => 'Invalid image format',
+                        // 'poster.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 1090 x 400 (w x h). ',
+                        // 'poster.mimes'   => 'Invalid image format',
+                        'poster.required'   => ' image required',
+                        
                     ]);
-            }else{
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-                        'sub_title.*'   => 'sometimes',
-                        'alt_title.*'   => 'sometimes',
-                        'poster.*'      => app('App\Http\Controllers\Commonfunctions')->getImage_mainslider_val_sbu(),
-                   ],[
-                        'title.required' => 'Title is required',
-                        'title.min' => 'Title  minimum lenght is 2',
-                        'title.max' => 'Title  maximum lenght is 50',
-                        'title.regex' => 'Invalid characters not allowed for Title',
-        
-                        'sub_title.required' => 'Sub title text is required',
-                        'sub_title.min' => 'Sub title text  minimum lenght is 2',
-                        'sub_title.max' => 'Sub title text  maximum lenght is 50',
-                        'sub_title.regex' => 'Invalid characters not allowed for Sub title text',
-        
-                        'alt_title.required' => 'Alternative text is required',
-                        'alt_title.min' => 'Alternative text  minimum lenght is 2',
-                        'alt_title.max' => 'Alternative text  maximum lenght is 50',
-                        'alt_title.regex' => 'Invalid characters not allowed for alternative text',
-        
-                        'poster.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 1090 x 400 (w x h). ',
-                        'poster.mimes'   => 'Invalid image format',
-                    ]);
-            }
+            
         
             if ($validator->fails()) {
                 // dd($validator->errors());
                 return back()->withInput()->withErrors($validator->errors());
             }
-            // dd($request->all());
-          
+    
 
             $leng=count($request->sel_lang);
             $filename=array();
@@ -695,7 +658,7 @@ class SiteadminController extends Controller
                                 $date = date('dmYH:i:s');
                                 $imageName = 'Banner'.$j. $date . '.' .$filep->extension();
                                 $filename[]=$imageName;
-                                $path = $request->file('poster')[$j]->storeAs('/uploads/Banner/', $imageName, 'myfile');
+                                $path = $request->file('poster')[$j]->storeAs('/assets/backend/uploads/banner/', $imageName, 'myfile');
 
                                 $j++;
 
@@ -717,13 +680,7 @@ class SiteadminController extends Controller
                 }//forloop
                 // dd($path);
             }//bannerid
-            if(Auth::user()->role_id==5)//SBU admin
-            {
-                return redirect()->route('sbu.banner')->with('success','created successfully');
-            }else if(Auth::user()->role_id==2){//Site admin
-                return redirect()->route('siteadmin.banner')->with('success','created successfully');
-            }
-          
+            return redirect()->route('banner')->with('success','created successfully');
 
         } catch (ModelNotFoundException $exception) {
             \LogActivity::addToLog($exception->getMessage(),'error');
@@ -742,7 +699,7 @@ class SiteadminController extends Controller
            $imageName = Banner_sub::where('bannerid', $id)->select('poster')->get();
 
             foreach($imageName as $img){
-                    Storage::disk('myfile')->delete('/uploads/Banner/' . $img->file);
+                    Storage::disk('myfile')->delete('/assets/backend/uploads/banner/' . $img->file);
                 }
              $res_sub= Banner_sub::where('bannerid',$id)->delete();
           
@@ -753,12 +710,7 @@ class SiteadminController extends Controller
             $edit_f ='';
                  if($res_sub){
                     DB::commit();
-                    if(Auth::user()->role_id==5)//SBU admin
-                    {
-                        return redirect()->route('sbu.banner')->with('success','Deleted successfully');
-                    }else if(Auth::user()->role_id==2){//Site admin
-                        return redirect()->route('siteadmin.banner')->with('success','Deleted successfully');
-                    }
+                    return redirect()->route('banner')->with('success','Deleted successfully');
                  }else{
                     DB::rollback(); 
                      return back()->withErrors('Not deleted ');
@@ -797,7 +749,7 @@ class SiteadminController extends Controller
         $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
         $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
 
-        return view('Siteadmin.Banner.createbanner', compact('data','edit_f', 'error','keydata','breadcrumbarr','language','navbar','user'));
+        return view('backend.siteadmin.Banner.createbanner', compact('data','edit_f', 'error','keydata','breadcrumbarr','language','navbar','user'));
     }
 
         /*Banner update*/
@@ -809,14 +761,13 @@ class SiteadminController extends Controller
         // dd($role_id);
       
         try{
-            if($role_id == 2){
                 $validator = Validator::make(
                     $request->all(),
                     [
                         'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
                         'sub_title.*'   => 'sometimes',
                         'alt_title.*'   => 'sometimes',
-                        'poster.*'      => app('App\Http\Controllers\Commonfunctions')->getImage_mainslider_val(),
+                        'poster.*'      => 'required',
                    ],[
                         'title.required' => 'Title is required',
                         'title.min' => 'Title  minimum lenght is 2',
@@ -833,44 +784,10 @@ class SiteadminController extends Controller
                         'alt_title.max' => 'Alternative text  maximum lenght is 50',
                         'alt_title.regex' => 'Invalid characters not allowed for alternative text',
         
-                        'poster.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 1090 x 400 (w x h). ',
-                        'poster.mimes'   => 'Invalid image format',
+                        // 'poster.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 1090 x 400 (w x h). ',
+                        'poster.required'   => 'required image ',
                     ]);
-            }else{
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-                        'sub_title.*'   => 'sometimes',
-                        'alt_title.*'   => 'sometimes',
-                        'poster.*'      => app('App\Http\Controllers\Commonfunctions')->getImage_mainslider_val_sbu(),
-                   ],[
-                        'title.required' => 'Title is required',
-                        'title.min' => 'Title  minimum lenght is 2',
-                        'title.max' => 'Title  maximum lenght is 50',
-                        'title.regex' => 'Invalid characters not allowed for Title',
-        
-                        'sub_title.required' => 'Sub title text is required',
-                        'sub_title.min' => 'Sub title text  minimum lenght is 2',
-                        'sub_title.max' => 'Sub title text  maximum lenght is 50',
-                        'sub_title.regex' => 'Invalid characters not allowed for Sub title text',
-        
-                        'alt_title.required' => 'Alternative text is required',
-                        'alt_title.min' => 'Alternative text  minimum lenght is 2',
-                        'alt_title.max' => 'Alternative text  maximum lenght is 50',
-                        'alt_title.regex' => 'Invalid characters not allowed for alternative text',
-        
-                        'poster.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 1090 x 400 (w x h). ',
-                        'poster.mimes'   => 'Invalid image format',
-                    ]);
-            }
-        
-        //    $imageName = Banner_sub::where('bannerid', $id)->select('poster')->get();
 
-            // foreach($imageName as $img){
-            //         Storage::disk('myfile')->delete('/uploads/Banner/' . $img->file);
-            //     }
-            //  $res_sub= Banner_sub::where('bannerid',$id)->delete();
             $leng=count($request->sel_lang);
 // dd($request->all());
             for ($i=0; $i<count($request->sel_lang); $i++) {
@@ -881,28 +798,10 @@ class SiteadminController extends Controller
                         'alternatetext' =>$request->alt_title[$i],
            ]);
         }
-            // dd($leng);
-            // for($i=0;$i<$leng;$i++){
 
-
-            //    $uparr=array(
-            //         'languageid'=>$request->sel_lang[$i],
-            //         'title' =>$request->title[$i],
-            //         'subtitle' =>$request->sub_title[$i],
-            //         'alternatetext' =>$request->alt_title[$i],
-            //         // 'poster' => $filename[$i],
-            //      );
-            //     //  dd($request->hidden_id);
-            //      $res=Banner_sub::where('bannerid',$request->hidden_id)->update($uparr);
-            //   }   
                  $edit_f ='';
                  if($res){
-                    if(Auth::user()->role_id==5)//SBU admin
-                    {
-                        return redirect()->route('sbu.banner')->with('success','Updated successfully');
-                    }else if(Auth::user()->role_id==2){//Site admin
-                        return redirect()->route('siteadmin.banner')->with('success','Updated successfully');
-                    }
+                    return redirect()->route('banner')->with('success','Updated successfully');
                  }else{
                      return back()->withErrors('Not Updated ');
                  }

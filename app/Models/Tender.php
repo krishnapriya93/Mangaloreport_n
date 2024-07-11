@@ -11,27 +11,19 @@ class Tender extends Model
 
     protected $table = "tenders";
 
-    protected $fillable = ['user_id','status_id','tendercat','tenderdate','tendertype','pac_slabs','functional_unit','tenderno','viewpermission'];
+    protected $fillable = ['user_id','status_id','tenderdate','tendertype','tenderenddate','tenderno','tenderstartdate','department','emd','corrigendum'];
 
     public function tender_sub()
     {
         return $this->hasMany(TenderSub::class, 'tenderid', 'id');
     }
 
-    public function tender_category()
-    {
-        return $this->belongsTo(TenderCategory::class, 'tendercat', 'id');
-    }
 
     public function tender_type()
     {
         return $this->belongsTo(TenderType::class, 'tendertype', 'id');
     }
 
-    public function tender_pac()
-    {
-        return $this->belongsTo(TenderPac::class, 'pac_slabs', 'id');
-    }
 
     public function tender_items()
     {

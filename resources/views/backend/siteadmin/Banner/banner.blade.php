@@ -58,7 +58,7 @@
                         </td>
                         <td>
                             <a class="btn btn-primary btn-sm-default" href="{{ route('editbanner',\Crypt::encryptString($result->id)) }}">Edit</a>
-                            <a class="btn btn-danger btn-sm-default" href="{{ route('deleteBanner',\Crypt::encryptString($result->id)) }}">Delete</a>
+                            <a class="btn btn-danger btn-sm-default" href="{{ route('deleteBanner',\Crypt::encryptString($result->id)) }}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                         </td>
                     </tr>   
                      <!-- $i++; -->

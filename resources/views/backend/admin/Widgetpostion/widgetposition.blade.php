@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-white card-header-main">{{isset($edit_f) ? 'Update' : 'Add'}} Widget position</div>
+                <div class="card-header text-white card-header-main">{{isset($edit_f) ? 'Update' : 'Add'}} Press relation</div>
 
                 <div class="card-body">
                   @if(session('success'))
@@ -28,7 +28,7 @@
                     @csrf 
                         <input type="hidden" name="hidden_id" value="{{$keydata->id ?? ''}}">
                         <div class="row mb-3">
-                            <label for="widget" class="col-sm-2 col-form-label">Widget postition Name <span class="redalert"> *</span></label>
+                            <label for="widget" class="col-sm-2 col-form-label">Press relation Name <span class="redalert"> *</span></label>
                             <div class="col-sm-10">
                             <input id="widget" type="text" class="form-control @error('widget') is-invalid @enderror" name="widget" value="{{ $keydata->name ?? old('name')}}" required autocomplete="widget" placeholder="Enter widget here" autofocus>
                             <span class="ErrP alert-danger titleerr redalert" style="display: none;">Please Check the widget Entered</span>
@@ -53,7 +53,7 @@
             </div>
        <br>
             <div class="card">
-                <div class="card-header text-white card-header-main">{{ __('List of widget position') }}</div>
+                <div class="card-header text-white card-header-main">{{ __('List of Press relation') }}</div>
                  
                 <div class="card-body">
                     <table id="datatable_view" class="table table-striped">

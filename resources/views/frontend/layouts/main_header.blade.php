@@ -24,6 +24,8 @@
 
     
   </head>
+  @include('frontend.main.maintopmenu')
+
   @yield('content')
 
   @include('frontend.layouts.mainscript')

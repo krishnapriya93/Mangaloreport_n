@@ -510,6 +510,7 @@ if ((width == 1920) && (height == 440)) {
 }	
 //banner
 function imageval(id, testval) {
+
 		var file = testval;
 		var fileType = file["type"];
 		var filesize = file["size"];
@@ -521,15 +522,9 @@ function imageval(id, testval) {
 		console.log(filesize + 'filesize');
 		var validImageTypes = ["image/webp", "image/jpeg", "image/png", "image/jpg" ,"image/gif"];
 		if ($.inArray(fileType, validImageTypes) < 0) {
-			return 'Only file type: webp/jpeg/png/jpg/gif is acceptable';
+			return false;
 		} else {
-			if (filesize > 2000000) {
-
-				return 'Size should be less than 2 MB';
-			} else {
-				return 'true';
-			}
-
+		    return true;
 		}
 	}    
 

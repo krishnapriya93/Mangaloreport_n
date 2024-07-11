@@ -18,6 +18,7 @@
     <link href="{{asset('/assets/backend/css/uppy.min.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="{{asset('assets/backend/sweetalert/sweetalert2.min.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/backend/img_cropper/css/cropper.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/backend/css/custom.css')}}" />
 
 </head>
 
