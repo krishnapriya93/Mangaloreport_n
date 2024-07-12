@@ -1,4 +1,4 @@
-@extends('layouts.htmlheader')
+@extends('backend.layouts.htmlheader')
 
 @section('content')
 @php
@@ -82,11 +82,8 @@ $enc_id = Crypt::encrypt($galdet['id']);
             </div> <!-- ./alert -->
         </div>
     </div><!-- ./row -->
-                @if(Auth::user()->role_id==2)
-                    <a class="col-sm-3 btn btn-sm btn-warning btn-flat mt-3 mb-3" title="" href="{{route('siteadmin.gallerylist')}}"><i class="fa fa-reply" aria-hidden="true"></i> Back to list </a><br>
-                @elseif(Auth::user()->role_id==5)
-                    <a class="col-sm-3 btn btn-sm btn-warning btn-flat mt-3 mb-3" title="" href="{{route('sbu.gallerylist')}}"><i class="fa fa-reply" aria-hidden="true"></i> Back to list </a><br>
-                @endif
+    <a class="col-sm-3 btn btn-sm btn-warning btn-flat mt-3 mb-3" title="" href="{{route('siteadmin.gallerylist')}}"><i class="fa fa-reply" aria-hidden="true"></i> Back to list </a><br>
+
     <section class="gallery-block grid-gallery">
         <div class="row mt-2">
 
@@ -97,8 +94,8 @@ $enc_id = Crypt::encrypt($galdet['id']);
 
                     <div class="card-body">
                        
-                            <a class="lightbox" href="{{asset('uploads/Galleryitemsuppy/'.$res->image) }}">
-                                <img id="img_show" src="{{ asset('uploads/Galleryitemsuppy/'.$res->image) }}" class="img-fluid" alt="film poster">
+                            <a class="lightbox" href="{{asset('/assets/backend/uploads/Galleryitem/'.$res->image) }}">
+                                <img id="img_show" src="{{ asset('/assets/backend/uploads/Galleryitem/'.$res->image) }}" class="img-fluid" alt="film poster">
                             </a>
                        
                     </div> <!-- ./card-body -->
@@ -200,16 +197,7 @@ $enc_id = Crypt::encrypt($galdet['id']);
             var element_id = $(this).attr('id');
             // alert(element_id);
             var usertype = $("#usertype_id").val();
-            var action_url = "/galitemdel/" + element_id;
-            // if (usertype == 4) {
-            //     var action_url = "/festmanager/galitemdel/" + element_id;
-            // } else if (usertype == 3) {
-            //     var action_url = "/festadmin/galitemdel/" + element_id;
-            // } else if (usertype == 6) {
-            //     var action_url = "/mediamanager/galitemdel/" + element_id;
-            // }else if (usertype == 11) {
-            //     var action_url = "/archiveuser/galitemdel/" + element_id;
-            // }
+            var action_url = "/siteadmin/galitemdel/" + element_id;
 
 
             $.ajax({
@@ -402,7 +390,7 @@ $('button').on('click',function(){
         if ($('.uppy-StatusBar').hasClass('is-complete')) {
             alert("Upload complete! We’ve uploaded these files:");
             swal({
-                title: "KSEB",
+                title: "NMPA",
                     text: "Upload complete! We’ve uploaded these files:",
                     type: "info",
                     showCancelButton: false,

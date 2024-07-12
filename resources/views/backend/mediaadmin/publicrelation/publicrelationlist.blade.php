@@ -32,8 +32,9 @@
                     <thead>    
                     <tr>
                         <th>No</th>
-                        <th width="380px">Title</th>
-                        <th>Status</th>
+                        <th width="400px">Title</th>
+                        <th width="280px">Type</th>
+                        <th width="180px">Status</th>
                         <th width="280px">Action</th>
                     </tr>
                     </thead>
@@ -45,6 +46,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$result->publicrel_sub[0]->title ?? ''}}</td>
+                        <td>{{$result->publicrelationtype->name ?? ''}}</td>
                         <td>
                         @if(($result->status_id)==1)
                             <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('statuspublicrelation',\Crypt::encryptString($result->id)) }}">Active</a>
@@ -56,7 +58,7 @@
                         <td>
                             
                         <a class="btn btn-primary btn-sm-default" href="{{ route('editpublicrelation',\Crypt::encryptString($result->id)) }}">Edit</a>
-                        <a class="btn btn-danger btn-sm-default" href="{{ route('deletepublicrelation',\Crypt::encryptString($result->id)) }}">Delete</a>
+                        <a class="btn btn-danger btn-sm-default" href="{{ route('deletepublicrelation',\Crypt::encryptString($result->id)) }}" onclick="return confirm('Are you sure?')">Delete</a>
                         </td>
                     </tr>   
                      <!-- $i++; -->

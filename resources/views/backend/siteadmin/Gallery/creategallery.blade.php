@@ -117,7 +117,7 @@
                                  @if(isset($keydata->file))
                                  <div class="col-sm-3 mb-btm" id="div_poster"> 
                                     <label class="my-1 mr-2" for="inlineFormCustomSelectPref"> <span class="redalert"> </span></label>
-                                   <img id="preview-image-before-upload" rel="" class="preview-image-before-upload imgstamp" src="{{asset('uploads/Gallerymain/'.$keydata->file)}}" alt="preview image">
+                                   <img id="preview-image-before-upload" rel="" class="preview-image-before-upload imgstamp" src="{{asset('/assets/backend/uploads/Gallerymain/'.$keydata->file)}}" alt="preview image">
                                 </div><br/>
                                 @endif
                             </div> <!-- ./inner-card-iterate -->

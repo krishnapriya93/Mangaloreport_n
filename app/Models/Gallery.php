@@ -16,4 +16,8 @@ class Gallery extends Model
     {
         return $this->hasMany(GallerySub::class, 'galleryid', 'id');
     }
+    public function gallery_item()
+    {
+        return $this->hasMany(GallerySubItems::class, 'galleryid', 'id');
+    }
 }

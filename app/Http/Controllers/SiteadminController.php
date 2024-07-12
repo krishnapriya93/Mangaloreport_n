@@ -33,7 +33,6 @@ use App\Models\Downloadtype;
 use App\Models\Counter;
 use App\Models\Countersub;
 use App\Models\Gallerytype;
-use App\Models\Gallery_sub;
 use App\Models\Menulinktype;
 use App\Models\Customerservice;
 use App\Models\Customerservicesub;
@@ -59,8 +58,9 @@ use App\Models\Articlesub;
 use App\Models\Submenu;
 use App\Models\Mainmenu;
 use App\Models\GallerySub;
-use App\Models\Galleryitem;
-
+use App\Models\GallerySubItems;
+use App\Models\Midwidget;
+use App\Models\Midwidgetsub;
 
 use \Crypt;
 use DB;
@@ -1300,13 +1300,12 @@ public function statusgallery($id)
     $image = str_replace(' ', '+', $image);
 
     $imageName =  'Gallerymain' . $date . '.' . $extension;
-    // dd($imageName);
-    Storage::disk('myfile')->put('/uploads/Gallerymain/' . $imageName,  base64_decode($image));
+   
+    Storage::disk('myfile')->put('/assets/backend/uploads/Gallerymain/' . $imageName,  base64_decode($image));
+    $im = imagecreatefromjpeg(public_path('/assets/backend/uploads/Gallerymain/' . $imageName));
+    chmod(public_path('/assets/backend/uploads/Gallerymain/' . $imageName), 0777);
 
-    $im = imagecreatefromjpeg(public_path('/uploads/Gallerymain/' . $imageName));
-    chmod(public_path('/uploads/Gallerymain/' . $imageName), 0777);
-        // dd($imageName);
-        imagejpeg($im, public_path('/uploads/Gallerymain'. $imageName));
+        imagejpeg($im, public_path('/assets/backend/uploads/Gallerymain/'. $imageName));
 ////////////////////////////////////
 
 // dd($imageName);
@@ -1357,7 +1356,7 @@ public function statusgallery($id)
         $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
         $galdet = Gallery::whereId($storeinfo->id)->first();
         // dd($galdet);
-        $galitem = Galleryitem::where('gallery_id', $gallery_id)->where('status_id', 1)->get();
+        $galitem = GallerySubItems::where('gallery_id', $gallery_id)->where('status_id', 1)->get();
         $galitemcnt = count($galitem);
        
         return view('backend.siteadmin.Gallery.uploadgallery',compact('breadcrumbarr','navbar','user','gallery_id','galitem','galdet','galitemcnt'));
@@ -1380,7 +1379,7 @@ public function statusgallery($id)
 
         $files = $request->file;
         $imageName = time() . rand() . '.' . $files->extension();
-        $request->file('file')->storeAs('/uploads/Galleryitemsuppy', $imageName, 'myfile');
+        $request->file('file')->storeAs('/assets/backend/uploads/Galleryitem', $imageName, 'myfile');
 
         $formdata = array(
             'gallery_id' => $id,
@@ -1391,32 +1390,19 @@ public function statusgallery($id)
 
         );
 
-        $res=Galleryitem::create($formdata);
+        $res=GallerySubItems::create($formdata);
         $resusertype=$usertype_id;
 // dd($res->id."");
 
         if ($res) {
-            if($usertype_id==2)//siteadmin
-            {
-                $breadcrumb = array(
-                    0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-                    // 1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/archiveuser/gallerylist'),
-                    2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-                );
-    
-            }else if($usertype_id==5)//sbuadmin
-            {
-                $breadcrumb = array(
-                    0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/Sbuadminhome'),
-                    // 1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/archiveuser/gallerylist'),
-                    2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-                );
-    
-            }
+            $breadcrumb = array(
+                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+                1 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
+            );
             
             $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-            $galdet = Galleryitem::whereId($res->id)->first();
-            $galitem = Galleryitem::where('gallery_id', $id)->where('status_id', 1)->get();
+            $galdet = GallerySubItems::whereId($res->id)->first();
+            $galitem = GallerySubItems::where('gallery_id', $id)->where('status_id', 1)->get();
             // dd($galitem);
             $galitemcnt = count($galitem);
 
@@ -1436,13 +1422,13 @@ public function statusgallery($id)
         if ($request->ajax()) {
 
                 // if($usertype_id==4){
-                    $galitem = Galleryitem::whereId($id)->first();
-                    $galitemimg = public_path('uploads/Galleryitemsuppy/') . $galitem->image;
+                    $galitem = GallerySubItems::whereId($id)->first();
+                    $galitemimg = public_path('/assets/backend/uploads/Galleryitem/') . $galitem->image;
                     if (file_exists($galitemimg)) {
                         @unlink($galitemimg);
                     }
     
-                    Galleryitem::findOrFail($id)->delete();
+                    GallerySubItems::findOrFail($id)->delete();
                 // }else 
             
             return response()->json(['success' => 'Data Updated successfully.']);
@@ -1457,73 +1443,22 @@ public function statusgallery($id)
         $resusertype = User::where('id', Auth::user()->id)->first();
         $usertype_id = Auth::user()->usertype_id;
         $usertype = Auth::user()->usertype_id;
-        if ($usertype == 4) {
-
-            $resusertype = User::where('id', Auth::user()->id)->first();
-            $usertype_id = Auth::user()->usertype_id;
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/festmanager'),
-                1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/festmanager/gallerylist'),
-                2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-            );
-
-            $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-            $galdet = Gallery::whereId($id)->first();
-            $galitem = Galleryitem::where('gallery_id', $id)->where('status_id', 1)->get();
-            $galitemcnt = count($galitem);
-            return view('Festmanager.gallery.uploadgalleryitems', compact('breadcrumbarr', 'resusertype', 'galdet', 'galitem', 'galitemcnt'));
-        } else if ($usertype == 3) {
-            //return redirect('festmanager/listFilm')->with('msg','Film updated successfully.');
-            $resusertype = User::where('id', Auth::user()->id)->first();
-            $usertype_id = Auth::user()->usertype_id;
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/festadmin'),
-                1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/festadmin/gallerylist'),
-                2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-            );
-            
-        } else if ($usertype == 6) {
-            //return redirect('festmanager/listFilm')->with('msg','Film updated successfully.');
-            $resusertype = User::where('id', Auth::user()->id)->first();
-            $usertype_id = Auth::user()->usertype_id;
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/mediamanager'),
-                1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/mediamanager/gallerylist'),
-                2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-            );
-        }
-        if ($usertype == 11) {
-            //return redirect('festmanager/listFilm')->with('msg','Film updated successfully.');
-
-            $resusertype = User::where('id', Auth::user()->id)->first();
-            $usertype_id = Auth::user()->usertype_id;
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/archiveuser'),
-                1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/archiveuser/gallerylist'),
-                2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-            );
-            $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-
-            $galdet = ArchiveGallery::whereId($id)->first();
-            $galitem = ArchiveGalleryitem::where('gallery_id', $id)->where('status_id', 1)->get();
-            $galitemcnt = count($galitem);
-        }else{
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/festmanager'),
-                1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/festmanager/gallerylist'),
-                2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 1)
-            );
+        $breadcrumb = array(
+            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+            1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/siteadmin/gallerylist'),
+            2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 2)
+        );
                 $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
             // $galdet = ArchiveGallery::whereId($id)->first();
-            // $galitem = ArchiveGalleryitem::where('gallery_id', $id)->where('status_id', 1)->get();
+            // $galitem = ArchiveGallerySubItems::where('gallery_id', $id)->where('status_id', 1)->get();
             // $galitemcnt = count($galitem);
 
             //changed sabitha 07062022
             $galdet = Gallery::whereId($id)->first();
-            $galitem = Galleryitem::where('gallery_id', $id)->where('status_id', 1)->get();
+            $galitem = GallerySubItems::where('gallery_id', $id)->where('status_id', 1)->get();
             $galitemcnt = count($galitem);
 
-        }
+        
         $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
         $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
         return view('backend.siteadmin.Gallery.uploadgallery', compact('user','navbar','breadcrumbarr', 'resusertype', 'galdet', 'galitem', 'galitemcnt'));
@@ -1538,12 +1473,12 @@ public function statusgallery($id)
         $id= Crypt::decryptString($id);
 
             DB::beginTransaction();
-           $imageName = Galleryitem::where('gallery_id', $id)->select('image')->get();
+           $imageName = GallerySubItems::where('gallery_id', $id)->select('image')->get();
 
             foreach($imageName as $img){
-                    Storage::disk('myfile')->delete('/uploads/Galleryitemsuppy/' . $img->file);
+                    Storage::disk('myfile')->delete('/assets/backend/uploads/Galleryitem' . $img->file);
                 }
-             $res_sub= Gallery_sub::where('galleryid',$id)->delete();
+             $res_sub= GallerySub::where('galleryid',$id)->delete();
           
             if($res_sub)
             {
@@ -1552,13 +1487,7 @@ public function statusgallery($id)
             $edit_f ='';
                  if($res_sub){
                     DB::commit();
-                    if(Auth::user()->role_id==5)//SBU admin
-                    {
-                        return redirect()->route('sbu.gallerylist')->with('success','status change successfully');
-                    }else if(Auth::user()->role_id==2){//Site admin
-                        return redirect()->route('siteadmin.gallerylist')->with('success','status change successfully');
-                    }
-                   
+                    return redirect()->route('siteadmin.gallerylist')->with('success','status change successfully');
                  }else{
                     DB::rollback(); 
                      return back()->withErrors('Not deleted ');
@@ -1576,19 +1505,11 @@ public function statusgallery($id)
             $usertype_id=Auth::user()->role_id;
             $resusertype = User::where('id', Auth::user()->id)->first();
         //  dd($id);
-            if($usertype_id == 5 ){//sbu admin
-                $breadcrumb = array(
-                    0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/Sbuadminhome'),
-                    1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 1, 'link' => '/sbu/gallerylist'),
-                    2 => array('title' => 'Edit Gallery', 'message' => 'Edit Gallery', 'status' => 2)
-                );
-            } else if($usertype_id == 2 ){//siteadmin
-                $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-                1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 1, 'link' => '/siteadmin/gallerylist'),
-                2 => array('title' => 'Edit Gallery', 'message' => 'Edit Gallery', 'status' => 2)
-            );
-            }
+        $breadcrumb = array(
+            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+            1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/siteadmin/gallerylist'),
+            2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 2)
+        );
             // dd($usertype_id);
 
 
@@ -1599,7 +1520,7 @@ public function statusgallery($id)
                     }]);
                 }])->where('delet_flag',0)->where('id', $id)->first();
 
-// dd($keydata);
+
       
         } catch (\Illuminate\Database\QueryException $exception) {
           
@@ -1609,7 +1530,7 @@ public function statusgallery($id)
         $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
 
         $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-        return view('backen.siteadmin.Gallery.creategallery', compact( 'breadcrumbarr', 'Gallerytype', 'resusertype', 'edit_f', 'keydata','navbar','user'));
+        return view('backend.siteadmin.Gallery.creategallery', compact( 'breadcrumbarr', 'Gallerytype', 'resusertype', 'edit_f', 'keydata','navbar','user'));
     }
 
     public function updategallery(Request $request)
@@ -1697,11 +1618,11 @@ public function statusgallery($id)
 
         $imageName =  'Gallerymain' . $date . '.' . $extension;
         // dd($imageName);
-        Storage::disk('myfile')->put('/uploads/Gallerymain/' . $imageName,  base64_decode($image));
-        $im = imagecreatefromjpeg(public_path('/uploads/Gallerymain/' . $imageName));
-        chmod(public_path('/uploads/Gallerymain/' . $imageName), 0777);
+        Storage::disk('myfile')->put('/assets/backend/uploads/Gallerymain/' . $imageName,  base64_decode($image));
+        $im = imagecreatefromjpeg(public_path('/assets/backend/uploads/Gallerymain/' . $imageName));
+        chmod(public_path('/assets/backend/uploads/Gallerymain/' . $imageName), 0777);
             // dd($imageName);
-            imagejpeg($im, public_path('/uploads/Gallerymain'. $imageName));
+            imagejpeg($im, public_path('/assets/backend/uploads/Gallerymain'. $imageName));
     ////////////////////////////////////
 
 
@@ -1734,7 +1655,7 @@ public function statusgallery($id)
             $galdate =$date; 
             $leng=count($request->sel_lang);
           
-                $chkrws = Gallery_sub::where('galleryid', '=', $id)->exists() ? 1 : 0;
+                $chkrws = GallerySub::where('galleryid', '=', $id)->exists() ? 1 : 0;
                 // dd($request->all());
                 if($chkrws)
                 {
@@ -1746,7 +1667,7 @@ public function statusgallery($id)
                             'galleryid' => $id,
                         );
                 
-                    $storedetails_sub=Gallery_sub::where('galleryid',$id)->where('languageid',$request->sel_lang[$i])->update($store_sub_info);
+                    $storedetails_sub=GallerySub::where('galleryid',$id)->where('languageid',$request->sel_lang[$i])->update($store_sub_info);
               }
            
            
@@ -1761,21 +1682,11 @@ public function statusgallery($id)
         if($storedetails_sub)
                 {
     
-                    if($usertype==5)//sbu user
-                    {
-                        $breadcrumb = array(
-                            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/Sbuadminhome'),
-                            1 => array('title' => 'Gallery', 'message' => 'Gallery', 'status' => 0, 'link' => '/sbu/gallerylist'),
-                            2 => array('title' => 'Upload Gallery', 'message' => 'Upload Gallery', 'status' => 1)
-                        );
-                    }else if($usertype==2)//siteadmin
-                    {
-                        $breadcrumb = array(
-                            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-                            1 => array('title' => 'Gallery', 'message' => 'Gallery', 'status' => 0, 'link' => '/siteadmin/gallerylist'),
-                            2 => array('title' => 'Upload Gallery', 'message' => 'Upload Gallery', 'status' => 1)
-                        );
-                    }
+                    $breadcrumb = array(
+                        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+                        1 => array('title' => 'List Gallery', 'message' => 'List Gallery', 'status' => 0, 'link' => '/siteadmin/gallerylist'),
+                        2 => array('title' => 'Upload Gallery Item', 'message' => 'Upload Gallery Item', 'status' => 2)
+                    );
     
     
                     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
@@ -1783,7 +1694,7 @@ public function statusgallery($id)
                     $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
                     $galdet = Gallery::whereId($id)->first();
                     // dd($galdet);
-                    $galitem = Galleryitem::where('gallery_id', $id)->where('status_id', 1)->get();
+                    $galitem = GallerySubItems::where('gallery_id', $id)->where('status_id', 1)->get();
                     $galitemcnt = count($galitem);
                 $gallery_id=$id;
                     return view('backend.siteadmin.Gallery.uploadgallery',compact('breadcrumbarr','navbar','user','gallery_id','galitem','galdet','galitemcnt'));
@@ -1798,120 +1709,7 @@ public function statusgallery($id)
 
         
     }    
-    /*Uppy view end */
-    public function galitemstoreuppy_old(Request $request, $encid){
-        dd($encid);
-        $id = Crypt::decrypt($encid);
-        $usertype_id = Auth::user()->usertype_id;
-        
-
-//         $validator = Validator::make(
-//             $request->all(),
-//             [
-//                 //'file' => 'required|mimes:pdf,doc,docx,odt,jpeg,png,jpg,gif,svg|max:5000000|dimensions:max_width=500,max_height=500',
-//                 'file' => 'required|mimes:pdf,doc,docx,odt,jpeg,png,jpg,gif,svg|max:5000000',
-
-//             ],
-//             [
-//                 'file.required' => 'File is required. ',
-//                 'file.mimes'   => 'Invalid image format.',
-//                 'file.max'   => 'Max size of 5MB.',
-//                 //'file.dimensions' => 'Image resolution does not meet the requirement. Size of the image should be 500 x 500 (w x h). ',
-
-
-//             ]
-//         );
-// dd($validator->fails());
-//         if ($validator->fails()) {
-//             return back()->withInput()->withErrors($validator->errors());
-//         }
-$pgmdet = Gallery::where('id', $id)->first();
-
-            $files = $request->file;
-            $imageName = time() . rand() . '.' . $files->extension();
-            $request->file('file')->storeAs('/uploads/Galleryitemsuppy', $imageName, 'myfile');
-            // $files->move(public_path('uploads/Galleryitemsuppy/'), $imageName);
-    // dd($request->file('file')->storeAs('/uploads/Galleryitemsuppy', $imageName, 'myfile'));
-            $formdata = array(
-                'gallery_id' => $id,
-                'image' => $imageName,
-                'alternate_text' => 'Upload',
-                'status_id' => 1,
-                'user_id'  => Auth::user()->id
-    
-            );
-            Galleryitem::create($formdata);
-        if($usertype_id==2){
-            $pgmdet = Gallery::where('id', $id)->first();
-
-            $files = $request->file;
-            $imageName = time() . rand() . '.' . $files->extension();
-            $request->file('file')->storeAs('/uploads/Galleryitemsuppy/', $imageName, 'myfile');
-            // $files->move(public_path('uploads/Galleryitemsuppy/'), $imageName);
-    dd($request->file('file')->storeAs('/uploads/Galleryitemsuppy/', $imageName, 'myfile'));
-            $formdata = array(
-                'gallery_id' => $id,
-                'image' => $imageName,
-                'alternate_text' => 'Upload',
-                'status_id' => 1,
-                'user_id'  => Auth::user()->id
-    
-            );
-            Galleryitem::create($formdata);
-        }else if($usertype_id==3){//sabitha 07062022
-            $pgmdet = Gallery::where('id', $id)->first();
-
-            $files = $request->file;
-            $imageName = time() . rand() . '.' . $files->extension();
-            $request->file('file')->storeAs('/uploads/Galleryitemsuppy/', $imageName, 'myfile');
-
-    
-            $formdata = array(
-                'gallery_id' => $id,
-                'image' => $imageName,
-                'alternate_text' => 'Upload',
-                'status_id' => 1,
-                'user_id'  => Auth::user()->id
-    
-            );
-            Galleryitem::create($formdata);
-        }else if($usertype_id==6){//sabitha 07062022
-            $pgmdet = Gallery::where('id', $id)->first();
-
-            $files = $request->file;
-            $imageName = time() . rand() . '.' . $files->extension();
-            $request->file('file')->storeAs('/uploads/Galleryitemsuppy/', $imageName, 'myfile');
-
-    
-            $formdata = array(
-                'gallery_id' => $id,
-                'image' => $imageName,
-                'alternate_text' => 'Upload',
-                'status_id' => 1,
-                'user_id'  => Auth::user()->id
-    
-            );
-            Galleryitem::create($formdata);
-        }else if($usertype_id==11){
-            $pgmdet = ArchiveGallery::where('id', $id)->first();
-
-            $files = $request->file;
-            $imageName = time() . rand() . '.' . $files->extension();
-            $request->file('file')->storeAs('/uploads/Galleryitemsuppy/', $imageName, 'myfile');
-
-    
-            $formdata = array(
-                'gallery_id' => $id,
-                'image' => $imageName,
-                'alternate_text' => 'Upload',
-                'status_id' => 1,
-                'user_id'  => Auth::user()->id
-    
-            );
-            ArchiveGalleryitem::create($formdata);
-        }
-        
-    }
+   
 
        /*multiple image Store Gallery*/
 
@@ -1956,7 +1754,7 @@ $pgmdet = Gallery::where('id', $id)->first();
                 'user_id'  => Auth::user()->id
     
             );
-            Galleryitem::create($formdata);
+            GallerySubItems::create($formdata);
      
         
     }
@@ -6222,4 +6020,188 @@ public function OrderchangeSubmenu_form(Request $request)
         return response()->json(['html' => $error]);
     }
 }
+
+ /*midwidget */
+ public function midwidget()
+ {
+         $datas = Midwidget::with(['midwiget_sub' => function ($query) {
+          }])->get();
+     $breadcrumb = array(
+         0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+         1 => array('title' => 'Mid widget', 'message' => 'Mid widget', 'status' => 1)
+     );
+     $language = Language::where('delet_flag', 0)->orderBy('name')->get();
+
+     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+     $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+     $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+     return view('backend.siteadmin.Midwidget.midwidget', compact('datas', 'breadcrumbarr', 'navbar', 'user','language'));
+ }
+ public function storemidwidget(Request $request)
+  {
+      // dd($request->all());
+
+      $validator = Validator::make(
+          $request->all(),
+          [
+              'sel_lang.*' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+              'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+          ],
+          [
+              'title.required' => 'Title is required',
+              'title.min' => 'Title  minimum lenght is 2',
+              'title.max' => 'Title  maximum lenght is 50',
+              'title.regex' => 'Invalid characters not allowed for Title',
+
+          ]
+      );
+      if ($validator->fails()) {
+          // dd($validator->errors());
+          return back()->withInput()->withErrors($validator->errors());
+      }
+      try {
+
+          $request->input();
+          $role_id = Auth::user()->id;
+
+          $leng = count($request->sel_lang);
+         
+          $storeinfo = new Midwidget([
+              'userid' => Auth::user()->id,
+              'status_id' => 1,
+              'value'    =>$request->valuedata,
+              'delet_flag' => 0,
+          ]);
+
+          $res = $storeinfo->save();
+          $widgetid = DB::getPdo()->lastInsertId();
+
+          for ($i = 0; $i < $leng; $i++) {
+              if ($widgetid) {
+                  $store_sub_info = new Midwidgetsub([
+                      'languageid' => $request->sel_lang[$i],
+                      'title' => $request->title[$i],
+                      'widgetid' => $widgetid,
+                  ]);
+                  $storedetails_sub = $store_sub_info->save();
+              }
+              // dd($path);
+          } //forloopend
+
+          return redirect()->route('siteadmin.midwidget')->with('success', 'Created successfully');
+      } catch (ModelNotFoundException $exception) {
+          \LogActivity::addToLog($exception->getMessage(), 'error');
+          $data = \LogActivity::logLatestItem();
+          return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+      }
+  }
+  public function editlinktype($id)
+  {
+
+      $id = Crypt::decryptString($id);
+
+      $edit_f = 'E';
+
+      $keydata = Linktype::with(['linktype_sub' => function ($query) {
+   }])->where('id', $id)->first();
+      $error = '';
+
+
+      $language = Language::orderBy('name')->get();
+
+      $breadcrumb = array(
+          0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/adminhome'),
+          1 => array('title' => 'Tender category', 'message' => 'Tender category', 'status' => 0, 'link' => '/admin/whatwedotype'),
+          2 => array('title' => 'Edit Tender category', 'message' => 'Edit Tender category', 'status' => 1)
+      );
+      $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+      $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+      $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+
+      return view('backend.admin.linktype.createlinktype', compact('breadcrumbarr', 'navbar', 'user', 'language', 'edit_f', 'keydata'));
+  }
+  public function updatelinktype(Request $request)
+  {
+      // dd($request->all());
+
+      $validator = Validator::make(
+          $request->all(),
+          [
+              'sel_lang.*' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+              'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+          ],
+          [
+              'title.required' => 'Title is required',
+              'title.min' => 'Title  minimum lenght is 2',
+              'title.max' => 'Title  maximum lenght is 50',
+              'title.regex' => 'Invalid characters not allowed for Title',
+
+          ]
+      );
+      if ($validator->fails()) {
+          // dd($validator->errors());
+          return back()->withInput()->withErrors($validator->errors());
+      }
+      try {
+
+          $request->input();
+          $role_id = Auth::user()->id;
+
+          $leng = count($request->sel_lang);
+          // dd($leng);
+
+          $storeinfo = array(
+              'userid' => Auth::user()->id,
+          );
+
+          $res = Linktype::where('id', $request->hidden_id)->update($storeinfo);
+          $linktypeid = $request->hidden_id;
+
+          for ($i = 0; $i < $leng; $i++) {
+
+
+              if ($linktypeid) {
+
+                  $store_sub_info = array(
+                      'languageid' => $request->sel_lang[$i],
+                      'title' => $request->title[$i],
+                      'linktypeid' => $linktypeid,
+                  );
+                  $storedetails_sub = Linktypesub::where('linktypeid', $request->hidden_id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
+              }
+              // dd($path);
+          } //forloopend
+
+          return redirect()->route('admin.linktype')->with('success', 'Updated successfully');
+      } catch (ModelNotFoundException $exception) {
+          \LogActivity::addToLog($exception->getMessage(), 'error');
+          $data = \LogActivity::logLatestItem();
+          return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+      }
+  }
+
+
+  public function deletelinktype($id)
+  {
+      $id = Crypt::decryptString($id);
+      // dd($id);
+      DB::beginTransaction();
+
+      $res_sub = TenderTypeSub::where('tendertypeid', $id)->delete();
+
+      // if($res_sub)
+      // {
+      $res = TenderType::findOrFail($id)->delete();
+
+      // }
+      $edit_f = '';
+      if ($res_sub) {
+          DB::commit();
+          return Redirect('/admin/tendertypelist')->with('success', 'Deleted successfully', ['edit_f' => $edit_f]);
+      } else {
+          DB::rollback();
+          return back()->withErrors('Not deleted ');
+      }
+  }
+ 
 }

@@ -107,7 +107,7 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Adminlogin']], funct
    Route::post('/updatewhatwedotype', [App\Http\Controllers\AdminController::class, 'updatewhatwedotype'])->name('admin.updatewhatwedotype');
    Route::get('/deletetendertype/{id}', [App\Http\Controllers\AdminController::class, 'deletetendertype'])->name('admin.deletetendertype');
 
-   //What we do type
+   //Link type
    Route::get('/admin/linktype', [App\Http\Controllers\AdminController::class, 'linktype'])->name('admin.linktype');
    Route::get('/admin/createlinktype', [App\Http\Controllers\AdminController::class, 'createlinktype'])->name('admin.createlinktype');
    Route::post('/admin/storelinktype', [App\Http\Controllers\AdminController::class, 'storelinktype'])->name('admin.storelinktype');
@@ -181,8 +181,16 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], functi
    Route::get('/siteadmin/deletegallery/{id}', [App\Http\Controllers\SiteadminController::class, 'deletegallery'])->name('siteadmin.deletegallery');
    Route::post('/siteadmin/galitemstoreuppy/{id}', [App\Http\Controllers\SiteadminController::class, 'galitemstoreuppy'])->name('siteadmin.galitemstoreuppy');
    Route::get('/viewgallarypics/{id}', [App\Http\Controllers\SiteadminController::class, 'viewgallarypics'])->name('viewgallarypics')->middleware('auth');
-   Route::get('/galitemdel/{id}', [App\Http\Controllers\SiteadminController::class, 'galitemdel'])->middleware('auth');
+   Route::get('/siteadmin/galitemdel/{id}', [App\Http\Controllers\SiteadminController::class, 'galitemdel'])->middleware('auth');
    Route::get('/siteadmin/statusgallery/{id}', [App\Http\Controllers\SiteadminController::class, 'statusgallery'])->name('siteadmin.statusgallery');
+ 
+   //Link type
+  Route::get('/siteadmin/midwidget', [App\Http\Controllers\SiteadminController::class, 'midwidget'])->name('siteadmin.midwidget');
+  Route::post('/siteadmin/storemidwidget', [App\Http\Controllers\SiteadminController::class, 'storemidwidget'])->name('siteadmin.storemidwidget');
+  Route::get('/siteadmin/editmidwidget/{id}', [App\Http\Controllers\SiteadminController::class, 'editmidwidget'])->name('siteadmin.editmidwidget');
+  Route::post('/siteadmin/updatemidwidget', [App\Http\Controllers\SiteadminController::class, 'updatemidwidget'])->name('siteadmin.updatemidwidget');
+  Route::get('/siteadmin/deletemidwidget/{id}', [App\Http\Controllers\SiteadminController::class, 'deletemidwidget'])->name('siteadmin.deletemidwidget');
+
 });
 
 
@@ -206,19 +214,6 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin']],
    Route::get('/masteradmin/editBOD/{id}', [App\Http\Controllers\MasterController::class, 'editBOD'])->name('editBOD');
    Route::post('/masteradmin/updateBOD', [App\Http\Controllers\MasterController::class, 'updateBOD'])->name('updateBOD');
    Route::get('/masteradmin/deleteBOD/{id}', [App\Http\Controllers\MasterController::class, 'deleteBOD'])->name('deleteBOD');
-
-   //Milestone
-   Route::get('/masteradmin/milestonelist', [App\Http\Controllers\MasterController::class, 'milestonelist'])->name('milestonelist');
-   Route::get('/masteradmin/createmilestone', [App\Http\Controllers\MasterController::class, 'createmilestone'])->name('createmilestone');
-   Route::post('/masteradmin/storemilestone', [App\Http\Controllers\MasterController::class, 'storemilestone'])->name('storemilestone');
-   Route::get('/masteradmin/editmilestone/{id}', [App\Http\Controllers\MasterController::class, 'editmilestone'])->name('editmilestone');
-   Route::post('/masteradmin/updatemilestone', [App\Http\Controllers\MasterController::class, 'updatemilestone'])->name('updatemilestone');
-   Route::get('/masteradmin/deletemilestone/{id}', [App\Http\Controllers\MasterController::class, 'deletemilestone'])->name('deletemilestone');
-   Route::get('//masteradmin/statusmilestone/{id}', [App\Http\Controllers\MasterController::class, 'statusmilestone'])->name('statusmilestone');
-
-   //Gallery type
-   Route::get('/masteradmin/gallerytype', [App\Http\Controllers\MasterController::class, 'gallerytype'])->name('gallerytype');
-   Route::post('/masteradmin/storegallerytype', [App\Http\Controllers\MasterController::class, 'storegallerytype'])->name('storegallerytype');
 
    //Footermenu
    Route::get('/masteradmin/footermenu', [App\Http\Controllers\MasterController::class, 'footermenu'])->name('footermenu');

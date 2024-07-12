@@ -5,14 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GallerySub extends Model
+class GallerySubItems extends Model
 {
     use HasFactory;
-    protected $table = "gallery_subs";
+    protected $table = "galleryitems";
 
     protected $guarded = [];
-    public function lang()
-    {
-        return $this->belongsTo(Language::class, 'languageid', 'id');
-    }
 }

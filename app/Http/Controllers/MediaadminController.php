@@ -52,10 +52,12 @@ class MediaadminController extends Controller
 
         $data = Publicrelation::with(['publicrel_sub' => function ($query) {
             // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
+        }])->with(['publicrelationtype' => function ($query){
+
         }])->where('delet_flag', 0)->where('userid', $user)->get();
         // dd($data);
         $language = Language::where('delet_flag', 0)->orderBy('name')->get();
-
+// dd($data);
 
         $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
 
@@ -67,6 +69,7 @@ class MediaadminController extends Controller
 
         return view('backend.mediaadmin.publicrelation.publicrelationlist', compact('data', 'breadcrumbarr', 'usertype', 'language', 'navbar', 'user', 'role'));
     }
+
     /*Status Status*/
     public function statusgallery($id)
     {
@@ -301,21 +304,32 @@ class MediaadminController extends Controller
     }
     public function deletepublicrelation(Request $request, $id)
     {
-        // dd(true);
-        if ($request->ajax()) {
 
-            // if($usertype_id==4){
-            $galitem = Publicrelationitem::whereId($id)->first();
-            $galitemimg = public_path('/assets/backend/uploads/publicrelationitems/') . $galitem->image;
-            if (file_exists($galitemimg)) {
-                @unlink($galitemimg);
+        $id= Crypt::decryptString($id);
+
+        DB::beginTransaction();
+       $imageName = Publicrelationitem::where('publicrelationid', $id)->select('image')->get();
+
+        foreach($imageName as $img){
+                Storage::disk('myfile')->delete('/assets/backend/uploads/publicrelationitems/' . $img->file);
             }
-
-            Publicrelationitem::findOrFail($id)->delete();
-            // }else 
-
-            return response()->json(['success' => 'Data Updated successfully.']);
+         $res_sub= Publicrelation_sub::where('publicrelationid',$id)->delete();
+      
+        if($res_sub)
+        {
+         $res= Publicrelation::where('id',$id)->delete();
         }
+       
+             if($res){
+                DB::commit();
+                return redirect()->route('publicrelation')->with('success','Deleted successfully');
+            
+             }else{
+                DB::rollback(); 
+                 return back()->withErrors('Not deleted ');
+             }
+
+
     }
 
     /*Uppy view images */

@@ -11,6 +11,7 @@ use App\Models\Article;
 use App\Models\Language;
 use App\Models\Socialmedia;
 use App\Models\Banner;
+use App\Models\Publicrelation;
 
 class FrontendController extends Controller
 {
@@ -22,42 +23,13 @@ class FrontendController extends Controller
             }
             $sessionbil = Session::get('bilingual');
             $mainsubmenus = $this->mainmenu($sessionbil);
+            dd($mainsubmenus);
             $mainbanner = $this->mainbanner($sessionbil);
-
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner')); 
+            $circulartrades = $this->circulartrade($sessionbil);
+           
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades')); 
         }
     
-
-    private function mainmenu($sessionbil)
-    {
-        $sessionbil   = 1;
-        $mainsubmenu  = Mainmenu::with(['sub_menu' => function ($query) use($sessionbil){
-                $query->with(['submenusub' => function ($query1) use($sessionbil) {
-                    $query1->where('languageid',$sessionbil);
-
-                }]); 
-
-                $query->with(['subsubmenu' => function ($query3) use($sessionbil) {
-                    $query3->with(['subsubmenusub' => function ($query4) use($sessionbil) {
-                        $query4->where('languageid',$sessionbil);
-
-                    }]);
-                    $query3->orderBy('orderno','asc');
-                }]);
-                $query->where('status_id',1);
-                $query->orderBy('orderno','asc');
-            }])
-            
-            ->with(['mainmenu_sub' => function ($query2) use($sessionbil){
-                $query2->where('languageid',$sessionbil);
-            }])
-            ->where('status_id',1)
-            ->where('viewer_id',1)
-            ->orderBy('orderno', 'asc')
-            ->get();
-
-            return $mainsubmenu;    
-    }
     public function mainarticle($articlename,$enarticletypeid)
     {
         try{
@@ -105,19 +77,63 @@ class FrontendController extends Controller
             return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
         }
     }
+    private function mainmenu($sessionbil)
+    {
+        $sessionbil   = 1;
+        $mainsubmenu  = Mainmenu::with(['sub_menu' => function ($query) use($sessionbil){
+                $query->with(['submenusub' => function ($query1) use($sessionbil) {
+                    $query1->where('languageid',$sessionbil);
+
+                }]); 
+
+                $query->with(['subsubmenu' => function ($query3) use($sessionbil) {
+                    $query3->with(['subsubmenusub' => function ($query4) use($sessionbil) {
+                        $query4->where('languageid',$sessionbil);
+
+                    }]);
+                    $query3->orderBy('orderno','asc');
+                }]);
+                $query->where('status_id',1);
+                $query->orderBy('orderno','asc');
+            }])
+            
+            ->with(['mainmenu_sub' => function ($query2) use($sessionbil){
+                $query2->where('languageid',$sessionbil);
+            }])
+            ->where('status_id',1)
+            ->where('viewer_id',1)
+            ->orderBy('orderno', 'asc')
+            ->get();
+
+            return $mainsubmenu;    
+    }
     private function mainbanner($sessionbil)
     {
 
         $mainbanner =  Banner::with(['banner_sub' =>function($query) use($sessionbil){
             $query->where('languageid',$sessionbil);
         }])
-        ->where('sbutype_id', NULL)
-        ->where('userid', 2)
         ->where('delet_flag',0)
         ->where('status_id',1)
         ->orderBy('id',  'DESC')
         ->limit(6)->get();
 
         return $mainbanner;
+    }
+
+    private function circulartrade($sessionbil)
+    {
+
+        $circulartrade =  Publicrelation::with(['publicrel_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])->with(['publicrelationtype' => function($query2){
+            $query2->where('id',2);
+        }])
+        ->where('delet_flag',0)
+        ->where('status_id',1)
+        ->orderBy('id',  'DESC')
+        ->limit(6)->get();
+
+        return $circulartrade;
     }
 }

@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-sm-6 mb-btm" id="div">
-                                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref"> Date <span class="redalert"> *</span></label>
+                                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref"> Last Date <span class="redalert"> *</span></label>
                                         <input id="date" type="date" class="form-control date  @error('date') is-invalid @enderror" name="date" value="{{ $keydata->date ?? old('date')}}" rel="" required autocomplete="date" placeholder="Enter main here" autofocus>
                                         <span class="ErrP redalert titleerr1 display_status">Please Check the Entered</span>
                                         <span class="ErrP redalert titleerr2 display_status">Please Check Entered</span>
