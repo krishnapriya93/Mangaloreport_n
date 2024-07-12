@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Whatwedoitems extends Model
 {
     use HasFactory;
-    protected $table = "downloaditem";
+    protected $table = "whatwedoitem";
 
     protected $guarded = [];
 

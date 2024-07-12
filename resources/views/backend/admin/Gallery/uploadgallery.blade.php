@@ -1,4 +1,4 @@
-@extends('backend.layouts.htmlheader')
+@extends('layouts.htmlheader')
 
 @section('content')
 @php
@@ -9,7 +9,7 @@ $enc_id = Crypt::encrypt($galdet['id']);
 
     <div class="row pt-3 pb-2" id="bread-row">
         <div class="col-12">
-            <span class="h4"> <i class="fas fa-folder-open"></i> &nbsp; Upload Documents</span>
+            <span class="h4"> <i class="fas fa-folder-open"></i> &nbsp; Upload Gallery Items</span>
         </div> <!-- ./col12 -->
 
         <div class="col-12 pt-2 d-flex justify-content-end">
@@ -48,7 +48,7 @@ $enc_id = Crypt::encrypt($galdet['id']);
     <div class="row py-2" id="warning-row">
         <div class="col-12">
             <div class="alert alert-success" role="alert">
-                <span class="text-primary">{{'Upload documents'}}</span>
+                <span class="text-primary">{{'Upload images for Gallery Stills'}}</span>
             </div> <!-- ./alert -->
         </div>
     </div><!-- ./row -->
@@ -78,11 +78,15 @@ $enc_id = Crypt::encrypt($galdet['id']);
         <div class="col-12">
             <div class="alert alert-success" role="alert">
                 
-                <span class="text-primary">{{'Uploaded images for Download Stills'}}</span>
+                <span class="text-primary">{{'Uploaded images for Gallery Stills'}}</span>
             </div> <!-- ./alert -->
         </div>
     </div><!-- ./row -->
-    <a class="col-sm-3 btn btn-sm btn-warning btn-flat mt-3 mb-3" title="" href="{{route('mediaadmin.whatwedo')}}"><i class="fa fa-reply" aria-hidden="true"></i> Back to list </a><br>
+                @if(Auth::user()->role_id==2)
+                    <a class="col-sm-3 btn btn-sm btn-warning btn-flat mt-3 mb-3" title="" href="{{route('siteadmin.gallerylist')}}"><i class="fa fa-reply" aria-hidden="true"></i> Back to list </a><br>
+                @elseif(Auth::user()->role_id==5)
+                    <a class="col-sm-3 btn btn-sm btn-warning btn-flat mt-3 mb-3" title="" href="{{route('sbu.gallerylist')}}"><i class="fa fa-reply" aria-hidden="true"></i> Back to list </a><br>
+                @endif
     <section class="gallery-block grid-gallery">
         <div class="row mt-2">
 
@@ -93,13 +97,13 @@ $enc_id = Crypt::encrypt($galdet['id']);
 
                     <div class="card-body">
                        
-                            <a class="lightbox" id="img_show" href="{{asset('uploads/Downloadtemsuppy/'.$res->image) }}"><i class="fas fa-file-pdf uppy_pdf_icon"></i> {{ $res->image }}
-                                <!-- <img id="img_show" src="{{ asset('uploads/Downloadtemsuppy/'.$res->image) }}" class="img-fluid" alt="download file"> -->
+                            <a class="lightbox" href="{{asset('uploads/Galleryitemsuppy/'.$res->image) }}">
+                                <img id="img_show" src="{{ asset('uploads/Galleryitemsuppy/'.$res->image) }}" class="img-fluid" alt="film poster">
                             </a>
                        
                     </div> <!-- ./card-body -->
                     <div class="card-footer">
-                        <input type="hidden" id="poster_path" name="poster_path" value="{{ asset('uploads/Downloadtemsuppy/'.$res->image) }}">
+                        <input type="hidden" id="poster_path" name="poster_path" value="{{ asset('uploads/Galleryitemsuppy/'.$res->image) }}">
                         <input type="hidden" id="galitemid" name="galitemid" value="{{ $res->id }}">
                         <button class="btn btn-sm btn-danger btn-flat mt-3 delete_pic_btn" title="Remove Image" id="{{ $res->id }}">
                             <i class="fas fa-trash" title="Remove Image"></i> Delete image</button>
@@ -117,7 +121,7 @@ $enc_id = Crypt::encrypt($galdet['id']);
     <div class="row py-2" id="warning-row">
         <div class="col-12">
             <div class="alert alert-success" role="alert">
-                <span class="text-primary">{{'Uploaded images for Downloads Stills'}}</span>
+                <span class="text-primary">{{'Uploaded images for Gallery Stills'}}</span>
             </div> <!-- ./alert -->
         </div>
     </div><!-- ./row -->
@@ -130,12 +134,12 @@ $enc_id = Crypt::encrypt($galdet['id']);
                 <div class="card">
 
                     <div class="card-body">
-                        <a class="lightbox" href="{{asset('uploads/Downloadtemsuppy/'.$res->image) }}">
-                            <img id="img_show" src="{{ asset('uploads/Downloadtemsuppy/'.$res->image) }}" class="img-fluid" alt="download">
+                        <a class="lightbox" href="{{asset('uploads/Galleryitemsuppy/'.$res->image) }}">
+                            <img id="img_show" src="{{ asset('uploads/Galleryitemsuppy/'.$res->image) }}" class="img-fluid" alt="film poster">
                         </a>
                     </div> <!-- ./card-body -->
                     <div class="card-footer">
-                        <input type="hidden" id="poster_path" name="poster_path" value="{{ asset('uploads/Downloadtemsuppy/'.$res->image) }}">
+                        <input type="hidden" id="poster_path" name="poster_path" value="{{ asset('uploads/Galleryitemsuppy/'.$res->image) }}">
                         <input type="hidden" id="galitemid" name="galitemid" value="{{ $res->id }}">
                         <button class="btn btn-sm btn-danger btn-flat mt-3 delete_pic_btn" title="Remove Image" id="{{ $res->id }}">
                             <i class="fas fa-trash" title="Remove Image"></i> Delete image</button>
@@ -152,7 +156,7 @@ $enc_id = Crypt::encrypt($galdet['id']);
 
     <div class="row p-1">
         <div class="col-12 p-2 d-flex justify-content-end" id="search_col1">
-            <input type="hidden" id="usertype_id" name="usertype_id" value="{{$roletype_id ?? ''}}">
+            <input type="hidden" id="usertype_id" name="usertype_id" value="{{Auth::user()->role_id}}">
             <input type="hidden" id="edit_f" value="{{isset($edit_f)?$edit_f:''}}">
             <meta name="csrf-token" content="{{ csrf_token() }}">
             <input type="hidden" id="hidden_id" name="hidden_id" value="{{isset($enc_id)?$enc_id:''}}">
@@ -196,10 +200,16 @@ $enc_id = Crypt::encrypt($galdet['id']);
             var element_id = $(this).attr('id');
             // alert(element_id);
             var usertype = $("#usertype_id").val();
-            // alert(usertype);
-           
-                var action_url = "/mediaadmin/whatwedoitemdel/" + element_id;
-        
+            var action_url = "/galitemdel/" + element_id;
+            // if (usertype == 4) {
+            //     var action_url = "/festmanager/galitemdel/" + element_id;
+            // } else if (usertype == 3) {
+            //     var action_url = "/festadmin/galitemdel/" + element_id;
+            // } else if (usertype == 6) {
+            //     var action_url = "/mediamanager/galitemdel/" + element_id;
+            // }else if (usertype == 11) {
+            //     var action_url = "/archiveuser/galitemdel/" + element_id;
+            // }
 
 
             $.ajax({
@@ -285,18 +295,22 @@ $('button').on('click',function(){
 });
     /*    UPPY file upload and editor (start)  */
     var hidid = $("#hidden_id").val();
-    
     var usertype = $("#usertype_id").val();
-    var actionurl = '/mediaadmin/whatwedostoreuppy/' + hidid;
-   
-
+    // alert(usertype+'::'+hidid);
+    var actionurl = '/siteadmin/galitemstoreuppy/' + hidid;
+    // if (usertype == 2) {
+    //     var actionurl = '/siteadmin/galitemstoreuppy/' + hidid;
+    // } else if (usertype == 3) {
+    //     var actionurl = '/festadmin/galitemstoreuppy/' + hidid;
+    // } else if (usertype == 6) {
+    //     var actionurl = '/mediamanager/galitemstoreuppy/' + hidid;
+    // }
     var uppy = new Uppy.Core({
             restrictions: {
                 maxFileSize: 2000000,
                 maxNumberOfFiles: 5,
                 minNumberOfFiles: 1,
-                // allowedFileTypes: ['image/*', 'application/*']
-                allowedFileTypes: ['.pdf']
+                allowedFileTypes: ['image/*', 'application/*' ,'video/*']
             },
         })
         .use(Uppy.Dashboard, {
@@ -304,7 +318,7 @@ $('button').on('click',function(){
             inline: true,
             target: '#drag-drop-area',
             showProgressDetails: true,
-            note: '.pdf file formats only, 1–5 files, up to 20 MB',
+            note: '.jpg, .jpeg, .png, .pdf, .doc, .docx, .odt , .mp4 file formats only, 1–5 files, up to 2 MB',
             // height: 470,
 
             metaFields: [{
@@ -388,7 +402,7 @@ $('button').on('click',function(){
         if ($('.uppy-StatusBar').hasClass('is-complete')) {
             alert("Upload complete! We’ve uploaded these files:");
             swal({
-                title: "NMPA",
+                title: "KSEB",
                     text: "Upload complete! We’ve uploaded these files:",
                     type: "info",
                     showCancelButton: false,
@@ -396,10 +410,7 @@ $('button').on('click',function(){
 })
 .then(willDelete => {
   if (willDelete) {
-    var usertype = $("#usertype_id").val();
-    
-    window.location.href = "/mediaadmin/viewwhatwedostorepics/" + hidid; 
-  
+    window.location.href = "/viewgallarypics/" + hidid;
   }
 });
             // swal({

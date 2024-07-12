@@ -1,4 +1,4 @@
-@extends('backend.layouts.htmlheader')
+@extends('layouts.htmlheader')
 
 @section('content')
 <nav aria-label="breadcrumb">
@@ -25,8 +25,11 @@
                     </div>
                 @endif
                 <div class="card-header text-white card-header-main">{{ __('List of Gallery') }}</div>
-              
+                @if(Auth::user()->role_id==2)
                 <div class="row"><div class="col-sm-9"></div><div class="col-sm-3 mt-3"><a href="{{route('siteadmin.creategallery')}}" id="addlogobtn" class="btn btn-flat btn-point btn-sm btn-success"><i class="fas fa-plus"></i>&nbsp;Add New Record</a></div> </div>
+                @elseif(Auth::user()->role_id==5)
+                <div class="row"><div class="col-sm-9"></div><div class="col-sm-3 mt-3"><a href="{{route('sbu.creategallery')}}" id="addlogobtn" class="btn btn-flat btn-point btn-sm btn-success"><i class="fas fa-plus"></i>&nbsp;Add New Record</a></div> </div>
+                @endif
 
                 <div class="card-body">
                     <table id="datatable_view" class="table table-striped">
@@ -47,16 +50,30 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{$result->gallery_sub[0]->title ?? ''}}</td>
                         <td>
-                        @if(($result->status_id)==1)
+                        @if(Auth::user()->role_id==2)
+                          @if(($result->status_id)==1)
                             <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('siteadmin.statusgallery',\Crypt::encryptString($result->id)) }}">Active</a>
-                        @else
+                            @else
                             <a class="main-btn deactive-btn rounded-full btn-hover btn-sm-default" href="{{ route('siteadmin.statusgallery',\Crypt::encryptString($result->id)) }}">Deactive</a>
+                            @endif
+                        @elseif(Auth::user()->role_id==5)
+                           @if(($result->status_id)==1)
+                            <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('sbu.statusgallery',\Crypt::encryptString($result->id)) }}">Active</a>
+                            @else
+                            <a class="main-btn deactive-btn rounded-full btn-hover btn-sm-default" href="{{ route('sbu.statusgallery',\Crypt::encryptString($result->id)) }}">Deactive</a>
+                            @endif
                         @endif
                             
                         </td>
                         <td>
-                        <a class="btn btn-primary btn-sm-default" href="{{ route('siteadmin.editgallery',\Crypt::encryptString($result->id)) }}">Edit</a>
-                        <a class="btn btn-danger btn-sm-default" href="{{ route('siteadmin.deletegallery',\Crypt::encryptString($result->id)) }}">Delete</a>
+                            
+                        @if(Auth::user()->role_id==2)
+                            <a class="btn btn-primary btn-sm-default" href="{{ route('siteadmin.editgallery',\Crypt::encryptString($result->id)) }}">Edit</a>
+                            <a class="btn btn-danger btn-sm-default" href="{{ route('siteadmin.deletegallery',\Crypt::encryptString($result->id)) }}">Delete</a>
+                        @elseif(Auth::user()->role_id==5)
+                            <a class="btn btn-primary btn-sm-default" href="{{ route('sbu.editgallery',\Crypt::encryptString($result->id)) }}">Edit</a>
+                            <a class="btn btn-danger btn-sm-default" href="{{ route('sbu.deletegallery',\Crypt::encryptString($result->id)) }}">Delete</a>
+                        @endif
                         </td>
                     </tr>   
                      <!-- $i++; -->

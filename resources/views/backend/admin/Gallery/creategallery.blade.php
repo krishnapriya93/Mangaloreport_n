@@ -1,4 +1,4 @@
-@extends('backend.layouts.htmlheader')
+@extends('layouts.htmlheader')
 
 @section('content')
 <nav aria-label="breadcrumb">
@@ -165,6 +165,7 @@
                                    @else
                                    <button type="submit" class="btn btn-primary">Save and Upload images</button>
                                    @endif
+                                   <a type="submit" class="btn btn-success" href="{{route('gallery')}}">Refresh</a>
                                 </div>
                             </div>
                         </div><!-- .row -->

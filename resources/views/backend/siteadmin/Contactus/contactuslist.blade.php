@@ -25,7 +25,7 @@
             <div class="card">
                 <div class="card-header text-white card-header-main">{{ __('List of Contactus') }}</div>
                
-                <div class="row"><div class="col-sm-9"></div><div class="col-sm-3 mt-3"><a href="{{route('createcontactus')}}" id="addlogobtn" class="btn btn-flat btn-point btn-sm btn-success"><i class="fas fa-plus"></i>&nbsp;Add New Record</a></div> </div>
+                <div class="row"><div class="col-sm-9"></div><div class="col-sm-3 mt-3"><a href="{{route('siteadmin.createcontactus')}}" id="addlogobtn" class="btn btn-flat btn-point btn-sm btn-success"><i class="fas fa-plus"></i>&nbsp;Add New Record</a></div> </div>
 
                 <div class="card-body">
                     <table id="datatable_view" class="table drag_tab table-striped">
@@ -50,8 +50,8 @@
                         <!-- <td>{{$result->logo_type[0]->name ?? ''}}</td> -->
                         <td>
 
-                        <a class="btn btn-primary btn-sm-default" href="{{ route('editcontactus',\Crypt::encryptString($result->id)) }}">Edit</a>
-                            <a class="btn btn-danger btn-sm-default" href="{{ route('deletecontactus',\Crypt::encryptString($result->id)) }}">Delete</a>
+                        <a class="btn btn-primary btn-sm-default" href="{{ route('siteadmin.editcontactus',\Crypt::encryptString($result->id)) }}">Edit</a>
+                            <a class="btn btn-danger btn-sm-default" href="{{ route('siteadmin.deletecontactus',\Crypt::encryptString($result->id)) }}">Delete</a>
                        
                         </td>
                     </tr>   

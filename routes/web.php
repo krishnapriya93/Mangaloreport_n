@@ -106,6 +106,14 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Adminlogin']], funct
    Route::get('/admin/editwhatwedotype/{id}', [App\Http\Controllers\AdminController::class, 'editwhatwedotype'])->name('admin.editwhatwedotype');
    Route::post('/updatewhatwedotype', [App\Http\Controllers\AdminController::class, 'updatewhatwedotype'])->name('admin.updatewhatwedotype');
    Route::get('/deletetendertype/{id}', [App\Http\Controllers\AdminController::class, 'deletetendertype'])->name('admin.deletetendertype');
+
+   //What we do type
+   Route::get('/admin/linktype', [App\Http\Controllers\AdminController::class, 'linktype'])->name('admin.linktype');
+   Route::get('/admin/createlinktype', [App\Http\Controllers\AdminController::class, 'createlinktype'])->name('admin.createlinktype');
+   Route::post('/admin/storelinktype', [App\Http\Controllers\AdminController::class, 'storelinktype'])->name('admin.storelinktype');
+   Route::get('/admin/editlinktype/{id}', [App\Http\Controllers\AdminController::class, 'editlinktype'])->name('admin.editlinktype');
+   Route::post('/admin/updatelinktype', [App\Http\Controllers\AdminController::class, 'updatelinktype'])->name('admin.updatelinktype');
+   Route::get('/admin/deletelinktype/{id}', [App\Http\Controllers\AdminController::class, 'deletelinktype'])->name('admin.deletelinktype');
 });
 
 Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], function () {
@@ -131,12 +139,12 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], functi
    Route::get('/siteadmin/statusbanner/{id}', [App\Http\Controllers\SiteadminController::class, 'statusbanner'])->name('statusbanner');
 
    //Contact us
-   Route::get('/siteadmin/contactus', [App\Http\Controllers\SiteadminController::class, 'contactus'])->name('contactus');
-   Route::get('/siteadmin/createcontactus', [App\Http\Controllers\SiteadminController::class, 'createcontactus'])->name('createcontactus');
-   Route::post('/siteadmin/storecontactus', [App\Http\Controllers\SiteadminController::class, 'storecontactus'])->name('storecontactus');
-   Route::get('/siteadmin/editcontactus/{id}', [App\Http\Controllers\SiteadminController::class, 'editcontactus'])->name('editcontactus');
-   Route::post('/siteadmin/updatecontactus', [App\Http\Controllers\SiteadminController::class, 'updatecontactus'])->name('updatecontactus');
-   Route::get('/siteadmin/deletecontactus/{id}', [App\Http\Controllers\SiteadminController::class, 'deletecontactus'])->name('deletecontactus');
+   Route::get('/siteadmin/contactus', [App\Http\Controllers\SiteadminController::class, 'contactus'])->name('siteadmin.contactus');
+   Route::get('/siteadmin/createcontactus', [App\Http\Controllers\SiteadminController::class, 'createcontactus'])->name('siteadmin.createcontactus');
+   Route::post('/siteadmin/storecontactus', [App\Http\Controllers\SiteadminController::class, 'storecontactus'])->name('siteadmin.storecontactus');
+   Route::get('/siteadmin/editcontactus/{id}', [App\Http\Controllers\SiteadminController::class, 'editcontactus'])->name('siteadmin.editcontactus');
+   Route::post('/siteadmin/updatecontactus', [App\Http\Controllers\SiteadminController::class, 'updatecontactus'])->name('siteadmin.updatecontactus');
+   Route::get('/siteadmin/deletecontactus/{id}', [App\Http\Controllers\SiteadminController::class, 'deletecontactus'])->name('siteadmin.deletecontactus');
 
    //Mainmenu
    Route::get('/siteadmin/mainmenu', [App\Http\Controllers\SiteadminController::class, 'mainmenu'])->name('mainmenu');
@@ -162,6 +170,19 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], functi
    Route::get('/siteadmin/statussubmenu/{id}', [App\Http\Controllers\SiteadminController::class, 'statussubmenu'])->name('statussubmenu');
    Route::get('/siteadmin/sbuwisemainmenu', [App\Http\Controllers\SiteadminController::class, 'sbuwisemainmenu'])->name('admin.sbuwisemainmenu');
    Route::get('/siteadmin/ordernumberchecksubmenu', [App\Http\Controllers\SiteadminController::class, 'ordernumberchecksubmenu'])->name('admin.ordernumberchecksubmenu');
+
+   //Gallery
+   Route::get('/siteadmin/gallerylist', [App\Http\Controllers\SiteadminController::class, 'gallery'])->name('siteadmin.gallerylist');
+   Route::get('/siteadmin/creategallery', [App\Http\Controllers\SiteadminController::class, 'creategallery'])->name('siteadmin.creategallery');
+   Route::post('/siteadmin/storegallery', [App\Http\Controllers\SiteadminController::class, 'storegallery'])->name('siteadmin.storegallery');
+   Route::post('/galitemstore/{id}', [App\Http\Controllers\SiteadminController::class, 'galitemstore'])->name('galitemstore');
+   Route::get('/siteadmin/editgallery/{id}', [App\Http\Controllers\SiteadminController::class, 'editgallery'])->name('siteadmin.editgallery');
+   Route::post('/siteadmin/updategallery', [App\Http\Controllers\SiteadminController::class, 'updategallery'])->name('siteadmin.updategallery');
+   Route::get('/siteadmin/deletegallery/{id}', [App\Http\Controllers\SiteadminController::class, 'deletegallery'])->name('siteadmin.deletegallery');
+   Route::post('/siteadmin/galitemstoreuppy/{id}', [App\Http\Controllers\SiteadminController::class, 'galitemstoreuppy'])->name('siteadmin.galitemstoreuppy');
+   Route::get('/viewgallarypics/{id}', [App\Http\Controllers\SiteadminController::class, 'viewgallarypics'])->name('viewgallarypics')->middleware('auth');
+   Route::get('/galitemdel/{id}', [App\Http\Controllers\SiteadminController::class, 'galitemdel'])->middleware('auth');
+   Route::get('/siteadmin/statusgallery/{id}', [App\Http\Controllers\SiteadminController::class, 'statusgallery'])->name('siteadmin.statusgallery');
 });
 
 
@@ -264,6 +285,7 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Mediaadminlogin']], 
    Route::get('/mediaadmin/whatwedo', [App\Http\Controllers\MediaadminController::class, 'whatwedo'])->name('mediaadmin.whatwedo');
    Route::get('/mediaadmin/createwhatwedo', [App\Http\Controllers\MediaadminController::class, 'createwhatwedo'])->name('mediaadmin.createwhatwedo');
    Route::post('/mediaadmin/storewhatwedo', [App\Http\Controllers\MediaadminController::class, 'storewhatwedo'])->name('mediaadmin.storewhatwedo');
+   Route::get('/mediaadmin/editwhatwedo', [App\Http\Controllers\MediaadminController::class, 'editwhatwedo'])->name('mediaadmin.editwhatwedo');
    Route::post('/mediaadmin/updatewhatwedo', [App\Http\Controllers\MediaadminController::class, 'updatewhatwedo'])->name('mediaadmin.updatewhatwedo');
    Route::post('/mediaadmin/whatwedostoreuppy/{id}', [App\Http\Controllers\MediaadminController::class, 'whatwedostoreuppy'])->name('mediaadmin.whatwedostoreuppy');
    Route::get('/mediaadmin/viewwhatwedostorepics/{id}', [App\Http\Controllers\MediaadminController::class, 'viewwhatwedostorepics'])->name('mediaadmin.viewwhatwedostorepics')->middleware('auth');

@@ -9,18 +9,20 @@ class Whatwedo extends Model
 {
     use HasFactory;
 
-      protected $table = "downloads";
+      protected $table = "whatwedos";
 
       protected $guarded = [];
 
 
     public function whatwedo_sub()
     {
-        return $this->hasMany(WhatwedoSub::class, 'downloadid', 'id');
+        return $this->hasMany(WhatwedoSub::class, 'whatwedoid', 'id');
     }
 
     public function whatwedo_items()
     {
-        return $this->hasMany(Whatwedoitems::class,'download_id','id');
+        return $this->hasMany(Whatwedoitems::class,'whatwedoid','id');
     }
+
+    
 }

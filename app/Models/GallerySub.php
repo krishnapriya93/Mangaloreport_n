@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GallerySub extends Model
 {
     use HasFactory;
+    protected $table = "gallery_subs";
+
+    protected $guarded = [];
 }

@@ -9,7 +9,7 @@ class WhatwedoSub extends Model
 {
     use HasFactory;
 
-     protected $table = "whatwedotypes";
+     protected $table = "whatwedosubs";
 
      protected $guarded = [];
 

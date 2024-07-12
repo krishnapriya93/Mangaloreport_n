@@ -19,9 +19,9 @@
                        </div>
                    @endif
                    @if(isset($edit_f))
-                    <form id="formiid" method="POST" action="{{ route('updatecontactus') }}" enctype="multipart/form-data">
+                    <form id="formiid" method="POST" action="{{ route('siteadmin.updatecontactus') }}" enctype="multipart/form-data">
                     @else
-                    <form id="formiid" method="POST" action="{{ route('storecontactus') }}" enctype="multipart/form-data">
+                    <form id="formiid" method="POST" action="{{ route('siteadmin.storecontactus') }}" enctype="multipart/form-data">
                     @endif
 
                     @csrf 
