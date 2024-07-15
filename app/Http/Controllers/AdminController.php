@@ -239,7 +239,7 @@ class AdminController extends Controller
     /*storeuser*/
     public function storeuser(Request $request)
     {
-        // dd($request->all()); 
+        // dd($request->all());
         try {
             $request->validate([
                 'usertype'  => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
@@ -1120,7 +1120,7 @@ class AdminController extends Controller
 
                 ]
             );
-            // 
+            //
 
             if ($validator->fails()) {
                 // dd($validator->errors());
@@ -1576,7 +1576,7 @@ class AdminController extends Controller
         try {
             $id = Crypt::decryptString($request->id); //dd($id);
             $res = subsubmenu::where('id', '=', $id)->update(['orderno' => $request->val]);
-            // 
+            //
         } catch (\Exception $exception) {
             /*\LogActivity::addToLog($exception->getMessage());
           $data = \LogActivity::logLatestItem();
@@ -2509,7 +2509,7 @@ class AdminController extends Controller
            $role_id = Auth::user()->id;
 
            $leng = count($request->sel_lang);
-          
+
            $storeinfo = new Whatwedotype([
                'userid' => Auth::user()->id,
                'status_id' => 1,
@@ -2707,7 +2707,7 @@ class AdminController extends Controller
            $role_id = Auth::user()->id;
 
            $leng = count($request->sel_lang);
-          
+
            $storeinfo = new Linktype([
                'userid' => Auth::user()->id,
                'status_id' => 1,
@@ -2847,5 +2847,5 @@ class AdminController extends Controller
            return back()->withErrors('Not deleted ');
        }
    }
-  
+
 }
