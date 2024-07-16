@@ -11,7 +11,7 @@ class Mainmenu extends Model
 
     protected $table = "mainmenus";
 
-    protected $fillable = ['iconclass','menulinktype_id','file','status_id','users_id','delet_flag','menulinktype_data','orderno','sbu_type','viewer_id','articletype_id'];
+    protected $guarded = [];
 
     public function lang_sel()
     {
@@ -29,10 +29,7 @@ class Mainmenu extends Model
     {
         return $this->hasMany(Mainmenusub::class, 'mainmenuid', 'id');
     }
-    public function sbu_type_user()
-    {
-        return $this->hasMany(Sbutype::class, 'id', 'sbu_type');
-    }
+
     public function article_type()
     {
         return $this->hasMany(Articletype::class, 'id', 'articletype_id');

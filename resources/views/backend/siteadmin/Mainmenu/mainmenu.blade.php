@@ -5,7 +5,7 @@
     <ol class="breadcrumb justify-content-center">
         {!!$breadcrumbarr!!}
     </ol>
-</nav> 
+</nav>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -32,25 +32,25 @@
                 <div class="row"><div class="col-sm-9"></div><div class="col-sm-3 mt-3"><a href="{{route('createmainmenu')}}" id="addlogobtn" class="btn btn-flat btn-point btn-sm btn-success"><i class="fas fa-plus"></i>&nbsp;Add New Record</a></div> </div>
                 <div class="card-body">
                     <table id="datatable_view" class="drag_tab table table-striped">
-                    <thead>    
+                    <thead>
                     <tr>
                         <th>No</th>
                         <th>Title</th>
-                        <th>SBU</th>
+
                         <th>Status</th>
                         <th width="280px">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @php 
+                    @php
                     $i=0;
-                    @endphp 
+                    @endphp
+
                     @foreach ($data as $key => $result)
-                   
                     <tr>
                         <td name="{{$result->mainmenu_sub[0]->title}}" id="{{\Crypt::encryptString($result->id)}}" class="SNum sortnum_{{$i}} officer_id-{{\Crypt::encryptString($result->id)}}">{{ $loop->iteration }}</td>
                         <td>{{$result->mainmenu_sub[0]->title ?? ''}}</td>
-                        <td>@if($result->sbu_type==null) maindashboard @else {{$result->sbu_type_user[0]->title}} @endif</td>
+
                         <td>
                             @if(($result->status_id)==1)
                             <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('statusmainmenu',\Crypt::encryptString($result->id)) }}">Active</a>
@@ -62,12 +62,12 @@
                             <a class="btn btn-primary btn-sm-default" href="{{ route('editmainmenu',\Crypt::encryptString($result->id)) }}">Edit</a>
                             <a class="btn btn-danger btn-sm-default" href="{{ route('deletemainmenu',\Crypt::encryptString($result->id)) }}">Delete</a>
                         </td>
-                    </tr>   
+                    </tr>
                      <!-- $i++; -->
-                    @endforeach    
-                    </tbody>    
-                    </table>    
-  
+                    @endforeach
+                    </tbody>
+                    </table>
+
                 </div>
             </div> <!--card2 -->
 
@@ -81,7 +81,7 @@
     $(".alert").fadeTo(2000, 500).slideUp(500, function() {
       $(".alert").slideUp(500);
     });
-   
+
     $('.alert').alert();
 
 
@@ -114,7 +114,7 @@
         var j=0;
         var officer_id=0;
         var names='';
-       
+
         var action_url='';
         // if(usern==3){
         //     action_url="{{ url('OrderchangeJury_form') }}";
@@ -123,9 +123,9 @@
         // }else if(usern==6){
         //     action_url="{{ url('mediamanager/OrderchangeJury_form') }}";
         // }
-        var usertype=$("#usertype_id").val(); 
-        var action_url = "/OrderchangeMainmenu_form"; 
-        
+        var usertype=$("#usertype_id").val();
+        var action_url = "/OrderchangeMainmenu_form";
+
         $('.SNum').each(function () {
             officer_id=$(this).attr('id');
             names=$(this).attr('name');
@@ -142,17 +142,17 @@
                 success: function(result) {
                     /* alert(result);*/
                             window.location.reload();
-                    
+
 
 
                 }
             });
-            
+
             $(this).text(j);
             console.log(officer_id+' id');
         });
 
-        
+
     }
 });
 </script>

@@ -13,7 +13,7 @@ use App\Models\Componentpermission;
 use App\Models\user;
 use App\Models\Publicrelationtype;
 use App\Models\Department;
-use App\Models\Publicrelation_sub;
+use App\Models\publicrelationsub;
 use App\Models\Publicrelationitem;
 use App\Models\Tender;
 use App\Models\TenderSub;
@@ -50,7 +50,7 @@ class MediaadminController extends Controller
             1 => array('title' => 'Public Relation', 'message' => 'Public Relation', 'status' => 1)
         );
 
-        $data = Publicrelation::with(['publicrel_sub' => function ($query) {
+        $data = Publicrelation::with(['publicrelsub' => function ($query) {
             // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
         }])->with(['publicrelationtype' => function ($query){
 
@@ -184,7 +184,7 @@ class MediaadminController extends Controller
                         }
                     }
                     for ($i = 0; $i < $leng; $i++) {
-                        $store_sub_info = new Publicrelation_sub([
+                        $store_sub_info = new publicrelationsub([
                             'languageid' => $request->sel_lang[$i],
                             'title' => $request->title[$i],
                             'content' => $request->con_title[$i],
@@ -197,7 +197,7 @@ class MediaadminController extends Controller
                     } //forloop
                 } else {
                     for ($i = 0; $i < $leng; $i++) {
-                        $store_sub_info = new Publicrelation_sub([
+                        $store_sub_info = new publicrelationsub([
                             'languageid' => $request->sel_lang[$i],
                             'title' => $request->title[$i],
                             'content' => $request->con_title[$i],
@@ -313,19 +313,19 @@ class MediaadminController extends Controller
         foreach($imageName as $img){
                 Storage::disk('myfile')->delete('/assets/backend/uploads/publicrelationitems/' . $img->file);
             }
-         $res_sub= Publicrelation_sub::where('publicrelationid',$id)->delete();
-      
+         $res_sub= publicrelationsub::where('publicrelationid',$id)->delete();
+
         if($res_sub)
         {
          $res= Publicrelation::where('id',$id)->delete();
         }
-       
+
              if($res){
                 DB::commit();
                 return redirect()->route('publicrelation')->with('success','Deleted successfully');
-            
+
              }else{
-                DB::rollback(); 
+                DB::rollback();
                  return back()->withErrors('Not deleted ');
              }
 
@@ -412,7 +412,7 @@ class MediaadminController extends Controller
             $pulicreltype = Publicrelationtype::where('delet_flag', 0)->orderBy('name')->get();
             $departments = Department::where('langcode', 1)->where('status', 1)->where('vid', 'departments')->orderBy('name')->get();
 
-            $keydata = Publicrelation::with(['publicrel_sub' => function ($query) {
+            $keydata = Publicrelation::with(['publicrelsub' => function ($query) {
                 $query->with(['lang' => function ($query) {
                 }]);
             }])->where('delet_flag', 0)->where('id', $id)->first();
@@ -485,7 +485,7 @@ class MediaadminController extends Controller
                         'image' => $request->poster[$i],
                         'publicrelationid' =>  $request->hidden_id,
                     );
-                    $storedetails_sub = Publicrelation_sub::where('publicrelationid', $id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
+                    $storedetails_sub = publicrelationsub::where('publicrelationid', $id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
                 } //forloop
             } else {
                 for ($i = 0; $i < $leng; $i++) {
@@ -495,7 +495,7 @@ class MediaadminController extends Controller
                         'content' => $request->con_title[$i],
                         'publicrelationid' => $request->hidden_id,
                     );
-                    $storedetails_sub = Publicrelation_sub::where('publicrelationid', $id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
+                    $storedetails_sub = publicrelationsub::where('publicrelationid', $id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
                 } //forloop
             }
 
@@ -674,7 +674,7 @@ class MediaadminController extends Controller
             }
 
             TenderItem::findOrFail($id)->delete();
-            // }else 
+            // }else
 
             return response()->json(['success' => 'Data Updated successfully.']);
         }
@@ -928,7 +928,7 @@ class MediaadminController extends Controller
         }
     }
 
-    //What we do 
+    //What we do
     public function whatwedo()
     {
         $breadcrumb = array(
@@ -1057,7 +1057,7 @@ if($request->whatwedotype)
                         'delet_flag' => 0,
                     ]);
                 }
-    
+
             }else{
                 $storeinfo = new Whatwedo([
                     'userid' => Auth::user()->id,
@@ -1068,7 +1068,7 @@ if($request->whatwedotype)
                     'delet_flag' => 0,
                 ]);
             }
-            
+
 
             $res = $storeinfo->save();
             $whatweid = DB::getPdo()->lastInsertId();
@@ -1158,7 +1158,7 @@ if($request->whatwedotype)
             }
 
             Whatwedoitems::findOrFail($id)->delete();
-            // }else 
+            // }else
 
             return response()->json(['success' => 'Data Updated successfully.']);
         }
@@ -1370,7 +1370,7 @@ if($request->whatwedotype)
                     'env_type' => $env_type,
                     'linktypeid'=>$request->linktype,
                     'url' => $url,
-    
+
                 );
             }
 

@@ -15,7 +15,7 @@ use App\Models\Publicrelation;
 
 class FrontendController extends Controller
 {
-//    
+//
         public function index()
         {
             if (!Session::has('bilingual')) {
@@ -23,13 +23,13 @@ class FrontendController extends Controller
             }
             $sessionbil = Session::get('bilingual');
             $mainsubmenus = $this->mainmenu($sessionbil);
-            dd($mainsubmenus);
+
             $mainbanner = $this->mainbanner($sessionbil);
             $circulartrades = $this->circulartrade($sessionbil);
-           
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades')); 
+
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades'));
         }
-    
+
     public function mainarticle($articlename,$enarticletypeid)
     {
         try{
@@ -40,16 +40,16 @@ class FrontendController extends Controller
             }
             $sessionbil = Session::get('bilingual');
             $language   = Language::where('delet_flag',0)->orderBy('name')->get();
-            
+
             //social media
             $socialmedia    =   Socialmedia::with(['socialmedia_sub' =>function($query) use($sessionbil){
                 $query->where('delet_flag',0)->where('languageid',$sessionbil);
                 }])->where('delet_flag',0)->get();
 
             $mainsubmenus = $this->mainmenu($sessionbil);
-            // $footerquicklinks       = $this->footerQuickLinks($sessionbil); 
-            // $footerimportantlinks   = $this->footerImportantLinks($sessionbil);  
-            // $sitecontrollabels      = $this->siteControlLables($sessionbil);    
+            // $footerquicklinks       = $this->footerQuickLinks($sessionbil);
+            // $footerimportantlinks   = $this->footerImportantLinks($sessionbil);
+            // $sitecontrollabels      = $this->siteControlLables($sessionbil);
             //article details
             $articledetails =  Article::with(['articleval_sub' =>function($query) use($sessionbil){
                 $query->where('languageid',$sessionbil);
@@ -84,7 +84,7 @@ class FrontendController extends Controller
                 $query->with(['submenusub' => function ($query1) use($sessionbil) {
                     $query1->where('languageid',$sessionbil);
 
-                }]); 
+                }]);
 
                 $query->with(['subsubmenu' => function ($query3) use($sessionbil) {
                     $query3->with(['subsubmenusub' => function ($query4) use($sessionbil) {
@@ -96,7 +96,7 @@ class FrontendController extends Controller
                 $query->where('status_id',1);
                 $query->orderBy('orderno','asc');
             }])
-            
+
             ->with(['mainmenu_sub' => function ($query2) use($sessionbil){
                 $query2->where('languageid',$sessionbil);
             }])
@@ -105,7 +105,7 @@ class FrontendController extends Controller
             ->orderBy('orderno', 'asc')
             ->get();
 
-            return $mainsubmenu;    
+            return $mainsubmenu;
     }
     private function mainbanner($sessionbil)
     {
@@ -124,7 +124,7 @@ class FrontendController extends Controller
     private function circulartrade($sessionbil)
     {
 
-        $circulartrade =  Publicrelation::with(['publicrel_sub' =>function($query) use($sessionbil){
+        $circulartrade =  publicrelation::with(['publicrelsub' =>function($query) use($sessionbil){
             $query->where('languageid',$sessionbil);
         }])->with(['publicrelationtype' => function($query2){
             $query2->where('id',2);

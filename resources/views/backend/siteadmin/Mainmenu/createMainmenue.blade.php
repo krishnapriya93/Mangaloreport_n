@@ -5,7 +5,7 @@
     <ol class="breadcrumb justify-content-center">
         {!!$breadcrumbarr!!}
     </ol>
-</nav> 
+</nav>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -24,40 +24,40 @@
                            {{ session('error') }}
                        </div>
                    @endif
-                    
+
                    @if(isset($edit_f))
                     <form id="formiid" method="POST" action="{{ route('updateMainmenu') }}" enctype="multipart/form-data">
                     @else
                     <form id="formiid" method="POST" action="{{ route('storeMainmenu') }}" enctype="multipart/form-data">
                     @endif
 
-                    @csrf 
+                    @csrf
                         <input type="hidden" name="hidden_id" value="{{$keydata->id ?? ''}}">
                         <input type="hidden" name="menulinktype_id_edit" id="menulinktype_id_edit" value="{{$keydata->menulinktype_id ?? ''}}">
                         <input type="hidden" id="edit_id" name="edit_id" value="{{$edit_f ?? ''}}">
                         <input type="hidden" id="article_id_edit" name="article_id_edit" value="{{$keydata->menulinktype_data ?? ''}}">
-                         
-                   
+
+
                         <div class="row mb-3">
-                           @if(isset($edit_f)) 
+                           @if(isset($edit_f))
 
                            @if(isset($keydata->id)) @foreach(($keydata->mainmenu_sub) as $mainsub)
                            <input type="hidden"  value="{{$mainsub->languageid ?? ''}}" id="sel_lang{{$mainsub->languageid}}" name="sel_lang[]">
-                                <div class="col-sm-6 mb-btm" id="div{{$mainsub->id}}"> 
+                                <div class="col-sm-6 mb-btm" id="div{{$mainsub->id}}">
                                      <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Mainmenu title <span class="redalert"> *</span></label>
-                                    
+
                                     <input id="title{{$mainsub->id}}" type="text" class="form-control title @error('title') is-invalid @enderror" name="title[]"  rel="{{$mainsub->languageid}}" value="{{$mainsub->title}}" required autocomplete="title" placeholder="Enter  here" autofocus  >
                                       <span class="ErrP redalert titleerr1" style="display: none;">Please Check the {{$mainsub->title}} title Entered</span>
                                      <span class="ErrP redalert titleerr2" style="display: none;">Please Check the {{$mainsub->title}} title Entered</span>
                                 </div>
-                           @endforeach @endif 
+                           @endforeach @endif
                            @else
                            @foreach($language as $langs)
 
                             <input type="hidden"  value="{{$langs->id ?? ''}}" id="sel_lang{{$langs->id}}" name="sel_lang[]">
-                              <div class="col-sm-6 mb-btm" id="div{{$langs->id}}"> 
+                              <div class="col-sm-6 mb-btm" id="div{{$langs->id}}">
                                      <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Mainmenu title in {{$langs->name}} <span class="redalert"> *</span></label>
-                                    
+
                                     <input id="title{{$langs->id}}" type="text" class="form-control title @error('title') is-invalid @enderror" name="title[]"  rel="{{$langs->id}}" value="" required autocomplete="title" placeholder="Enter {{$langs->name}} here" autofocus  >
                                      <span class="ErrP redalert titleerr1" style="display: none;">Please Check the {{$langs->name}} title Entered</span>
                                      <span class="ErrP redalert titleerr2" style="display: none;">Please Check the {{$langs->name}} title Entered</span>
@@ -67,9 +67,9 @@
 
                         </div><br>
                            <div class="row mb-3">
-                            <label for="icon_class" class="col-sm-2 col-form-label">Icon Class<span class="redalert"> *</span></label>
+                            <label for="icon_class" class="col-sm-2 col-form-label">Icon Class</label>
                             <div class="col-sm-10">
-                            <input id="icon_class" type="text" class="form-control @error('icon_class') is-invalid @enderror" name="icon_class" value="{{ $keydata->iconclass ?? old('iconclass')}}" required autocomplete="icon_class" placeholder="Eg: lni lni-search-alt" autofocus>
+                            <input id="icon_class" type="text" class="form-control @error('icon_class') is-invalid @enderror" name="icon_class" value="{{ $keydata->iconclass ?? old('iconclass')}}" autocomplete="icon_class" placeholder="Eg: lni lni-search-alt" autofocus>
                             <span class="ErrP alert-danger redalert iconerr" style="display: none;">Please Check the icon_class Entered</span>
                             <span class="redalert">@error('icon_class'){{$message}} @enderror</span>
                             </div>
@@ -83,7 +83,7 @@
                             @foreach($Menulinktype as $Menulinktypes)
                                 <option value="{{$Menulinktypes->id}}" rel="{{$Menulinktypes->name}}" @if(isset($edit_f))  {{($Menulinktypes->id == $keydata->menu_link_type->id) ? 'selected' : ''}} @endif >{{$Menulinktypes->name}}</option>
                             @endforeach
-                            </select>    
+                            </select>
                             <span class="ErrP alert-danger menuerr redalert" style="display: none;">Please Check the menulinktype Entered</span>
                             <span class="redalert">@error('menulinktype'){{$message}} @enderror</span>
                             </div>
@@ -98,7 +98,7 @@
                             <span class="redalert">@error('Anchor'){{$message}} @enderror</span>
                             </div>
                         </div>
-                        
+
                         <!-- MenuType Url -->
                          <div class="row mb-3" id="div_url"   @if(isset($keydata->menulinktype_id)) @if($keydata->menulinktype_id) != 12) style="display:none;" @endif @endif>
                             <label for="div_url" class="col-sm-2 col-form-label">URL<span class="redalert"> *</span></label>
@@ -114,12 +114,12 @@
                             <label for="div_file" class="col-sm-2 col-form-label">File<span class="redalert"> *</span></label>
                             <div class="col-sm-10">
                               <input id="file_type" type="file" class="form-control @error('file_type') is-invalid @enderror" name="file_type"  autocomplete="file_type" placeholder="Eg: /example" enctype = "multipart/form-data" >
-                              <a href="{{ asset('/uploads/Mainmenu/'.$keydata->menulinktype_data)}}"  target=blank >view document</a>
+                              @if(isset($edit_f)) <a href="{{ asset('/uploads/Mainmenu/'.$keydata->menulinktype_data)}}"  target=blank >view document</a> @endif
                               <span class="ErrP alert-danger fileerr redalert" style="display: none;">Please Check the file Entered</span>
                             <span class="redalert">@error('file'){{$message}} @enderror</span>
                             </div>
                         </div>
-                        
+
 
                         <!-- MenuType route -->
                         <div class="row mb-3" id="div_route"   @if(isset($keydata->menulinktype_id)) @if($keydata->menulinktype_id) != 16) style="display:none;" @endif @endif>
@@ -138,20 +138,20 @@
                             <div class="col-sm-10">
 
                             <select class="form-control select2 formselect" name="articletype" id="articletype">
-                       
-                             
+
+
                             @foreach($arttype as $arttypeon)
 
                                 @foreach($arttypeon->articletype_sub as $artsub)
                                     <option value="{{$artsub->id}}" rel="{{$artsub->title}}" @if(isset($edit_f))  {{($artsub->articletypeid == $keydata->article_id) ? 'selected' : ''}} @endif >{{$artsub->title}}</option>
                                 @endforeach
                             @endforeach
-                            </select>  
+                            </select>
                             <span class="ErrP alert-danger articleerr redalert" style="display: none;">Please Check the Article type Entered</span>
                             <span class="redalert">@error('articletype'){{$message}} @enderror</span>
                             </div>
                         </div>
-                    
+
                          <!-- MenuType Downloads -->
                          <div class="row mb-3" id="div_download"   @if(isset($keydata->menulinktype_id)) @if($keydata->menulinktype_id) != 21) style="display:none;" @endif @endif>
 
@@ -159,10 +159,10 @@
                             <div class="col-sm-10">
 
                             <select class="form-control select2 formselect" name="downloadtype" id="downloadtype">
-                    
-                             
-                   
-                            </select>  
+
+
+
+                            </select>
 
                               <!-- <input id="articletype" type="text" class="form-control @error('articletype') is-invalid @enderror" name="articletype"  autocomplete="file" placeholder="Eg: /example" @if(isset($edit_f)) @if($keydata->menulinktype_id == 14)  value="{{ $keydata->menulinktype_data}}" @endif @endif> -->
                             <span class="ErrP alert-danger downloaderr redalert" style="display: none;">Please Check the download type Entered</span>
@@ -184,7 +184,7 @@
                         <div class="row mb-3">
                             <label for="ord_num" class="col-sm-2 col-form-label">Order number<span class="redalert"> *</span></label>
                             <div class="col-sm-10">
-                                <input id="ord_num" type="text" class="form-control @error('ord_num') is-invalid @enderror" name="ord_num" value="{{ $keydata->orderno ?? old('ord_num')}}" required autocomplete="ord_num" placeholder="Enter order number here" autofocus>
+                                <input id="ord_num" type="text" class="form-control @error('ord_num') is-invalid @enderror" name="ord_num" value="{{ $keydata->orderno ?? old('orderno')}}" required autocomplete="ord_num" placeholder="Enter order number here" autofocus>
                                 <span class="ErrP article-poster-img keyiderr" style="display: none;"> <i class="lni lni-warning redalert"></i> Same Order number Already exist </span>
                             </div>
                         </div>
@@ -211,21 +211,21 @@
 </div>
 @endsection
 @section('page_scripts')
-<script>  
+<script>
  $( document ).ready(function() {
     //check Order number
 $( "#ord_num" ).on( "keyup", function() {
-    var orderno = $(this).val(); 
+    var orderno = $(this).val();
 
-   
+
     $('.keyiderr').hide();
     $.ajax({
-        url: "{{route('admin.ordernumbercheckmainmenu')}}", 
+        url: "{{route('admin.ordernumbercheckmainmenu')}}",
         type : 'GET',
         data: {'orderno':orderno,'sbutype_id':sbutype_id,'viewer_id':viewer_id},
         success: function(response){
         console.log(response);
-        
+
           if(response==0)
           {
             $('.keyiderr').hide();
@@ -281,7 +281,7 @@ $( "#ord_num" ).on( "keyup", function() {
                     $('.titleerr1').hide();
                 }
             }
-      
+
      });
 
     // validation in class icon
@@ -303,7 +303,7 @@ $( "#ord_num" ).on( "keyup", function() {
 
     var val=$(this).attr('value');
     var check =  $(this).prop('checked');
- 
+
     if(check)
     {
 
@@ -312,33 +312,33 @@ $( "#ord_num" ).on( "keyup", function() {
             $('.div_lan2').show();
             $('#div'+val).show();
             $('#div_alt'+val).show();
-            $('#div_poster'+val).show(); 
-            $('#div_sub'+val).show(); 
-            $('#div_cont'+val).show();       
+            $('#div_poster'+val).show();
+            $('#div_sub'+val).show();
+            $('#div_cont'+val).show();
        }
 
        else {
-        
-            $('#div'+val).hide();  
-            $('#div_poster'+val).hide(); 
-            $('#div_sub'+val).hide(); 
-            $('#div_alt'+val).hide();  
-            $('#div_cont'+val).hide();   
+
+            $('#div'+val).hide();
+            $('#div_poster'+val).hide();
+            $('#div_sub'+val).hide();
+            $('#div_alt'+val).hide();
+            $('#div_cont'+val).hide();
        }
 
     }else{
-        
+
          $('#div'+val).hide();
-         $('#div_sub'+val).hide();   
-         $('#div_poster'+val).hide(); 
+         $('#div_sub'+val).hide();
+         $('#div_poster'+val).hide();
          $('.div_lan1').hide();
          $('.div_lan2').hide();
          $('#div_alt').hide();
-         $('#div_cont'+val).hide(); 
+         $('#div_cont'+val).hide();
          $("#sel_lang"+val).prop('checked', false);
     }
 
-   
+
    });
 
 
@@ -382,7 +382,7 @@ $( "#ord_num" ).on( "keyup", function() {
         var sbu_user=$('#sbu_user').val();
         // alert("ddddd");
         $.ajax({
-        url: "{{route('admin.articleload')}}", 
+        url: "{{route('admin.articleload')}}",
         type : 'GET',
         data: {'sbu_user':sbu_user},
         success: function(response){
@@ -400,7 +400,7 @@ $( "#ord_num" ).on( "keyup", function() {
                     $('<option></option>').val(element1.articletypeid).html(element1.title)
                 );
                 })
-                
+
             })
     }});
 
@@ -443,7 +443,7 @@ $( "#ord_num" ).on( "keyup", function() {
         var download_id_edit =$('#article_id_edit').val();
             // alert(article_id_edit);
                 $.ajax({
-                url: "{{route('admin.downloadtypeload')}}", 
+                url: "{{route('admin.downloadtypeload')}}",
                 type : 'GET',
                 data: {'sbu_user':sbu_user},
                 success: function(response){
@@ -451,36 +451,36 @@ $( "#ord_num" ).on( "keyup", function() {
                 // $('#unit').append(unit);
                 var length = response.length;
 
-    
+
                 var length = response.length;
         //   alert(mainmenu_edit);
           $('#downloadtype').empty();
-    
+
             $.each(response, function(index, element) {
-        
+
                 $.each(element.downloadtype_sub, function(index1, element1) {
-                  
+
                     if(download_id_edit==element1.downloadtypeid){
                         console.log(element1.downloadtypeid);
                         $('#downloadtype').append(
                     $('<option></option>').val(element1.downloadtypeid).html(element1.title).attr('selected','selected')
                 );
                     }else{
-                     
+
                         $('#downloadtype').append(
                     $('<option></option>').val(element1.downloadtypeid).html(element1.title)
                 );
                     }
-                    
+
                 })
-                
+
             })
             }});
 
     }
-    }); 
-    
- 
+    });
+
+
 if(edit=='E')
     {
         var menulinktype_id_edit=$('#menulinktype_id_edit').val();
@@ -522,7 +522,7 @@ if(edit=='E')
             var article_id_edit =$('#article_id_edit').val();
             // alert(article_id_edit);
                 $.ajax({
-                url: "{{route('admin.articleload')}}", 
+                url: "{{route('admin.articleload')}}",
                 type : 'GET',
                 data: {'sbu_user':sbu_user},
                 success: function(response){
@@ -543,9 +543,9 @@ if(edit=='E')
                                 $('#articletype').append(
                             $('<option></option>').val(element1.articletypeid).html(element1.title) );
                             }
-                          
+
                         })
-                        
+
                     })
             }});
 
@@ -588,7 +588,7 @@ if(edit=='E')
             var download_id_edit =$('#article_id_edit').val();
             // alert(article_id_edit);
                 $.ajax({
-                url: "{{route('admin.downloadtypeload')}}", 
+                url: "{{route('admin.downloadtypeload')}}",
                 type : 'GET',
                 data: {'sbu_user':sbu_user},
                 success: function(response){
@@ -596,34 +596,34 @@ if(edit=='E')
                 // $('#unit').append(unit);
                 var length = response.length;
 
-    
+
                 var length = response.length;
         //   alert(mainmenu_edit);
           $('#downloadtype').empty();
-    
+
             $.each(response, function(index, element) {
-        
+
                 $.each(element.downloadtype_sub, function(index1, element1) {
-                  
+
                     if(download_id_edit==element1.downloadtypeid){
                         console.log(element1.downloadtypeid);
                         $('#downloadtype').append(
                     $('<option></option>').val(element1.downloadtypeid).html(element1.title).attr('selected','selected')
                 );
                     }else{
-                     
+
                         $('#downloadtype').append(
                     $('<option></option>').val(element1.downloadtypeid).html(element1.title)
                 );
                     }
-                    
+
                 })
-                
+
             })
             }});
 
     }
-    
+
         $('.card-main').hide();
     }else{
  $('.card-main').show();

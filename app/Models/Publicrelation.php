@@ -8,22 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Publicrelation extends Model
 {
     use HasFactory;
+
     protected $table = "publicrelations";
 
     protected $guarded = [];
 
-    public function publicrel_sub()
+    public function publicrelsub()
     {
-        return $this->hasMany(Publicrelation_sub::class, 'publicrelationid', 'id');
-    }
-
-    public function publicrel_items()
-    {
-        return $this->hasMany(Publicrelationitem::class, 'publicrelationid', 'id');
-    }
-
-    public function publicrelationtype()
-    {
-        return $this->belongsTo(Publicrelationtype::class, 'publicreltypeid', 'id');
+        return $this->hasMany(publicrelationsub::class, 'publicrelationid', 'id');
     }
 }
