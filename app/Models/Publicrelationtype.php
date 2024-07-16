@@ -10,5 +10,9 @@ class Publicrelationtype extends Model
     use HasFactory;
 
     protected $table = 'publicrelationtypes';
-    protected $fillable = ['name','delet_flag','status_id','userid'];
+    protected $guarded = [];
+    public function ptypesub()
+    {
+        return $this->hasMany(PublicrelationtypSub::class, 'publicrelationtypeid', 'id');
+    }
 }

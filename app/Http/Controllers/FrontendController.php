@@ -12,6 +12,7 @@ use App\Models\Language;
 use App\Models\Socialmedia;
 use App\Models\Banner;
 use App\Models\Publicrelation;
+use App\Models\Link;
 
 class FrontendController extends Controller
 {
@@ -27,7 +28,9 @@ class FrontendController extends Controller
             $mainbanner = $this->mainbanner($sessionbil);
             $circulartrades = $this->circulartrade($sessionbil);
 
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades'));
+            $whatwedo = $this->whatwedo($sessionbil);
+
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo'));
         }
 
     public function mainarticle($articlename,$enarticletypeid)
@@ -101,7 +104,6 @@ class FrontendController extends Controller
                 $query2->where('languageid',$sessionbil);
             }])
             ->where('status_id',1)
-            ->where('viewer_id',1)
             ->orderBy('orderno', 'asc')
             ->get();
 
@@ -135,5 +137,19 @@ class FrontendController extends Controller
         ->limit(6)->get();
 
         return $circulartrade;
+    }
+
+    private function whatwedo($sessionbil)
+    {
+        $sessionbil   = 1;
+        $whatwedo =  Link::with(['link_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('delet_flag',0)
+        ->where('status_id',1)
+        ->orderBy('orderno', 'asc')->get();
+
+        return $whatwedo;
+
     }
 }

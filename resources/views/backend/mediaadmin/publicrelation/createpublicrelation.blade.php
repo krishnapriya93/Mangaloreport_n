@@ -43,13 +43,18 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label for="publicrelid" class="my-1 mr-2">Public relation type<span class="redalert"> *</span></label>
-                                        <select class="form-control formselect" name="publicrelid" id="publicrelid" required>
-                                            <option value="">Select</option>
+                                        <select class="form-control" id="publicrelid" name="publicrelid" required>
+                                            <option>Select Public relation Type</option>
 
-                                            @foreach($pulicreltype as $pulicreltypes)
-                                            <option value="{{$pulicreltypes->id}}" @if(isset($edit_f)) {{ $pulicreltypes->id == $keydata->publicreltypeid ? 'selected' : '' }} @endif>{{$pulicreltypes->name}}</option>
+                                            @foreach($pulicreltype as $ptype)
+
+                                                @foreach($ptype->ptypesub as $psub)
+                                                    <option value="{{$ptype->id}}" @if(isset($edit_f)) {{ $ptype->tid == $keydata->publicreltypeid ? 'selected' : '' }} @endif  >{{$psub->title}}</option>
+                                                @endforeach
+
                                             @endforeach
                                         </select>
+
                                         <span class="ErrP alert-danger menuerr redalert" style="display: none;">Please Check the downloadtype Entered</span>
                                         <span class="redalert">@error('pulicreltype'){{$message}} @enderror</span>
                                     </div>
@@ -112,7 +117,7 @@
                                             <img id="preview-image-before-upload{{$publicrel_sub->id}}" src="{{ asset('/assets/backend/uploads/publicrelationitems/'.$publicrel_sub->image) }}" rel="{{$publicrel_sub->id}}" class="preview-image-before-upload imgstamp" alt="preview image">
                                             <!-- <br><span class="redalert">selected image</span> -->
                                         </div><br />
-            
+
                                     </div><br />
                                 </div>
 
@@ -211,7 +216,7 @@
         // if($('#Errval').val()!=1){
         //     $("#entry_div").hide();
 
-        // } 
+        // }
             // Iterate over each input with the class 'poster'
     $('.con_title').each(function() {
         var elementId = $(this).attr('id');
@@ -224,7 +229,7 @@
         // Initialize CKEditor on the element
         CKEDITOR.replace(elementId);
     });
-});   
+});
         $('.postererr1').hide();
         $('.postererr2').hide();
 
@@ -373,7 +378,7 @@
 
     var val=$(this).attr('value');
     var check =  $(this).prop('checked');
- 
+
     if(check)
     {
 
@@ -382,25 +387,25 @@
             $('.div_lan2').show();
             $('#div'+val).show();
             $('#div_alt'+val).show()
-            $('#div_poster'+val).show(); 
-            $('#div_sub'+val).show();        
-            $('#div_content'+val).show();        
+            $('#div_poster'+val).show();
+            $('#div_sub'+val).show();
+            $('#div_content'+val).show();
        }
 
        else {
-        
-            $('#div'+val).hide();  
-            $('#div_poster'+val).hide(); 
-            $('#div_sub'+val).hide(); 
-            $('#div_content'+val).hide(); 
-            $('#div_alt'+val).hide();   
+
+            $('#div'+val).hide();
+            $('#div_poster'+val).hide();
+            $('#div_sub'+val).hide();
+            $('#div_content'+val).hide();
+            $('#div_alt'+val).hide();
        }
 
     }else{
-        
+
          $('#div'+val).hide();
-         $('#div_sub'+val).hide();   
-         $('#div_poster'+val).hide(); 
+         $('#div_sub'+val).hide();
+         $('#div_poster'+val).hide();
          $('.div_lan1').hide();
          $('.div_lan2').hide();
          $('#div_alt').hide()
@@ -408,11 +413,11 @@
          $("#sel_lang"+val).prop('checked', false);
     }
 
-   
+
    });*/
 
     // });
-  
+
 
     function img_preview() {
 

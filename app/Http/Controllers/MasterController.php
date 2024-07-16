@@ -18,6 +18,10 @@ use App\Models\Footermenu;
 use App\Models\Gallerytype;
 use App\Models\Logotype;
 use App\Models\Menulinktype;
+use App\Models\Publicrelationtype;
+use App\Models\PublicrelationtypSub;
+use App\Models\Linktype;
+use App\Models\Linktypesub;
 use \Crypt;
 use DB;
 use Redirect;
@@ -46,7 +50,7 @@ class MasterController extends Controller
        $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
        $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
        $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-      
+
        $usertype=usertype::get();
 
        return view('backend.masteradmin.Articletype.articletypelist',compact('data','breadcrumbarr','usertype','navbar','user'));
@@ -70,12 +74,12 @@ class MasterController extends Controller
        $url = url()->previous();
        $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
        $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
-     
+
        return view('backend.masteradmin.Articletype.createarticletype',compact('breadcrumbarr','language','navbar','user','Navid'));
    }
 
 /*Store Article type*/
-   
+
    public function storearticletype(Request $request)
    {
        // dd($request->all());
@@ -112,12 +116,12 @@ class MasterController extends Controller
                                'status_id'=>1,
                            ]);
 // dd($storeinfo);
-           $res = $storeinfo->save(); 
+           $res = $storeinfo->save();
            $Articletypeid = DB::getPdo()->lastInsertId();
 
            for($i=0;$i<$leng;$i++){
-             
-              
+
+
                if($Articletypeid){
 
                        $store_sub_info=new Articletypesub([
@@ -141,8 +145,8 @@ class MasterController extends Controller
            return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
        }
 
-   }  
-  
+   }
+
   /*edit Article type*/
    public function editarticletype($id)
    {
@@ -218,16 +222,16 @@ class MasterController extends Controller
            DB::commit();
            return Redirect('articletype')->with('success','Updated successfully');
        }else{
-           DB::rollback(); 
+           DB::rollback();
            return back()->withErrors('Not Updated ');
        }
-               
+
        } catch (ModelNotFoundException $exception) {
            \LogActivity::addToLog($exception->getMessage(),'error');
            $data = \LogActivity::logLatestItem();
            return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
        }
-      
+
    }
 
      /* Article delete*/
@@ -236,20 +240,20 @@ class MasterController extends Controller
          $id= Crypt::decryptString($id);
          // dd($id);
              DB::beginTransaction();
- 
+
               $res_sub= Articletypesub::where('articletypeid',$id)->delete();
-           
+
              if($res_sub)
              {
               $res= Articletype::findOrFail($id)->delete();
- 
+
              }
              $edit_f ='';
                   if($res_sub){
                      DB::commit();
                       return Redirect('articletype')->with('success','Deleted successfully',['edit_f' => $edit_f]);
                   }else{
-                     DB::rollback(); 
+                     DB::rollback();
                       return back()->withErrors('Not deleted ');
                   }
      }
@@ -271,7 +275,7 @@ class MasterController extends Controller
                 );
        }
 
-         
+
            $res=Articletype::where('id',$id)->update($uparr);
 
            $edit_f ='';
@@ -279,7 +283,7 @@ class MasterController extends Controller
                    DB::commit();
                     return Redirect('articletype')->with('success','Status updated successfully',['edit_f' => $edit_f]);
                 }else{
-                   DB::rollback(); 
+                   DB::rollback();
                     return back()->withErrors('Not deleted ');
                 }
    }
@@ -330,7 +334,7 @@ class MasterController extends Controller
        $url = url()->previous();
        $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
        $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
-      
+
        $years = range(Carbon::now()->year, 1920);
        //  dd($Navid->id);
        return view('backend.masteradmin.Milestone.createmilestone',compact('breadcrumbarr','language','navbar','user','Navid','years'));
@@ -380,11 +384,11 @@ class MasterController extends Controller
                                'sbutype_id'=>Auth::user()->sbutype,
                            ]);
 
-           $res = $storeinfo->save(); 
+           $res = $storeinfo->save();
            $milestoneid = DB::getPdo()->lastInsertId();
 // dd($milestoneid);
            for($i=0;$i<$leng;$i++){
-             
+
               // dd($request->sel_lang[$i]);
                if($milestoneid){
                    if(isset($request->poster))
@@ -402,8 +406,8 @@ class MasterController extends Controller
                          }
                            // else{
                            //   $imageName='';
-                           // 
-     
+                           //
+
                        }//foreach
                    }
                    else{
@@ -418,32 +422,32 @@ class MasterController extends Controller
                                    'content'=>$request->con_title[$i],
                                    'poster'=>$imageName
                                ]);
-                     
+
                         $storedetails_sub=$store_sub_info->save();
                }
                // dd($path);
            }//forloopend
-           
+
            if($storedetails_sub)
            {
                $role_type=Auth::user()->role_id;
-               
+
                if($role_type==5)//SBU admin
                {
                    DB::commit();
                    return redirect()->route('milestonelist')->with('success','created successfully');
                }else if($role_type==3){//Site admin
-               
+
                    DB::commit();
                    return redirect()->route('planning.milestonelist')->with('success','created successfully');
                }
-             
+
            }else{
-               DB::rollback(); 
+               DB::rollback();
                return back()->withErrors('Not created ');
            }
-      
-           
+
+
 
        } catch (ModelNotFoundException $exception) {
            \LogActivity::addToLog($exception->getMessage(),'error');
@@ -487,7 +491,7 @@ class MasterController extends Controller
        $url = url()->previous();
        $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
        $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
-       
+
 // dd($keydata);
        return view('backend.masteradmin.Milestone.createmilestone', compact('data','edit_f', 'error','keydata','breadcrumbarr','navbar','user','language','Navid','years'));
    }
@@ -505,14 +509,14 @@ public function deletemilestone($id)
                Storage::disk('myfile')->delete('/uploads/Milestone/' . $img->file);
            }
         $res_sub= Milestonesub::where('milestoneid',$id)->delete();
-     
+
        if($res_sub)
        {
         $res= Milestone::findOrFail($id)->delete();
        }
        $edit_f ='';
             if($res_sub){
-             
+
                $role_type=Auth::user()->role_id;
                if($role_type==5)//SBU admin
                {
@@ -522,9 +526,9 @@ public function deletemilestone($id)
                    DB::commit();
                    return redirect()->route('planning.milestonelist')->with('success','Deleted successfully');
                }
-             
+
             }else{
-               DB::rollback(); 
+               DB::rollback();
                 return back()->withErrors('Not deleted ');
             }
 }
@@ -541,30 +545,30 @@ public function updatemilestone(Request $request)
            // 'description.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg_ckedit(),
            //'poster.*'      => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
            'alt_title.*'      => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-           
+
        ],
        [
            'title.required' => 'Title is required',
            'title.regex'    => 'The title format is invalid',
            'title.min'      => 'Title  minimum length is 3',
-           'title.max'      => 'Title  maximum length is 150', 
+           'title.max'      => 'Title  maximum length is 150',
 
            'sub_title.required' => 'Sub Title is required',
            'sub_title.regex'    => 'The Sub Title format is invalid',
            'sub_title.min'      => 'Sub Title  minimum length is 3',
-           'sub_title.max'      => 'Sub Title  maximum length is 150', 
+           'sub_title.max'      => 'Sub Title  maximum length is 150',
        ]
    );
-   // 
+   //
 
    if ($validator->fails()) {
        // dd($validator->errors());
        return back()->withInput()->withErrors($validator->errors());
    }
-   
+
    try{
        // dd($request->subtitle);
-      
+
        // dd($request->poster);
        $i=0;
        $filename=array();
@@ -586,9 +590,9 @@ public function updatemilestone(Request $request)
                        $filename[]=$imageName;
                        $path = $request->file('poster')[$j]->storeAs('/uploads/Milestone/', $imageName, 'myfile');
                    }
-                   
 
-                  
+
+
                    $i++;
                }
                // dd($filename);
@@ -604,7 +608,7 @@ public function updatemilestone(Request $request)
                                'icon_class'=>$request->iconclass,
                                'year'=>$request->year,
                              ]);
-     if($main_update)       
+     if($main_update)
      {
        for($i=0;$i<$leng;$i++){
          // dd(count($lang));
@@ -631,19 +635,19 @@ public function updatemilestone(Request $request)
                        'milestoneid' => $request->hidden_id
                      );
                  }
-                 
+
                  $res1=Milestonesub::where('milestoneid','=',$request->hidden_id)->where('languageid','=',$request->sel_lang[$i])->update($dataarr1);
 
-             
+
          }else{
              return back()->withInput()->with('error',"Already existing");
 
          }
-         
-         
-         
+
+
+
      }
-     }                 
+     }
 
                // dd(true)
                $role_type=Auth::user()->role_id;
@@ -653,14 +657,14 @@ public function updatemilestone(Request $request)
                }else if($role_type==3){//Site admin
                    return redirect()->route('planning.milestonelist')->with('success','Updated successfully');
                }
-             
-         
+
+
        // }
    }catch(Exception $e){
        return back()->withInput()->with('error',$e);
    }
-   
-   
+
+
 }
 
 
@@ -669,7 +673,7 @@ public function statusmilestone($id)
    {
        $id= Crypt::decryptString($id);
        $status=Milestone::where('id',$id)->value('status_id');
-     
+
        DB::beginTransaction();
        if($status==1)
        {
@@ -682,7 +686,7 @@ public function statusmilestone($id)
            );
        }
        $res=Milestone::where('id',$id)->update($uparr);
-     
+
        $edit_f ='';
        if($res){
            DB::commit();
@@ -693,13 +697,13 @@ public function statusmilestone($id)
            }else if($role_type==3){//Site admin
                return redirect()->route('planning.milestonelist')->with('success','Status change successfully');
            }
-         
+
        }else{
-           DB::rollback(); 
+           DB::rollback();
            return back()->withErrors('Not deleted ');
        }
    }
-   
+
    //BOD
    public function BODlist(Request $request)
    {
@@ -714,7 +718,7 @@ public function statusmilestone($id)
 
 
        $language   = Language::where('delet_flag',0)->orderBy('name')->get();
-   
+
        $data       = BOD::with(['bodsub'=>function($query){
 
        }])->get();
@@ -723,7 +727,7 @@ public function statusmilestone($id)
 
        }])->get();
        // dd();
-   
+
 
        return view('backend.masteradmin.BOD.bod',compact('breadcrumbarr','navbar','user','language','data','designation'));
    }
@@ -743,53 +747,53 @@ public function statusmilestone($id)
                'email' => app('App\Http\Controllers\Commonfunctions')->emailId_check(),
                'photo'      => app('App\Http\Controllers\Commonfunctions')->getImageLTAval(),
 
-               
+
            ],
            [
                'name.required' => 'name is required',
                'name.regex'    => 'The name format is invalid',
                'name.min'      => 'name  minimum length is 3',
-               'name.max'      => 'name  maximum length is 150', 
+               'name.max'      => 'name  maximum length is 150',
 
                'description.required' => 'description is required',
                'description.regex'    => 'The description format is invalid',
                'description.min'      => 'description  minimum length is 3',
-               'description.max'      => 'description  maximum length is 150', 
+               'description.max'      => 'description  maximum length is 150',
 
                'mobilenumber' => 'mobilenumber is required',
                'mobilenumber.regex'    => 'The mobilenumber format is invalid',
                'mobilenumber.min'      => 'mobilenumber  minimum length is 3',
-               'mobilenumber.max'      => 'mobilenumber  maximum length is 150', 
+               'mobilenumber.max'      => 'mobilenumber  maximum length is 150',
 
                'officenumber'=> 'officenumber is required',
                'officenumber.regex'    => 'The officenumber format is invalid',
                'officenumber.min'      => 'officenumber  minimum length is 3',
-               'officenumber.max'      => 'officenumber  maximum length is 150', 
+               'officenumber.max'      => 'officenumber  maximum length is 150',
 
                'email' => 'email is required',
                'email.regex'    => 'The email format is invalid',
                'email.min'      => 'email  minimum length is 3',
-               'email.max'      => 'email  maximum length is 150', 
+               'email.max'      => 'email  maximum length is 150',
 
                'photo' => 'photo is required',
                'photo.regex'    => 'The photo format is invalid',
                'photo.min'      => 'photo  minimum length is 3',
-               'photo.max'      => 'photo  maximum length is 150', 
+               'photo.max'      => 'photo  maximum length is 150',
 
            ]
        );
-       // 
+       //
        // dd($request->all());
        if ($validator->fails()) {
            // dd($validator->errors());
            return back()->withInput()->withErrors($validator->errors());
        }
        try{
-                 
+
            // dd($request->poster);
-         
-               
-             
+
+
+
                // print_r($request->file('poster')[$i]);
            //    dd($filep->poster[$i]->extension());
            // dd(count($request->poster));
@@ -800,9 +804,9 @@ public function statusmilestone($id)
                    $path = $request->file('photo')->storeAs('/uploads/bod/', $imageName, 'myfile');
                }else{
                    $imageName = 0;
-               }         
+               }
                $leng=count($request->sel_lang);
-           
+
            // dd(true);
            // if($chekrows==0){
            //   dd($filename);
@@ -824,14 +828,14 @@ public function statusmilestone($id)
                    'user_id'=>Auth::user()->id,
                    'status'=>1
                ]);
-              
+
                $res=$dataarr->save();
                if($res){
                    $bod_main_id=$dataarr->id;
                    $lang=Language::where('status_id',1)->get();
                    $i=0;
                    // foreach($lang as $lng){
-                       for($i=0;$i<$leng;$i++){   
+                       for($i=0;$i<$leng;$i++){
                        // dd(count($lang));
                        $chekrows = BOD_sub::where('name', $request->name[$i])->exists() ? 1 : 0;
                        if($chekrows==0){
@@ -841,8 +845,8 @@ public function statusmilestone($id)
                                'languageid'=>$request->sel_lang[$i],
                                'description'=>$request->description[$i],
                                'alt'=>$request->alt[$i],
-                               'desig_id'=>\Crypt::decryptString($request->desig_id[$i])       
-                               
+                               'desig_id'=>\Crypt::decryptString($request->desig_id[$i])
+
                            ]);
                            $res1=$dataarr1->save();
                            // if($i<count($lang)){
@@ -852,13 +856,13 @@ public function statusmilestone($id)
                            return back()->withInput()->with('error',"Already existing");
 
                        }
-                       
-                       
-                       
+
+
+
                    }
                    $success="Saved successfully";
                    return redirect('masteradmin/BODlist')->with(['success' => $success]);
-                   
+
 
                }else{
                    return back()->withInput()->with('error',"Error while saving");
@@ -866,13 +870,13 @@ public function statusmilestone($id)
            }else{
                return back()->withInput()->with('error',"Email/Mobile already existing");
            }
-              
+
            // }
        }catch(Exception $e){
            return back()->withInput()->with('error',$e);
        }
-       
-       
+
+
    }
 
      /*edit BOD*/
@@ -890,7 +894,7 @@ public function statusmilestone($id)
          $data = BOD::with(['bodsub' =>function($query){
              // $query->where('delet_flag',0);
          }])->get();
- 
+
          $language = Language::where('delet_flag',0)->orderBy('name')->get();
          $designation=Designation::with(['des_sub'=>function($query){
 
@@ -901,7 +905,7 @@ public function statusmilestone($id)
            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masterhome'),
            1 => array('title' => 'Edit BOD', 'message' => 'Edit BOD', 'status' => 1)
        );
-        
+
          $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
          $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
          $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
@@ -915,7 +919,7 @@ public function statusmilestone($id)
 
      public function updateBOD(Request $request)
      {
-         
+
          $validator = Validator::make(
              $request->all(),
              [
@@ -927,43 +931,43 @@ public function statusmilestone($id)
                  'officenumber' => app('App\Http\Controllers\Commonfunctions')->officenumber_check(),
                  'email' => app('App\Http\Controllers\Commonfunctions')->emailId_check(),
                  'photo'      => app('App\Http\Controllers\Commonfunctions')->getImageLTAval(),
- 
-                 
+
+
              ],
              [
                  'name.required' => 'name is required',
                  'name.regex'    => 'The name format is invalid',
                  'name.min'      => 'name  minimum length is 3',
-                 'name.max'      => 'name  maximum length is 150', 
- 
+                 'name.max'      => 'name  maximum length is 150',
+
                  'description.required' => 'description is required',
                  'description.regex'    => 'The description format is invalid',
                  'description.min'      => 'description  minimum length is 3',
-                 'description.max'      => 'description  maximum length is 150', 
- 
+                 'description.max'      => 'description  maximum length is 150',
+
                  'mobilenumber' => 'mobilenumber is required',
                  'mobilenumber.regex'    => 'The mobilenumber format is invalid',
                  'mobilenumber.min'      => 'mobilenumber  minimum length is 3',
-                 'mobilenumber.max'      => 'mobilenumber  maximum length is 150', 
- 
+                 'mobilenumber.max'      => 'mobilenumber  maximum length is 150',
+
                  'officenumber'=> 'officenumber is required',
                  'officenumber.regex'    => 'The officenumber format is invalid',
                  'officenumber.min'      => 'officenumber  minimum length is 3',
-                 'officenumber.max'      => 'officenumber  maximum length is 150', 
- 
+                 'officenumber.max'      => 'officenumber  maximum length is 150',
+
                  'email' => 'email is required',
                  'email.regex'    => 'The email format is invalid',
                  'email.min'      => 'email  minimum length is 3',
-                 'email.max'      => 'email  maximum length is 150', 
- 
+                 'email.max'      => 'email  maximum length is 150',
+
                  'photo' => 'photo is required',
                  'photo.regex'    => 'The photo format is invalid',
                  'photo.min'      => 'photo  minimum length is 3',
-                 'photo.max'      => 'photo  maximum length is 150', 
- 
+                 'photo.max'      => 'photo  maximum length is 150',
+
              ]
          );
-         // 
+         //
        //   dd($request->all());
          if ($validator->fails()) {
              // dd($validator->errors());
@@ -975,15 +979,15 @@ public function statusmilestone($id)
                    }else{
                        $desig_flag=1;
                    }
-                  
-          
+
+
                    $lang=Language::where('status_id',1)->get();
                    $i=0;
                    $leng=count($request->sel_lang);
                    $chekrows = BOD_sub::where('bod_main_id', $request->hidden_id)->exists() ? 1 : 0;
-                  
+
                    if($chekrows==1){
-                       for($i=0;$i<$leng;$i++){   
+                       for($i=0;$i<$leng;$i++){
 
                                $data_sub=array(
                                    'bod_main_id'=>$request->hidden_id,
@@ -991,14 +995,14 @@ public function statusmilestone($id)
                                    'languageid'=>$request->sel_lang[$i],
                                    'description'=>$request->description[$i],
                                    'alt'=>$request->alt[$i],
-                                   'desig_id'=>\Crypt::decryptString($request->desig_id[$i])       
-                                   
+                                   'desig_id'=>\Crypt::decryptString($request->desig_id[$i])
+
                                );
                                $res=BOD_sub::where('bod_main_id','=',$request->hidden_id)->where('languageid',$request->sel_lang[$i])->update($data_sub);
-     
-                           }   
+
+                           }
                    }
-                   // dd($res);     
+                   // dd($res);
                    $chekrows_bod = BOD::where('id', $request->hidden_id)->exists() ? 1 : 0;
                   if($chekrows_bod)
                   {
@@ -1014,8 +1018,8 @@ public function statusmilestone($id)
                            'photo'=>$imageName,
                        );
                        $res_main=BOD::where('id','=',$request->hidden_id)->update($data_main);
-     
- 
+
+
                    }else{//check row not existing
                        $data_main=array(
                            'email'=>$request->email,
@@ -1024,38 +1028,38 @@ public function statusmilestone($id)
                            'desig_flag'=>$desig_flag,
                        );
                        $res_main=BOD::where('id','=',$request->hidden_id)->update($data_main);
-         
+
                        }
-                      
+
                        $success="Updated successfully";
                        return redirect('planning/BODlist')->with(['success' => $success]);
-                   }  
+                   }
          }catch(Exception $e){
              return back()->withInput()->with('error',$e);
          }
-         
-         
+
+
      }
 
 
    public function deleteBOD(Request $request,$encid){
-       $id=\Crypt::decryptString($encid);   
+       $id=\Crypt::decryptString($encid);
        try{
            $imageName = BOD::where('id', $id)->select('photo')->first();
            // foreach($imageName as $img){
                Storage::disk('myfile')->delete('/uploads/bod/' . $imageName->photo);
            // }
-           
+
            $dataartSub=BOD_sub::where('bod_main_id',$id)->delete();
-           $dataEdit=BOD::destroy($id);       
+           $dataEdit=BOD::destroy($id);
            $msg="Deleted successfully";
            return redirect('planning/BODlist')->with(['delete' => $msg ]);
        }catch(Exception $e){
            return back()->withInput()->with('error',$e);
        }
-       
+
 }
-   
+
     /*Footermenu*/
     public function footermenu()
     {
@@ -1096,7 +1100,7 @@ public function statusmilestone($id)
     }
 
      /*Store logo*/
-    
+
     public function storefootermenu(Request $request)
     {
         // dd($request->poster);
@@ -1124,7 +1128,7 @@ public function statusmilestone($id)
 
             $leng=count($request->sel_lang);
             // dd($leng);
-// 
+//
                         $storeinfo=new Footermenu([
                                 'userid'=>Auth::user()->id,
                                 'delet_flag'=>0,
@@ -1132,19 +1136,19 @@ public function statusmilestone($id)
                                 'status_id'=>1,
                             ]);
 
-            $res = $storeinfo->save(); 
+            $res = $storeinfo->save();
             $footermenuid = DB::getPdo()->lastInsertId();
 
 
             // for($i=0;$i<$leng;$i++){
-              
-               
+
+
                 if($footermenuid){
                     $j=0;
                         $filename=array();
                         foreach($request->poster as $filep){
-                            
-                        
+
+
                             // print_r($request->file('poster')[$i]);
                         //    dd($filep->poster[$i]->extension());
                         // dd(count($request->poster));
@@ -1164,7 +1168,7 @@ public function statusmilestone($id)
                     //    foreach($request->file('poster') as $key => $file)
                     //     {
                     //          $imageName = $i . $date . '.' . $file->extension();
-                                
+
                     //          $path=$file->storeAs('/uploads/Footermenu', $imageName,'myfile');
 
                     //     }
@@ -1183,7 +1187,7 @@ public function statusmilestone($id)
 
                                 // dd($store_sub_info);
                          $storedetails_sub=$store_sub_info->save();
-                         
+
                 }
                 // dd($path);
             }//forloopend
@@ -1244,15 +1248,15 @@ public function updatefootermenu(Request $request)
             'title.required' => 'Title is required',
             'title.regex'    => 'The title format is invalid',
             'title.min'      => 'Title  minimum length is 3',
-            'title.max'      => 'Title  maximum length is 150', 
+            'title.max'      => 'Title  maximum length is 150',
 
             'alt_title.required' => 'Sub Title is required',
             'alt_title.regex'    => 'The Alternative Title format is invalid',
             'alt_title.min'      => 'Alternative Title  minimum length is 3',
-            'alt_title.max'      => 'Alternative Title  maximum length is 150', 
+            'alt_title.max'      => 'Alternative Title  maximum length is 150',
         ]
     );
-    
+
 
     if ($validator->fails()) {
         // dd($validator->errors());
@@ -1260,7 +1264,7 @@ public function updatefootermenu(Request $request)
     }
     // dd($request->all());
     try{
- 
+
         $i=0;
         $filename=array();
         if(isset($request->poster)){
@@ -1293,7 +1297,7 @@ public function updatefootermenu(Request $request)
                               ->update([
                                 'iconclass'=>$request->iconclass,
                               ]);
-      if($main_update)       
+      if($main_update)
       {
         for($i=0;$i<$leng;$i++){
           // dd(count($lang));
@@ -1320,25 +1324,25 @@ public function updatefootermenu(Request $request)
                         'content'=>$request->content[$i],
                       );
                   }
-                  
+
                   $res1=Footermenusub::where('footermenuid','=',$request->hidden_id)->where('languageid','=',$request->sel_lang[$i])->update($dataarr1);
 
-              
+
           }else{
               return back()->withInput()->with('error',"Already existing");
 
-          } 
+          }
       }
-      }                 
-                return redirect()->route('footermenu')->with('success','Updated successfully');   
+      }
+                return redirect()->route('footermenu')->with('success','Updated successfully');
 
-          
+
         // }
     }catch(Exception $e){
         return back()->withInput()->with('error',$e);
     }
-    
-    
+
+
 }
 
 
@@ -1349,7 +1353,7 @@ public function updatefootermenu(Request $request)
 
             DB::beginTransaction();
              $res_sub= Footermenusub::where('footermenuid',$id)->delete();
-          
+
             if($res_sub)
             {
              $res= Footermenu::findOrFail($id)->delete();
@@ -1359,7 +1363,7 @@ public function updatefootermenu(Request $request)
                     DB::commit();
                      return Redirect('footermenu')->with('success','Deleted successfully',['edit_f' => $edit_f]);
                  }else{
-                    DB::rollback(); 
+                    DB::rollback();
                      return back()->withErrors('Not deleted ');
                  }
 }
@@ -1391,14 +1395,14 @@ public function storegallerytype(Request $request)
        ]);
            $request->input();
            $role_id = Auth::user()->id;
-       
+
            $storeinfo=new Gallerytype([
                'name'=>$request->gallery_type,
                'delet_flag'=>0,
                'status_id'=>1,
                'userid'=>$role_id
            ]);
-  
+
            $storedetails=$storeinfo->save();
            return redirect()->route('gallerytype')->with('success','created successfully');
 
@@ -1426,7 +1430,7 @@ public function deletegaltype($id)
                 DB::commit();
                  return Redirect('gallerytype')->with('success','Deleted successfully',['edit_f' => $edit_f]);
              }else{
-                DB::rollback(); 
+                DB::rollback();
                  return back()->withErrors('Not deleted ');
              }
 }
@@ -1459,7 +1463,7 @@ try{
         'gallery_type'=>app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
    ]);
        $request->input();
-   
+
        $uparr=array(
         'name'=>$request->gallery_type,
          );
@@ -1507,14 +1511,14 @@ public function storelogotype(Request $request)
             'logotype'=>app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
        ]);
            $request->input();
-       
+
            $storeinfo=new Logotype([
                'name'=>$request->logotype,
                'delet_flag'=>0,
                'status_id'=>1,
                'userid'=>$role_id
            ]);
-  
+
            $storedetails=$storeinfo->save();
            return redirect()->route('logotype')->with('success','created successfully');
 
@@ -1553,7 +1557,7 @@ public function updatelogotype(Request $request)
             'logotype'=>app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
        ]);
            $request->input();
-       
+
            $uparr=array(
               'name'=>$request->logotype,
              );
@@ -1570,7 +1574,7 @@ public function updatelogotype(Request $request)
         $data = \LogActivity::logLatestItem();
         return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
     }
-   
+
 }
 
 
@@ -1590,7 +1594,7 @@ public function deletelogotype($id)
                 DB::commit();
                  return Redirect('logotype')->with('success','Deleted successfully',['edit_f' => $edit_f]);
              }else{
-                DB::rollback(); 
+                DB::rollback();
                  return back()->withErrors('Not deleted ');
              }
 }
@@ -1628,13 +1632,13 @@ public function deletelogotype($id)
                  // dd($validator->errors());
                  return back()->withInput()->withErrors($validator->errors());
              }
-        
+
             $storeinfo=new Menulinktype([
                 'name'=>$request->Menulinktype,
                 'delet_flag'=>0,
                 'status_id'=>1,
             ]);
-   
+
             $storedetails=$storeinfo->save();
             return redirect()->route('menulinktype')->with('success','created successfully');
 
@@ -1673,7 +1677,7 @@ public function deletelogotype($id)
              'Menulinktype'=>app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
         ]);
             $request->input();
-        
+
             $uparr=array(
                'name'=>$request->Menulinktype,
               );
@@ -1690,9 +1694,9 @@ public function deletelogotype($id)
          $data = \LogActivity::logLatestItem();
          return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
      }
-    
+
  }
-  
+
     /*Menue link type delete*/
  public function deleteMenulinktype($id)
  {
@@ -1709,7 +1713,7 @@ public function deletelogotype($id)
                  DB::commit();
                   return Redirect('menulinktype')->with('success','Deleted successfully',['edit_f' => $edit_f]);
               }else{
-                 DB::rollback(); 
+                 DB::rollback();
                   return back()->withErrors('Not deleted ');
               }
  }
@@ -1724,14 +1728,386 @@ public function deletelogotype($id)
              'status_id'=>0,
               );
          $res=Menulinktype::where('id',$id)->update($uparr);
-   
+
          $edit_f ='';
               if($res){
                  DB::commit();
                   return Redirect('menulinktype')->with('success','Status updated successfully',['edit_f' => $edit_f]);
               }else{
-                 DB::rollback(); 
+                 DB::rollback();
                   return back()->withErrors('Not deleted ');
               }
  }
+ /*publicrelationtype*/
+ public function publicrelationtype()
+ {
+     $data = Publicrelationtype::with(['ptypesub' => function ($query) {
+        $query->where('languageid', 1);
+    }])->where('delet_flag', 0)->get();
+
+     $breadcrumb = array(
+         0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+         1 => array('title' => 'Widgetposition', 'message' => 'Widgetposition', 'status' => 1)
+     );
+     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+     $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+     $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+     $language = Language::where('delet_flag',0)->orderBy('name')->get();
+
+     return view('backend.masteradmin.Publicrelationtype.Publicrelationtype', compact('data', 'breadcrumbarr', 'navbar','language','user'));
+ }
+
+
+ /*Store widget positions*/
+ public function storepublicrelationtype(Request $request)
+ {
+
+     $role_id = Auth::user()->id;
+     try {
+        $validator = Validator::make(
+            $request->all(),
+            [
+
+                'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+
+            ],
+            [
+                'title.required' => 'Title is required',
+                'title.regex'    => 'The title format is invalid',
+                'title.min'      => 'Title  minimum length is 3',
+                'title.max'      => 'Title  maximum length is 150',
+
+            ]
+        );
+        //
+
+        if ($validator->fails()) {
+            // dd($validator->errors());
+            return back()->withInput()->withErrors($validator->errors());
+        }
+         $storeinfo = new Publicrelationtype([
+             'userid' => Auth::user()->id,
+             'delet_flag' => 0,
+             'status_id' => 1,
+         ]);
+         // dd($storeinfo);
+         $res = $storeinfo->save();
+         $typeid = DB::getPdo()->lastInsertId();
+         $leng = count($request->sel_lang);
+
+         for ($i = 0; $i < $leng; $i++) {
+
+
+             if ($typeid) {
+
+                 $store_sub_info = new PublicrelationtypSub([
+                     'languageid' => $request->sel_lang[$i],
+                     'title' => $request->title[$i],
+                     'publicrelationtypeid' => $typeid,
+                 ]);
+                 $storedetails_sub = $store_sub_info->save();
+             }
+             // dd($path);
+         } //forloopend
+
+
+         return redirect()->route('publicrelationtype')->with('success', 'created successfully');
+     } catch (ModelNotFoundException $exception) {
+         \LogActivity::addToLog($exception->getMessage(), 'error');
+         $data = \LogActivity::logLatestItem();
+         return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+     }
+ }
+
+ /*edit widget positions*/
+ public function editwidget($id)
+ {
+     $id = Crypt::decryptString($id);
+     $edit_f = 'E';
+     $keydata = Publicrelationtype::where('id', $id)->first();
+     $error = '';
+     $data = Publicrelationtype::where('delet_flag', 0)->get();
+     $breadcrumb = array(
+         0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+         1 => array('title' => 'Widgetposition', 'message' => 'Widgetposition', 'status' => 1)
+     );
+     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+     $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+     $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+     return view('backend.admin.Widgetpostion.widgetposition', compact('data', 'edit_f', 'error', 'keydata', 'breadcrumbarr', 'navbar', 'user'));
+ }
+
+
+
+ /*widget positions update*/
+
+ public function updatepublicrelationtype(Request $request)
+ {
+     try {
+         $request->validate([
+             'widget' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+         ]);
+         $request->input();
+
+         $uparr = array(
+             'name' => $request->widget,
+         );
+
+         $res = Publicrelationtype::where('id', $request->hidden_id)->update($uparr);
+         $edit_f = '';
+         if ($res) {
+             return Redirect('widgetpositions')->with('success', 'Updated successfully', ['edit_f' => $edit_f]);
+         } else {
+             return back()->withErrors('Not Updated ');
+         }
+     } catch (ModelNotFoundException $exception) {
+         \LogActivity::addToLog($exception->getMessage(), 'error');
+         $data = \LogActivity::logLatestItem();
+         return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+     }
+ }
+
+ /*widget positions delete*/
+
+ public function deletewidget($id)
+ {
+     $id = Crypt::decryptString($id);
+
+     DB::beginTransaction();
+     // $uparr=array(
+     //     'delet_flag'=>1,
+     //      );
+     // $res=Widgetposition::where('id',$id)->update($uparr);
+     $res = Publicrelationtype::findOrFail($id)->delete();
+     $edit_f = '';
+     if ($res) {
+         DB::commit();
+         return Redirect('widgetpositions')->with('success', 'Deleted successfully', ['edit_f' => $edit_f]);
+     } else {
+         DB::rollback();
+         return back()->withErrors('Not deleted ');
+     }
+ }
+
+ /*Widget postion Status*/
+ public function statuswidgetpost($id)
+ {
+     $id = Crypt::decryptString($id);
+
+     DB::beginTransaction();
+     $uparr = array(
+         'status_id' => 0,
+     );
+     $res = Publicrelationtype::where('id', $id)->update($uparr);
+
+     $edit_f = '';
+     if ($res_sub) {
+         DB::commit();
+         return Redirect('widgetpositions')->with('success', 'Status updated successfully', ['edit_f' => $edit_f]);
+     } else {
+         DB::rollback();
+         return back()->withErrors('Not deleted ');
+     }
+ }
+
+ /*widget link*/
+
+  /*Link type type*/
+  public function linktype()
+  {
+          $datas = Linktype::with(['linktype_sub' => function ($query) {
+           }])->get();
+      $breadcrumb = array(
+          0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+          1 => array('title' => 'Link type', 'message' => 'Link type', 'status' => 1)
+      );
+      $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+      $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+      $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+      return view('backend.masteradmin.linktype.linktypelist', compact('datas', 'breadcrumbarr', 'navbar', 'user'));
+  }
+  public function createlinktype()
+  {
+    $breadcrumb = array(
+        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+        1 => array('title' => 'Link type', 'message' => 'Link type', 'status' => 1)
+    );
+
+      $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+      $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+      $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+      $usertype = usertype::get();
+
+      $language = Language::where('delet_flag', 0)->orderBy('name')->get();
+
+      return view('backend.masteradmin.linktype.createlinktype', compact('breadcrumbarr', 'navbar', 'user', 'usertype', 'language'));
+  }
+  public function storelinktype(Request $request)
+   {
+       // dd($request->all());
+
+       $validator = Validator::make(
+           $request->all(),
+           [
+               'sel_lang.*' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+               'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+           ],
+           [
+               'title.required' => 'Title is required',
+               'title.min' => 'Title  minimum lenght is 2',
+               'title.max' => 'Title  maximum lenght is 50',
+               'title.regex' => 'Invalid characters not allowed for Title',
+
+           ]
+       );
+       if ($validator->fails()) {
+           // dd($validator->errors());
+           return back()->withInput()->withErrors($validator->errors());
+       }
+       try {
+
+           $request->input();
+           $role_id = Auth::user()->id;
+
+           $leng = count($request->sel_lang);
+
+           $storeinfo = new Linktype([
+               'userid' => Auth::user()->id,
+               'status_id' => 1,
+               'delet_flag' => 0,
+           ]);
+
+           $res = $storeinfo->save();
+           $linktypeid = DB::getPdo()->lastInsertId();
+
+           for ($i = 0; $i < $leng; $i++) {
+
+
+               if ($linktypeid) {
+
+                   $store_sub_info = new Linktypesub([
+                       'languageid' => $request->sel_lang[$i],
+                       'title' => $request->title[$i],
+                       'linktypeid' => $linktypeid,
+                   ]);
+                   $storedetails_sub = $store_sub_info->save();
+               }
+               // dd($path);
+           } //forloopend
+
+           return redirect()->route('masteradmin.linktype')->with('success', 'Created successfully');
+       } catch (ModelNotFoundException $exception) {
+           \LogActivity::addToLog($exception->getMessage(), 'error');
+           $data = \LogActivity::logLatestItem();
+           return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+       }
+   }
+   public function editlinktype($id)
+   {
+
+       $id = Crypt::decryptString($id);
+
+       $edit_f = 'E';
+
+       $keydata = Linktype::with(['linktype_sub' => function ($query) {
+    }])->where('id', $id)->first();
+       $error = '';
+
+
+       $language = Language::orderBy('name')->get();
+
+       $breadcrumb = array(
+           0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masterhome'),
+           1 => array('title' => 'Tender category', 'message' => 'Tender category', 'status' => 0, 'link' => '/masteradmin/linktype'),
+           2 => array('title' => 'Edit Tender category', 'message' => 'Edit Tender category', 'status' => 1)
+       );
+       $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+       $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+       $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+
+       return view('backend.masteradmin.linktype.createlinktype', compact('breadcrumbarr', 'navbar', 'user', 'language', 'edit_f', 'keydata'));
+   }
+   public function updatelinktype(Request $request)
+   {
+       // dd($request->all());
+
+       $validator = Validator::make(
+           $request->all(),
+           [
+               'sel_lang.*' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+               'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+           ],
+           [
+               'title.required' => 'Title is required',
+               'title.min' => 'Title  minimum lenght is 2',
+               'title.max' => 'Title  maximum lenght is 50',
+               'title.regex' => 'Invalid characters not allowed for Title',
+
+           ]
+       );
+       if ($validator->fails()) {
+           // dd($validator->errors());
+           return back()->withInput()->withErrors($validator->errors());
+       }
+       try {
+
+           $request->input();
+           $role_id = Auth::user()->id;
+
+           $leng = count($request->sel_lang);
+           // dd($leng);
+
+           $storeinfo = array(
+               'userid' => Auth::user()->id,
+           );
+
+           $res = Linktype::where('id', $request->hidden_id)->update($storeinfo);
+           $linktypeid = $request->hidden_id;
+
+           for ($i = 0; $i < $leng; $i++) {
+
+
+               if ($linktypeid) {
+
+                   $store_sub_info = array(
+                       'languageid' => $request->sel_lang[$i],
+                       'title' => $request->title[$i],
+                       'linktypeid' => $linktypeid,
+                   );
+                   $storedetails_sub = Linktypesub::where('linktypeid', $request->hidden_id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
+               }
+               // dd($path);
+           } //forloopend
+
+           return redirect()->route('mediaadmin.linktype')->with('success', 'Updated successfully');
+       } catch (ModelNotFoundException $exception) {
+           \LogActivity::addToLog($exception->getMessage(), 'error');
+           $data = \LogActivity::logLatestItem();
+           return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+       }
+   }
+
+
+//    public function deletelinktype($id)
+//    {
+//        $id = Crypt::decryptString($id);
+//        // dd($id);
+//        DB::beginTransaction();
+
+//        $res_sub = TenderTypeSub::where('tendertypeid', $id)->delete();
+
+//        // if($res_sub)
+//        // {
+//        $res = TenderType::findOrFail($id)->delete();
+
+//        // }
+//        $edit_f = '';
+//        if ($res_sub) {
+//            DB::commit();
+//            return Redirect('/mediaadmin/tendertypelist')->with('success', 'Deleted successfully', ['edit_f' => $edit_f]);
+//        } else {
+//            DB::rollback();
+//            return back()->withErrors('Not deleted ');
+//        }
+//    }
 }

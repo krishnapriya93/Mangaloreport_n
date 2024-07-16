@@ -61,7 +61,7 @@ use App\Models\GallerySub;
 use App\Models\GallerySubItems;
 use App\Models\Midwidget;
 use App\Models\Midwidgetsub;
-
+use App\Models\Submenusub;
 use \Crypt;
 use DB;
 use Redirect;
@@ -106,23 +106,19 @@ class SiteadminController extends Controller
         $data       = Article::with(['articleval_sub'=>function($query){
 
         }])->where('users_id',Auth::user()->id)->get();
-        $widgetPosition=Widgetposition::get();
+        // $widgetPosition=Widgetposition::get();
         $keywordtags=Keywordtag::with(['keytag_sub'=>function($query){}])->get();
         $usertype = usertype::where('delet_flag',0)->whereIn('id',[8,9])->where('status_id',1)->get();
         // $keywordtags=array();
-        $sbu_type=Auth::user()->sbutype;
+
         // dd($sbu_type);
         $role_id_multi =Auth::user()->id;
-        // dd($role_id_multi);
-        $check_multi_sbu=Articletype::with(['articletype_sub'=>function($query){
-            $query->where('languageid', 1);
-        }])->where('status_id',1)->where('delet_flag',0)->where('multi_sbu',$role_id_multi)->where('sbu_type',$sbu_type)->get();
-        // dd($check_multi_sbu);
+
         $arttype =   Articletype::with(['articletype_sub'=>function($query){
             $query->where('languageid', 1);
         }])->where('status_id',1)->where('delet_flag',0)->get();
 
-        return view('backend.siteadmin.Article.article',compact('breadcrumbarr','navbar','user','language','data','arttype','widgetPosition','keywordtags','usertype'));
+        return view('backend.siteadmin.Article.article',compact('breadcrumbarr','navbar','user','language','data','arttype','keywordtags','usertype'));
     }
     public function createarticle(Request $request, $encid=null)
     {
@@ -151,11 +147,11 @@ class SiteadminController extends Controller
         $data       = Article::with(['articleval_sub'=>function($query){
 
         }])->where('users_id',Auth::user()->id)->get();
-        $widgetPosition=Widgetposition::get();
+        // $widgetPosition=Widgetposition::get();
         $keywordtags=Keywordtag::with(['keytag_sub'=>function($query){}])->get();
         $usertype = usertype::where('delet_flag',0)->whereIn('id',[8,9])->where('status_id',1)->get();
         // $keywordtags=array();
-        $sbu_type=Auth::user()->sbutype;
+        // $sbu_type=Auth::user()->sbutype;
         // dd($sbu_type);
 
 
@@ -166,7 +162,7 @@ class SiteadminController extends Controller
 
 
         // $editF='A';
-        return view('backend.siteadmin.Article.createarticle',compact('breadcrumbarr','navbar','user','language','data','arttype','widgetPosition','keywordtags','usertype'));
+        return view('backend.siteadmin.Article.createarticle',compact('breadcrumbarr','navbar','user','language','data','arttype','keywordtags','usertype'));
     }
 
 
@@ -184,7 +180,6 @@ class SiteadminController extends Controller
                     // 'poster.*'      => app('App\Http\Controllers\Commonfunctions')->article_imgae_upload(),
                     'poster'      =>'sometimes',
                     'usertype'      =>'sometimes',
-                    'viewtype'      =>'sometimes',
                     'alt_title.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
 
                 ],
@@ -3625,291 +3620,7 @@ public function deletewhatsnew($id)
         }
     }
 
-  /*Links*/
-    public function links()
-    {
-        $data = Link::with(['link_sub' =>function($query){
-            // $query->where('delet_flag',0);
-        }])->where('delet_flag',0)->orderBy('orderno','asc')->get();
 
-// dd($data);
-        $language = Language::where('delet_flag',0)->orderBy('name')->get();
-
-        $breadcrumb = array(
-            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-            1 => array('title' => 'Links', 'message' => 'Links', 'status' => 1)
-         );
-        $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-        $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-        $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-
-        return view('Siteadmin.Link.linklist',compact('data','breadcrumbarr','language','navbar','user'));
-    }
-
-
-            /*create Link*/
-    public function createlinks()
-    {
-
-        $language = Language::where('delet_flag',0)->orderBy('name')->get();
-        $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
-        $linktype = Linktype::with(['linktype_sub' =>function($query){
-            // $query->where('delet_flag',0);
-        }])->where('delet_flag',0)->get();
-        $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
-        $breadcrumb = array(
-            0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-            1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/links'),
-            2 => array('title' => 'Create Link ', 'message' => 'Create Link ', 'status' => 2)
-         );
-        $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-        $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-        $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-        $url = url()->previous();
-        $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
-        $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
-
-        return view('Siteadmin.Link.createlink',compact('breadcrumbarr','language','navbar','user','Menulinktype','linktype','Navid','Menulinktype'));
-    }
-
-    /*Store Link*/
-      public function storelink(Request $request)
-    {
-        // dd($request->all());
-        try{
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-                'alt_text.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-                'file.*'        => 'sometimes|nullable|mimes:jpg,jpeg,png',
-           ],[
-                'title.required' => 'Title is required',
-                'title.min' => 'Title  minimum lenght is 2',
-                'title.max' => 'Title  maximum lenght is 50',
-                'title.regex' => 'Invalid characters not allowed for Title',
-
-                'alt_text.required' => 'Alternative text is required',
-                'alt_text.min' => 'Alternative text  minimum lenght is 2',
-                'alt_text.max' => 'Alternative text  maximum lenght is 50',
-                'alt_text.regex' => 'Invalid characters not allowed for alternative text',
-
-                'file.mimes'   => 'Invalid image format',
-                'file.mimes'   => 'Invalid file format',
-            ]);
-            if ($validator->fails()) {
-                // dd($validator->errors());
-                return back()->withInput()->withErrors($validator->errors());
-            }
-            // dd($request->all());
-            $role_id = Auth::user()->id;
-            if($request->Anchor)
-            {
-                $menulinktype_data=$request->Anchor;
-            }
-            elseif($request->url_menu)
-            {
-                $menulinktype_data=$request->url_menu;
-            }
-            elseif($request->articletype)
-            {
-                $menulinktype_data=$request->articletype;
-            }elseif($request->route)
-            {
-                $menulinktype_data=$request->route;
-            }
-            elseif($request->forms)
-            {
-                $menulinktype_data=$request->forms;
-            }  elseif($request->menulinktype==17)
-            {
-                $menulinktype_data='';
-            }
-
-
-            $leng=count($request->sel_lang);
-            if(empty($request->url)){
-                $url=$request->url;
-            }else{
-                $url=1;
-            }
-
-            $date = date('dmYH:i:s');
-
-                         if (isset($request->file)) {
-                                $imageName = 'Linkicon' . $date . '.' . $request->file->extension();
-                                $path = $request->file('file')->storeAs('/uploads/Linkicon', $imageName,'myfile');
-                         }else{
-                            $imageName=0;
-                         }
-                         $storeinfo=new Link([
-                            'userid'=>Auth::user()->id,
-                            'iconclass'=>$request->iconclass,
-                            'url'=>$url,
-                            'file'=>$imageName,
-                            'menulinktype_id'=>$request->menulinktype,
-                            'menulinktype_data'=>$menulinktype_data,
-                            'linktypeid'=>$request->linktype,
-                            'delet_flag'=>0,
-                            'status_id'=>1,
-                        ]);
-
-            $res = $storeinfo->save();
-            $link_id = DB::getPdo()->lastInsertId();
-
-            for($i=0;$i<$leng;$i++){
-
-                if($link_id){
-
-                        $store_sub_info=new Linksub([
-                                    'languageid'=>$request->sel_lang[$i],
-                                    'title' =>$request->title[$i],
-                                    'alternatetext' =>$request->alt_text[$i],
-                                    'linkid' => $link_id,
-                                    'delet_flag'=>0,
-                                    'status_id'=>1,
-                                ]);
-                         $storedetails_sub=$store_sub_info->save();
-                }
-                // dd($path);
-            }//forloopend
-
-            return redirect()->route('links')->with('success','created successfully');
-
-        } catch (ModelNotFoundException $exception) {
-            \LogActivity::addToLog($exception->getMessage(),'error');
-            $data = \LogActivity::logLatestItem();
-            return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
-        }
-
-    }
-
-        /*edit Link*/
-
-        public function editlinks($id)
-        {
-            $id= Crypt::decryptString($id);
-
-            $edit_f = 'E';
-
-            $error = '';
-
-            $data = Link::with(['link_sub' =>function($query){
-                // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
-            }])->where('delet_flag',0)->get();
-
-            $keydata = Link::with(['link_sub' =>function($query){
-                // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
-            }])->where('delet_flag',0)->where('id',$id)->first();
-
-            $linktype = Linktype::with(['linktype_sub' =>function($query){
-                // $query->where('delet_flag',0);
-            }])->where('delet_flag',0)->get();
-            $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
-    // dd($keydata);
-            $language = Language::where('delet_flag',0)->orderBy('name')->get();
-
-            $breadcrumb = array(
-                0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-                1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/links'),
-                2 => array('title' => 'Edit Link ', 'message' => 'Edit Link ', 'status' => 2)
-             );
-            $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-
-            $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-            $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-
-            return view('Siteadmin.Link.createlink', compact('data','edit_f', 'error','keydata','breadcrumbarr','language','navbar','user','linktype','Menulinktype'));
-        }
-
-/*Link delete*/
-    public function deletelink($id)
-    {
-
-        $id= Crypt::decryptString($id);
-
-            DB::beginTransaction();
-           $imageName = Link::where('id', $id)->first();
-
-           $Storage_sub =     Storage::disk('myfile')->delete('/uploads/Linkicon/' . $imageName->file);
-            if($Storage_sub){
-                $res_sub= Linksub::where('linkid',$id)->delete();
-
-                        if($res_sub)
-                        {
-                        $res= Link::findOrFail($id)->delete();
-                        }
-                        $edit_f ='';
-                            if($res_sub){
-                                DB::commit();
-                                return Redirect('links')->with('success','Deleted successfully',['edit_f' => $edit_f]);
-                            }else{
-                                DB::rollback();
-                                return back()->withErrors('Not deleted ');
-                            }
-            }
-
-    }
-
-/*Link Status*/
-public function statuslink($id)
-    {
-        $id= Crypt::decryptString($id);
-        $status=Link::where('id',$id)->value('status_id');
-
-        DB::beginTransaction();
-        if($status==1)
-        {
-            $uparr=array(
-                'status_id'=>0,
-            );
-            }else{
-            $uparr=array(
-                'status_id'=>1,
-            );
-        }
-        $res=Link::where('id',$id)->update($uparr);
-
-        $edit_f ='';
-        if($res){
-            DB::commit();
-            return Redirect('links')->with('success','Status updated successfully',['edit_f' => $edit_f]);
-        }else{
-            DB::rollback();
-            return back()->withErrors('Not deleted ');
-        }
-          }
-
-public function Orderchangelinklist_form(Request $request)
-    {
-        try {
-            $id= Crypt::decryptString($request->id);/*dd($request->val);*/
-            $res = Link::where('id', '=', $id)->update(['orderno' => $request->val]);
-            //
-        } catch (\Exception $exception) {
-            /*\LogActivity::addToLog($exception->getMessage());
-            $data = \LogActivity::logLatestItem();
-            $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
-            return view('Siteadmin.dashboard', compact('error'));*/
-        } catch (\Throwable $exception) {
-            /*\LogActivity::addToLog($exception->getMessage());
-            $data = \LogActivity::logLatestItem();
-            $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
-            return view('Siteadmin.dashboard', compact('error'));*/
-        } catch (\Illuminate\Database\QueryException $exception) {
-
-            /*\LogActivity::addToLog($exception->getMessage());
-            $data = \LogActivity::logLatestItem();
-            return back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);*/
-        }
-        if ($res) {
-            $success = "Status Updated!";
-            return response()->json(['html' => $success]);
-        } else {
-            $error = 'Not updated status';
-            return response()->json(['html' => $error]);
-        }
-    }
   /*Press relase*/
     public function pressreleaselist()
     {
@@ -6164,6 +5875,425 @@ public function OrderchangeSubmenu_form(Request $request)
       } else {
           DB::rollback();
           return back()->withErrors('Not deleted ');
+      }
+  }
+
+  /*Links*/
+  public function links()
+  {
+      $data = Link::with(['link_sub' =>function($query){
+          // $query->where('delet_flag',0);
+      }])->where('delet_flag',0)->orderBy('orderno','asc')->get();
+
+// dd($data);
+      $language = Language::where('delet_flag',0)->orderBy('name')->get();
+
+      $breadcrumb = array(
+          0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+          1 => array('title' => 'Links', 'message' => 'Links', 'status' => 1)
+       );
+      $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+      $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+      $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
+
+      return view('backend.siteadmin.Link.linklist',compact('data','breadcrumbarr','language','navbar','user'));
+  }
+
+
+          /*create Link*/
+  public function createlinks()
+  {
+
+      $language = Language::where('delet_flag',0)->orderBy('name')->get();
+      $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
+      $linktype = Linktype::with(['linktype_sub' =>function($query){
+          // $query->where('delet_flag',0);
+      }])->where('delet_flag',0)->get();
+      $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
+      $breadcrumb = array(
+          0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+          1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/links'),
+          2 => array('title' => 'Create Link ', 'message' => 'Create Link ', 'status' => 2)
+       );
+      $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+      $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+      $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
+      $url = url()->previous();
+      $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
+      $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
+      $arttype =   Articletype::with(['articletype_sub'=>function($query){
+          $query->where('languageid', 1);
+      }])->where('status_id',1)->where('delet_flag',0)->where('sbu_type',['NULL',0])->get();
+
+      return view('backend.siteadmin.Link.createlink',compact('arttype','breadcrumbarr','language','navbar','user','Menulinktype','linktype','Navid','Menulinktype'));
+  }
+
+  /*Store Link*/
+    public function storelink(Request $request)
+  {
+      // dd($request->all());
+      try{
+      $validator = Validator::make(
+          $request->all(),
+          [
+              'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+              'alt_text.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+              'file.*'        => 'sometimes|nullable|mimes:jpg,jpeg,png',
+         ],[
+              'title.required' => 'Title is required',
+              'title.min' => 'Title  minimum lenght is 2',
+              'title.max' => 'Title  maximum lenght is 50',
+              'title.regex' => 'Invalid characters not allowed for Title',
+
+              'alt_text.required' => 'Alternative text is required',
+              'alt_text.min' => 'Alternative text  minimum lenght is 2',
+              'alt_text.max' => 'Alternative text  maximum lenght is 50',
+              'alt_text.regex' => 'Invalid characters not allowed for alternative text',
+
+              'file.mimes'   => 'Invalid image format',
+              'file.mimes'   => 'Invalid file format',
+          ]);
+          if ($validator->fails()) {
+              // dd($validator->errors());
+              return back()->withInput()->withErrors($validator->errors());
+          }
+          // dd($request->all());
+          $role_id = Auth::user()->id;
+          if($request->Anchor)
+          {
+              $menulinktype_data=$request->Anchor;
+          }
+          elseif($request->url_menu)
+          {
+              $menulinktype_data=$request->url_menu;
+          }
+          elseif($request->articletype)
+          {
+              $menulinktype_data=$request->articletype;
+          }elseif($request->route)
+          {
+              $menulinktype_data=$request->route;
+          }
+          elseif($request->forms)
+          {
+              $menulinktype_data=$request->forms;
+          }  elseif($request->menulinktype==17)
+          {
+              $menulinktype_data='';
+          }
+
+
+          $leng=count($request->sel_lang);
+          if(empty($request->url)){
+              $url=$request->url;
+          }else{
+              $url=1;
+          }
+
+          $date = date('dmYH:i:s');
+
+                       if (isset($request->file)) {
+                              $imageName = 'Linkicon' . $date . '.' . $request->file->extension();
+                              $path = $request->file('file')->storeAs('/assets/backend/uploads/Linkicon', $imageName,'myfile');
+                       }else{
+                          $imageName=0;
+                       }
+                       $storeinfo=new Link([
+                          'userid'=>Auth::user()->id,
+                          'iconclass'=>$request->iconclass,
+                          'url'=>$url,
+                          'file'=>$imageName,
+                          'menulinktype_id'=>$request->menulinktype,
+                          'menulinktype_data'=>$menulinktype_data,
+                          'linktypeid'=>$request->linktype,
+                          'delet_flag'=>0,
+                          'status_id'=>1,
+                      ]);
+
+          $res = $storeinfo->save();
+          $link_id = DB::getPdo()->lastInsertId();
+
+          for($i=0;$i<$leng;$i++){
+
+              if($link_id){
+
+                      $store_sub_info=new Linksub([
+                                  'languageid'=>$request->sel_lang[$i],
+                                  'title' =>$request->title[$i],
+                                  'alternatetext' =>$request->alt_text[$i],
+                                  'linkid' => $link_id,
+                                  'delet_flag'=>0,
+                                  'status_id'=>1,
+                              ]);
+                       $storedetails_sub=$store_sub_info->save();
+              }
+              // dd($path);
+          }//forloopend
+
+          return redirect()->route('links')->with('success','created successfully');
+
+      } catch (ModelNotFoundException $exception) {
+          \LogActivity::addToLog($exception->getMessage(),'error');
+          $data = \LogActivity::logLatestItem();
+          return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+      }
+
+  }
+
+      /*edit Link*/
+
+      public function editlinks($id)
+      {
+
+          $id= Crypt::decryptString($id);
+
+          $edit_f = 'E';
+
+          $error = '';
+
+          $data = Link::with(['link_sub' =>function($query){
+              $query->with(['lang_sel' => function($query){
+
+              }]);
+              // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
+          }])->where('delet_flag',0)->get();
+
+          $keydata = Link::with(['link_sub' =>function($query){
+              $query->with(['lang_sel' => function($query){
+
+              }]);
+              // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
+          }])->where('delet_flag',0)->where('id',$id)->first();
+
+          $linktype = Linktype::with(['linktype_sub' =>function($query){
+              // $query->where('delet_flag',0);
+          }])->where('delet_flag',0)->get();
+          $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
+  // dd($keydata);
+          $language = Language::where('delet_flag',0)->orderBy('name')->get();
+
+          $breadcrumb = array(
+              0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+              1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/links'),
+              2 => array('title' => 'Edit Link ', 'message' => 'Edit Link ', 'status' => 2)
+           );
+          $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+
+          $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+          $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
+          $arttype =   Articletype::with(['articletype_sub'=>function($query){
+              $query->where('languageid', 1);
+          }])->where('status_id',1)->where('delet_flag',0)->where('sbu_type',['NULL',0])->get();
+
+
+          return view('backend.siteadmin.Link.createlink', compact('arttype','data','edit_f', 'error','keydata','breadcrumbarr','language','navbar','user','linktype','Menulinktype'));
+      }
+  /*Edit Link*/
+  public function updatelink(Request $request)
+  {
+  //    dd($request->all());
+      try{
+      $validator = Validator::make(
+          $request->all(),
+          [
+              'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+              'alt_text.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+              'file.*'        => 'sometimes|nullable|mimes:jpg,jpeg,png',
+         ],[
+              'title.required' => 'Title is required',
+              'title.min' => 'Title  minimum lenght is 2',
+              'title.max' => 'Title  maximum lenght is 50',
+              'title.regex' => 'Invalid characters not allowed for Title',
+
+              'alt_text.required' => 'Alternative text is required',
+              'alt_text.min' => 'Alternative text  minimum lenght is 2',
+              'alt_text.max' => 'Alternative text  maximum lenght is 50',
+              'alt_text.regex' => 'Invalid characters not allowed for alternative text',
+
+              'file.mimes'   => 'Invalid image format',
+              'file.mimes'   => 'Invalid file format',
+          ]);
+          if ($validator->fails()) {
+              // dd($validator->errors());
+              return back()->withInput()->withErrors($validator->errors());
+          }
+          // dd($request->all());
+          $role_id = Auth::user()->id;
+          if($request->Anchor)
+          {
+              $menulinktype_data=$request->Anchor;
+
+          }
+          elseif($request->url_menu)
+          {
+              $menulinktype_data=$request->url_menu;
+
+          }
+          elseif($request->menulinktype==16)
+          {
+              $menulinktype_data=$request->route;
+
+          }
+          elseif($request->forms)
+          {
+              $menulinktype_data=$request->forms;
+
+          }  elseif($request->menulinktype==17)
+          {
+              $menulinktype_data='';
+
+          }elseif(($request->menulinktype==14) || ($request->menulinktype==20))
+          {
+              // $url_name='/planning/articledetail/';
+              // $menulinktype_data=$url_name.$request->articletype;
+              $menulinktype_data=$request->articletype;
+              $article_id=$request->articletype;
+
+          }elseif($request->menulinktype==21)
+          {
+              $menulinktype_data=$request->downloadtype;
+
+          }
+          // dd($menulinktype_data);
+
+          $leng=count($request->sel_lang);
+
+          if(empty($request->url)){
+              $url='';
+          }else{
+              $url=$request->url;
+          }
+
+          $date = date('dmYH:i:s');
+
+                       if (isset($request->file)) {
+                              $imageName = 'Linkicon' . $date . '.' . $request->file->extension();
+                              $path = $request->file('file')->storeAs('/assets/backend/uploads/Linkicon', $imageName,'myfile');
+                              $storeinfo=array(
+                                  'iconclass'=>$request->iconclass,
+                                  'url'=>$url,
+                                  'file'=>$imageName,
+                                  'menulinktype_id'=>$request->menulinktype,
+                                  'menulinktype_data'=>$menulinktype_data,
+                                  'linktypeid'=>$request->linktype,
+                              );
+                       }else{
+                          $storeinfo=array(
+                              'iconclass'=>$request->iconclass,
+                              'url'=>$url,
+                              'menulinktype_id'=>$request->menulinktype,
+                              'menulinktype_data'=>$menulinktype_data,
+                              'linktypeid'=>$request->linktype,
+                          );
+                       }
+
+                      $res=Link::where('id',$request->hidden_id)->update($storeinfo);
+          if($res){
+          for($i=0;$i<$leng;$i++){
+                      $store_sub_info=array(
+                                  'languageid'=>$request->sel_lang[$i],
+                                  'title' =>$request->title[$i],
+                                  'alternatetext' =>$request->alt_text[$i],
+                                  'linkid' =>$request->hidden_id,
+                              );
+                       $storedetails_sub=Linksub::where('id',$request->hidden_id)->where('languageid',$request->sel_lang[$i])->update($store_sub_info);
+              }
+              // dd($path);
+          }//forloopend
+
+          return redirect()->route('links')->with('success','Updated successfully');
+
+      } catch (ModelNotFoundException $exception) {
+          \LogActivity::addToLog($exception->getMessage(),'error');
+          $data = \LogActivity::logLatestItem();
+          return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+      }
+
+  }
+/*Link delete*/
+  public function deletelink($id)
+  {
+
+      $id= Crypt::decryptString($id);
+
+          DB::beginTransaction();
+         $imageName = Link::where('id', $id)->select('file')->get();
+         $res_sub= Linksub::where('linkid',$id)->delete();
+      //    dd($res_sub);
+
+                      if($res_sub)
+                      {
+                      $res= Link::findOrFail($id)->delete();
+                      }
+                      $edit_f ='';
+                          if($res_sub){
+                              DB::commit();
+                              return Redirect('links')->with('success','Deleted successfully',['edit_f' => $edit_f]);
+                          }else{
+                              DB::rollback();
+                              return back()->withErrors('Not deleted ');
+                          }
+
+
+  }
+
+/*Link Status*/
+public function statuslink($id)
+  {
+      $id= Crypt::decryptString($id);
+      $status=Link::where('id',$id)->value('status_id');
+
+      DB::beginTransaction();
+      if($status==1)
+      {
+          $uparr=array(
+              'status_id'=>0,
+          );
+          }else{
+          $uparr=array(
+              'status_id'=>1,
+          );
+      }
+      $res=Link::where('id',$id)->update($uparr);
+
+      $edit_f ='';
+      if($res){
+          DB::commit();
+          return Redirect('links')->with('success','Status updated successfully',['edit_f' => $edit_f]);
+      }else{
+          DB::rollback();
+          return back()->withErrors('Not deleted ');
+      }
+        }
+
+public function Orderchangelinklist_form(Request $request)
+  {
+      try {
+          $id= Crypt::decryptString($request->id);/*dd($request->val);*/
+          $res = Link::where('id', '=', $id)->update(['orderno' => $request->val]);
+          //
+      } catch (\Exception $exception) {
+          /*\LogActivity::addToLog($exception->getMessage());
+          $data = \LogActivity::logLatestItem();
+          $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
+          return view('Siteadmin.dashboard', compact('error'));*/
+      } catch (\Throwable $exception) {
+          /*\LogActivity::addToLog($exception->getMessage());
+          $data = \LogActivity::logLatestItem();
+          $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
+          return view('Siteadmin.dashboard', compact('error'));*/
+      } catch (\Illuminate\Database\QueryException $exception) {
+
+          /*\LogActivity::addToLog($exception->getMessage());
+          $data = \LogActivity::logLatestItem();
+          return back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);*/
+      }
+      if ($res) {
+          $success = "Status Updated!";
+          return response()->json(['html' => $success]);
+      } else {
+          $error = 'Not updated status';
+          return response()->json(['html' => $error]);
       }
   }
 

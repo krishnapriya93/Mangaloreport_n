@@ -5,13 +5,13 @@
     <ol class="breadcrumb justify-content-center">
         {!!$breadcrumbarr!!}
     </ol>
-</nav> 
+</nav>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            
+
             <div class="card">
-        
+
                 @if(Session::get('success')!='')
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Success!</strong>   {{Session::get('success')}}
@@ -35,26 +35,23 @@
                 <div class="row"><div class="col-sm-9"></div><div class="col-sm-3 mt-3"><a href="{{route('createsubmenu')}}" id="addlogobtn" class="btn btn-flat btn-point btn-sm btn-success"><i class="fas fa-plus"></i>&nbsp;Add New Record</a></div> </div>
                 <div class="card-body">
                     <table id="datatable_view1" class="drag_tab1 table table-striped">
-                    <thead>    
+                    <thead>
                     <tr>
                         <th>No</th>
                         <th>Title</th>
-                        <th>Main menu</th>
-                        <th>SBU</th>
+
                         <th>Status</th>
                         <th width="280px">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @php 
+                    @php
                     $i=0;
-                    @endphp 
+                    @endphp
                     @foreach ($data as $key => $result)
                     <tr>
                         <td name="{{$result->submenusub[0]->title ?? ''}}" id="{{\Crypt::encryptString($result->id)}}" class="SNum1 sortnum_{{$i}} officer_id-{{\Crypt::encryptString($result->id)}}">{{ $loop->iteration }}</td>
                         <td>{{$result->submenusub[0]->title ?? ''}}</td>
-                        <td>{{$result->mainmenu_sub_selected[0]->title ?? 'Main dashboard'}}</td>
-                        <td>@if($result->sbu_type==null) maindashboard @else {{$result->sbu_type_user[0]->title}} @endif</td>
                         <td>
                             @if(($result->status_id)==1)
                             <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('statussubmenu',\Crypt::encryptString($result->id)) }}">Active</a>
@@ -66,12 +63,12 @@
                             <a class="btn btn-primary btn-sm-default" href="{{ route('editsubmenu',\Crypt::encryptString($result->id)) }}">Edit</a>
                             <a class="btn btn-danger btn-sm-default" href="{{ route('deletesubmenu',\Crypt::encryptString($result->id)) }}">Delete</a>
                         </td>
-                    </tr>   
+                    </tr>
                      <!-- $i++; -->
-                    @endforeach    
-                    </tbody>    
-                    </table>    
-  
+                    @endforeach
+                    </tbody>
+                    </table>
+
                 </div>
             </div> <!--card2 -->
 
@@ -85,7 +82,7 @@
     $(".alert").fadeTo(2000, 500).slideUp(500, function() {
       $(".alert").slideUp(500);
     });
-   
+
     $('.alert').alert();
 });
 
@@ -114,7 +111,7 @@
         var k=0;
         var officer_id1=0;
         var names1='';
-       
+
         var action_url1='';
         // if(usern==3){
         //     action_url="{{ url('OrderchangeJury_form') }}";
@@ -123,9 +120,9 @@
         // }else if(usern==6){
         //     action_url="{{ url('mediamanager/OrderchangeJury_form') }}";
         // }
-        var usertype1=$("#usertype_id").val(); 
-        var action_url1 = "/OrderchangeSubmenu_form"; 
-        
+        var usertype1=$("#usertype_id").val();
+        var action_url1 = "/OrderchangeSubmenu_form";
+
         $('.SNum1').each(function () {
             officer_id1=$(this).attr('id');
             names1=$(this).attr('name');
@@ -142,17 +139,17 @@
                 success: function(result1) {
                      /*alert(result1);*/
                             window.location.reload();
-                    
+
 
 
                 }
             });
-            
+
             $(this).text(k);
             console.log(officer_id1+' id');
         });
 
-        
+
     }
 });
 </script>

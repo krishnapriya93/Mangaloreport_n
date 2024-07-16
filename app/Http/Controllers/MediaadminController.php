@@ -52,12 +52,13 @@ class MediaadminController extends Controller
 
         $data = Publicrelation::with(['publicrelsub' => function ($query) {
             // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
-        }])->with(['publicrelationtype' => function ($query){
-
+        }])->with(['publicrelationtype' => function ($query1){
+            $query1->with(['ptypesub' => function ($query) {
+                // $query->select('alternatetext','subtitle','title')->where('delet_flag',0);
+            }]);
         }])->where('delet_flag', 0)->where('userid', $user)->get();
         // dd($data);
         $language = Language::where('delet_flag', 0)->orderBy('name')->get();
-// dd($data);
 
         $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
 
@@ -108,7 +109,11 @@ class MediaadminController extends Controller
     {
 
         $language = Language::where('delet_flag', 0)->orderBy('name')->get();
-        $pulicreltype = Publicrelationtype::where('delet_flag', 0)->orderBy('name')->get();
+        $pulicreltype = Publicrelationtype::with(['ptypesub' => function ($query) {
+            $query->where('languageid', 1)->orderBy('title');
+        }])->where('delet_flag', 0)->get();
+
+
         $departments = Department::where('langcode', 1)->where('status', 1)->where('vid', 'departments')->orderBy('name')->get();
 
 
@@ -190,8 +195,7 @@ class MediaadminController extends Controller
                             'content' => $request->con_title[$i],
                             'image' => $request->poster[$i],
                             'publicrelationid' => $publicrel_id,
-                            'delet_flag' => 0,
-                            'status_id' => 1,
+
                         ]);
                         $storedetails_sub = $store_sub_info->save();
                     } //forloop
@@ -202,8 +206,7 @@ class MediaadminController extends Controller
                             'title' => $request->title[$i],
                             'content' => $request->con_title[$i],
                             'publicrelationid' => $publicrel_id,
-                            'delet_flag' => 0,
-                            'status_id' => 1,
+
                         ]);
                         $storedetails_sub = $store_sub_info->save();
                     } //forloop
@@ -1480,4 +1483,6 @@ if($request->whatwedotype)
             return back()->withErrors('Not deleted ');
         }
     }
+
+
 }

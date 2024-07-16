@@ -20,19 +20,19 @@
                        </div>
                    @endif
 
-                  @if(session('error')) 
+                  @if(session('error'))
                     <div class="alert alert-danger" role="alert">
                        {{ session('error') }}
-                    </div> 
+                    </div>
                  @endif
-                  
+
                    @if(isset($edit_f))
                     <form id="formiid" method="POST" action="{{ route('updateuser') }}" enctype="multipart/form-data">
                     @else
                     <form id="formiid" method="POST" action="{{ route('storeuser') }}" enctype="multipart/form-data">
                     @endif
-    
-                    @csrf 
+
+                    @csrf
                         <input type="hidden" name="hidden_id" value="{{$keydata->id ?? ''}}">
                         <input type="hidden" id="role_id" name="role_id" value="{{$keydata->role_id ?? ''}}">
                         <input type="hidden" id="edit_id" name="edit_id" value="{{$edit_f ?? ''}}">
@@ -61,24 +61,13 @@
                             @foreach($usertype as $usertypes)
                                 <option @if(isset($edit_f))  {{($usertypes->id == $keydata->role_id) ? 'selected' : ''}} @endif   value="{{$usertypes->id}}">{{$usertypes->usertype}}</option>
                             @endforeach
-                            </select>    
+                            </select>
                             <span class="ErrP alert-danger titleerr redalert" style="display: none;">Please Check the usertype Entered</span>
                             <span class="redalert">@error('usertype'){{$message}} @enderror</span>
                             </div>
                         </div>
 
-                        <div class="row mb-3"  style="display: none;" id="subtype_div">
-                            <label for="Sbu" class="col-sm-2 col-form-label">SBU Type<span class="redalert"> *</span></label>
-                            <div class="col-sm-10">
-                             <select class="form-control select2" name="sbutype" id="sbutype">
-                            @foreach($sbutype as $sbutypes)
-                                <option @if(isset($edit_f))  {{($sbutypes->id == $keydata->sbutype) ? 'selected' : ''}} @endif  value="{{$sbutypes->id}}">{{$sbutypes->title}}</option>
-                            @endforeach
-                            </select>    
-                            <span class="ErrP alert-danger titleerr redalert" style="display: none;">Please Check the sbutypes Entered</span>
-                            <span class="redalert">@error('sbutype'){{$message}} @enderror</span>
-                            </div>
-                        </div>
+
 
 
                         <div class="row mb-3">
@@ -108,7 +97,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="row">
                             <div class="col-sm-10 offset-sm-2">
                                @if($edit_f ?? '')
@@ -127,10 +116,10 @@
        <br>
             <div class="card">
                 <div class="card-header text-white card-header-main">{{ __('List of User') }}</div>
-                 
+
                 <div class="card-body">
                     <table id="datatable_view" class="table table-striped">
-                    <thead>    
+                    <thead>
                     <tr>
                         <th>No</th>
                         <th>User name</th>
@@ -146,7 +135,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $result->name }}</td>
                         <td>{{ $result->email }}</td>
-                        <td>{{$result->role_users->usertype}}</td>
+                        <td>{{$result->role_users->usertype ?? ''}}</td>
                         <td>
                             @if(($result->status_id)==1)
                             <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('statususer',\Crypt::encryptString($result->id)) }}">Active</a>
@@ -158,11 +147,11 @@
                               <a class="btn btn-primary btn-sm" href="{{ route('edituser',\Crypt::encryptString($result->id)) }}">Edit</a>
                             <a class="btn btn-danger btn-sm" href="{{ route('deleteuser',\Crypt::encryptString($result->id)) }}">Delete</a>
                         </td>
-                    </tr>   
-                    @endforeach    
-                    </tbody>    
-                    </table>    
-  
+                    </tr>
+                    @endforeach
+                    </tbody>
+                    </table>
+
                 </div>
             </div> <!--card2 -->
 
@@ -171,7 +160,7 @@
 </div>
 @endsection
 @section('page_scripts')
-<script>  
+<script>
  $( document ).ready(function() {
     var edit=$('#edit_id').val();
     $('.ErrP').hide();
@@ -179,7 +168,7 @@
 if(edit)
 {
     var role_id=$('#role_id').val();
-    
+
     if(role_id==5)
     {
         $('#subtype_div').show();
@@ -201,21 +190,21 @@ if(edit)
 
     $('#password').on('keyup',function(e){
         var testres=passwordcheck('#password',this.value);
-       
+
         if (testres!='true') {
             $('.passworderr').html('');
             $('.passworderr').html(testres);
             $('.passworderr').show();
-            
+
         } else {
             $('.passworderr').hide();
             var testres=confirmpass('password','cnfpassword');
-            
+
             if (testres!='true') {
                 $('.cnfpassworderr').html('');
                 $('.cnfpassworderr').html(testres);
                 $('.cnfpassworderr').show();
-                
+
             } else {
                 $('.cnfpassworderr').hide();
             }
@@ -230,7 +219,7 @@ if(edit)
             $('.fullnameerr').text("Characters allowed: Alphabets, numbers and special characters such as spaces . , / - _ & @ '\" ? % ! ( ) ; < >  [ ] . No consecutive special characters are allowed except for the combination of space with . , /. ");
 
             $('.fullnameerr').show();
-            
+
         } else {
             $('.fullnameerr').hide();
         }
@@ -244,7 +233,7 @@ if(edit)
             $('.mobileerr').text('Only numbres and must be 10 digits');
 
             $('.mobileerr').show();
-            
+
         } else {
             $('.mobileerr').hide();
         }
@@ -256,28 +245,28 @@ if(edit)
         if (!testres) {
             $('.usernameerr').text('Not Allowed');
             $('.usernameerr').show();
-            
+
         } else {
             $('.usernameerr').hide();
         }
     });
-        
+
      $('#savbtn').on('click',function(e){
         var flag=0;
         $( ".ErrP" ).each(function( index ) {
             if($( this ).css('display')=='inline'){
                 flag=1;
-            }  
+            }
         });
         if(flag==1){
             e.preventDefault();
             return false;
         }else{
-                   
+
         }
     });
 
     });
-      
+
 </script>
 @endsection

@@ -5,11 +5,11 @@
     <ol class="breadcrumb justify-content-center">
         {!!$breadcrumbarr!!}
     </ol>
-</nav> 
+</nav>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            
+
             <div class="card">
                @if(Session::get('success')!='')
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -29,7 +29,7 @@
 
                 <div class="card-body">
                     <table id="datatable_view" class="table table-striped">
-                    <thead>    
+                    <thead>
                     <tr>
                         <th>No</th>
                         <th width="400px">Title</th>
@@ -39,33 +39,37 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @php 
+                    @php
                     $i=0;
-                    @endphp 
+                    @endphp
+
                     @foreach ($data as $key => $result)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{$result->publicrel_sub[0]->title ?? ''}}</td>
-                        <td>{{$result->publicrelationtype->name ?? ''}}</td>
+                        <td>{{$result->publicrelsub[0]->title ?? ''}}</td>
+                        <td> @foreach ($result->publicrelationtype->ptypesub as $publicrelationtype )
+
+                            {{$publicrelationtype->title ?? ''}}
+                        @endforeach</td>
                         <td>
                         @if(($result->status_id)==1)
                             <a class="main-btn info-btn rounded-full btn-hover btn-sm-default" href="{{ route('statuspublicrelation',\Crypt::encryptString($result->id)) }}">Active</a>
                             @else
                             <a class="main-btn deactive-btn rounded-full btn-hover btn-sm-default" href="{{ route('statuspublicrelation',\Crypt::encryptString($result->id)) }}">Deactive</a>
                             @endif
-                            
+
                         </td>
                         <td>
-                            
+
                         <a class="btn btn-primary btn-sm-default" href="{{ route('editpublicrelation',\Crypt::encryptString($result->id)) }}">Edit</a>
                         <a class="btn btn-danger btn-sm-default" href="{{ route('deletepublicrelation',\Crypt::encryptString($result->id)) }}" onclick="return confirm('Are you sure?')">Delete</a>
                         </td>
-                    </tr>   
+                    </tr>
                      <!-- $i++; -->
-                    @endforeach    
-                    </tbody>    
-                    </table>    
-  
+                    @endforeach
+                    </tbody>
+                    </table>
+
                 </div>
             </div> <!--card2 -->
 
@@ -79,7 +83,7 @@
     $(".alert").fadeTo(2000, 500).slideUp(500, function() {
       $(".alert").slideUp(500);
     });
-   
+
     $('.alert').alert();
 });
 </script>
