@@ -1,352 +1,163 @@
- <script type="application/json" data-drupal-selector="drupal-settings-json">
-   {
-     "path": {
-       "baseUrl": "\/",
-       "scriptPath": null,
-       "pathPrefix": "",
-       "currentPath": "node",
-       "currentPathIsAdmin": false,
-       "isFront": true,
-       "currentLanguage": "en"
-     },
-     "pluralDelimiter": "\u0003",
-     "suppressDeprecationErrors": true,
-     "ajaxPageState": {
-       "libraries": "blazy\/animate,blazy\/bio.ajax,blazy\/blazy,blazy\/blur,blazy\/classlist,blazy\/column,blazy\/grid,blazy\/load,blazy\/polyfill,blazy\/promise,blazy\/raf,blazy\/ratio,blazy\/webp,calendar\/calendar.theme,classy\/file,construction_zymphonies_theme\/bootstrap,construction_zymphonies_theme\/flexslider,construction_zymphonies_theme\/fontawesome,construction_zymphonies_theme\/global-components,construction_zymphonies_theme\/owl,construction_zymphonies_theme\/smartmenus,extlink\/drupal.extlink,flexslider\/integration,owlcarousel\/owlcarousel,superfish\/superfish,superfish\/superfish_hoverintent,superfish\/superfish_smallscreen,superfish\/superfish_supersubs,superfish\/superfish_supposition,superfish\/superfish_touchscreen,system\/base,video_embed_field\/responsive-video,views\/views.ajax,views\/views.module,views_slideshow\/jquery_hoverIntent,views_slideshow\/widget_info,views_slideshow_cycle\/jquery_cycle,views_slideshow_cycle\/json2,views_slideshow_cycle\/views_slideshow_cycle",
-       "theme": "construction_zymphonies_theme",
-       "theme_token": null
-     },
-     "ajaxTrustedUrl": {
-       "\/index.php\/search\/node": true
-     },
-     "data": {
-       "extlink": {
-         "extTarget": true,
-         "extTargetNoOverride": false,
-         "extNofollow": true,
-         "extNoreferrer": true,
-         "extFollowNoOverride": false,
-         "extClass": "0",
-         "extLabel": "(link is external)",
-         "extImgClass": false,
-         "extSubdomains": false,
-         "extExclude": "",
-         "extInclude": "",
-         "extCssExclude": "",
-         "extCssExplicit": "",
-         "extAlert": true,
-         "extAlertText": "This link will take you to an external web site.",
-         "mailtoClass": "mailto",
-         "mailtoLabel": "(link sends email)",
-         "extUseFontAwesome": false,
-         "extIconPlacement": "append",
-         "extFaLinkClasses": "fa fa-external-link",
-         "extFaMailtoClasses": "fa fa-envelope-o",
-         "whitelistedDomains": []
-       }
-     },
-     "viewsSlideshowCycle": {
-       "#views_slideshow_cycle_main_gallery-block_1": {
-         "num_divs": 5,
-         "id_prefix": "#views_slideshow_cycle_main_",
-         "div_prefix": "#views_slideshow_cycle_div_",
-         "vss_id": "gallery-block_1",
-         "effect": "turnLeft",
-         "transition_advanced": 0,
-         "timeout": 5000,
-         "speed": 700,
-         "delay": 0,
-         "sync": 1,
-         "random": 0,
-         "pause": 1,
-         "pause_on_click": 0,
-         "action_advanced": 0,
-         "start_paused": 0,
-         "remember_slide": 0,
-         "remember_slide_days": 1,
-         "pause_in_middle": 0,
-         "pause_when_hidden": 0,
-         "pause_when_hidden_type": "full",
-         "amount_allowed_visible": "",
-         "nowrap": 0,
-         "fixed_height": 1,
-         "items_per_slide": 1,
-         "items_per_slide_first": 0,
-         "items_per_slide_first_number": 1,
-         "wait_for_image_load": 1,
-         "wait_for_image_load_timeout": 3000,
-         "cleartype": 0,
-         "cleartypenobg": 0,
-         "advanced_options": "{}",
-         "advanced_options_choices": 0,
-         "advanced_options_entry": ""
-       },
-       "#views_slideshow_cycle_main_whatsnew-block_1": {
-         "num_divs": 3,
-         "id_prefix": "#views_slideshow_cycle_main_",
-         "div_prefix": "#views_slideshow_cycle_div_",
-         "vss_id": "whatsnew-block_1",
-         "effect": "scrollUp",
-         "transition_advanced": 1,
-         "timeout": 5000,
-         "speed": 700,
-         "delay": 0,
-         "sync": 1,
-         "random": 0,
-         "pause": 1,
-         "pause_on_click": 0,
-         "action_advanced": 0,
-         "start_paused": 0,
-         "remember_slide": 0,
-         "remember_slide_days": 1,
-         "pause_in_middle": 0,
-         "pause_when_hidden": 0,
-         "pause_when_hidden_type": "full",
-         "amount_allowed_visible": "",
-         "nowrap": 0,
-         "fixed_height": 1,
-         "items_per_slide": 1,
-         "items_per_slide_first": 0,
-         "items_per_slide_first_number": 1,
-         "wait_for_image_load": 1,
-         "wait_for_image_load_timeout": 3000,
-         "cleartype": 0,
-         "cleartypenobg": 0,
-         "advanced_options": "{}",
-         "advanced_options_choices": 0,
-         "advanced_options_entry": ""
-       },
-       "#views_slideshow_cycle_main_tender-block_1": {
-         "num_divs": 5,
-         "id_prefix": "#views_slideshow_cycle_main_",
-         "div_prefix": "#views_slideshow_cycle_div_",
-         "vss_id": "tender-block_1",
-         "effect": "scrollUp",
-         "transition_advanced": 0,
-         "timeout": 5000,
-         "speed": 700,
-         "delay": 0,
-         "sync": 1,
-         "random": 0,
-         "pause": 1,
-         "pause_on_click": 0,
-         "action_advanced": 0,
-         "start_paused": 0,
-         "remember_slide": 0,
-         "remember_slide_days": 1,
-         "pause_in_middle": 0,
-         "pause_when_hidden": 0,
-         "pause_when_hidden_type": "full",
-         "amount_allowed_visible": "",
-         "nowrap": 0,
-         "fixed_height": 1,
-         "items_per_slide": 1,
-         "items_per_slide_first": 0,
-         "items_per_slide_first_number": 1,
-         "wait_for_image_load": 1,
-         "wait_for_image_load_timeout": 3000,
-         "cleartype": 0,
-         "cleartypenobg": 0,
-         "advanced_options": "{}",
-         "advanced_options_choices": 0,
-         "advanced_options_entry": ""
-       }
-     },
-     "viewsSlideshow": {
-       "gallery-block_1": {
-         "methods": {
-           "goToSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "nextSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "pause": ["viewsSlideshowControls", "viewsSlideshowCycle"],
-           "play": ["viewsSlideshowControls", "viewsSlideshowCycle"],
-           "previousSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "transitionBegin": ["viewsSlideshowPager", "viewsSlideshowSlideCounter"],
-           "transitionEnd": []
-         },
-         "paused": 0
-       },
-       "whatsnew-block_1": {
-         "methods": {
-           "goToSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "nextSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "pause": ["viewsSlideshowControls", "viewsSlideshowCycle"],
-           "play": ["viewsSlideshowControls", "viewsSlideshowCycle"],
-           "previousSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "transitionBegin": ["viewsSlideshowPager", "viewsSlideshowSlideCounter"],
-           "transitionEnd": []
-         },
-         "paused": 0
-       },
-       "tender-block_1": {
-         "methods": {
-           "goToSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "nextSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "pause": ["viewsSlideshowControls", "viewsSlideshowCycle"],
-           "play": ["viewsSlideshowControls", "viewsSlideshowCycle"],
-           "previousSlide": ["viewsSlideshowPager", "viewsSlideshowSlideCounter", "viewsSlideshowCycle"],
-           "transitionBegin": ["viewsSlideshowPager", "viewsSlideshowSlideCounter"],
-           "transitionEnd": []
-         },
-         "paused": 0
-       }
-     },
-     "views": {
-       "ajax_path": "\/views\/ajax",
-       "ajaxViews": {
-         "views_dom_id:1e4f0a3d93bb5da4e47583d71de9e1d4fc7a757a9164aed6a3e6d2404c6e28e2": {
-           "view_name": "tender",
-           "view_display_id": "block_1",
-           "view_args": "",
-           "view_path": "\/node",
-           "view_base_path": "tenders",
-           "view_dom_id": "1e4f0a3d93bb5da4e47583d71de9e1d4fc7a757a9164aed6a3e6d2404c6e28e2",
-           "pager_element": 0
-         },
-         "views_dom_id:bbcd20bec521c18846491b8cb77c0bee0c7c40edc01ff4cd1c93ddd3a49e5f34": {
-           "view_name": "related_links",
-           "view_display_id": "block_1",
-           "view_args": "",
-           "view_path": "\/node",
-           "view_base_path": null,
-           "view_dom_id": "bbcd20bec521c18846491b8cb77c0bee0c7c40edc01ff4cd1c93ddd3a49e5f34",
-           "pager_element": 0
-         }
-       }
-     },
-     "flexslider": {
-       "optionsets": {
-         "default": {
-           "animation": "fade",
-           "animationSpeed": 1000,
-           "direction": "vertical",
-           "slideshow": true,
-           "easing": "linear",
-           "smoothHeight": true,
-           "reverse": false,
-           "slideshowSpeed": 7000,
-           "animationLoop": true,
-           "randomize": false,
-           "startAt": 0,
-           "itemWidth": 0,
-           "itemMargin": 0,
-           "minItems": 0,
-           "maxItems": 0,
-           "move": 0,
-           "directionNav": true,
-           "controlNav": true,
-           "thumbCaptions": false,
-           "thumbCaptionsBoth": false,
-           "keyboard": true,
-           "multipleKeyboard": true,
-           "mousewheel": false,
-           "touch": true,
-           "prevText": "Previous",
-           "nextText": "Next",
-           "namespace": "flex-",
-           "selector": ".slides \u003E li",
-           "sync": "",
-           "asNavFor": "",
-           "initDelay": 10,
-           "useCSS": true,
-           "video": false,
-           "pausePlay": true,
-           "pauseText": "Pause",
-           "playText": "Play",
-           "pauseOnAction": false,
-           "pauseOnHover": false,
-           "controlsContainer": ".flex-control-nav-container",
-           "manualControls": ""
-         }
-       },
-       "instances": {
-         "flexslider-1": "default"
-       }
-     },
-     "superfish": {
-       "superfish-main": {
-         "id": "superfish-main",
-         "sf": {
-           "animation": {
-             "opacity": "show",
-             "height": "show"
-           },
-           "speed": "fast"
-         },
-         "plugins": {
-           "touchscreen": {
-             "mode": "window_width"
-           },
-           "smallscreen": {
-             "mode": "window_width",
-             "title": "Main navigation"
-           },
-           "supposition": true,
-           "supersubs": true
-         }
-       }
-     },
-     "blazy": {
-       "loadInvisible": false,
-       "offset": 100,
-       "saveViewportOffsetDelay": 50,
-       "validateDelay": 25,
-       "container": "",
-       "loader": true,
-       "unblazy": false,
-       "compat": true
-     },
-     "blazyIo": {
-       "disconnect": false,
-       "rootMargin": "0px",
-       "threshold": [0, 0.25, 0.5, 0.75, 1]
-     },
-     "user": {
-       "uid": 0,
-       "permissionsHash": "d55522667b46ae59e6d74d280b43e2e2dafbb0111d94511d14bb2b00dfeb8b54"
-     }
-   }
- </script>
- <script src="{{ asset('assets/frontend/js/main.js') }}"></script>
- <script src="https://unpkg.com/typewriter-effect@2.3.1/dist/core.js"></script>
+<!-- Start: Footer widgets -->
+<div class="footer" id="footer">
+    <div class="gmap">
 
- <script>
-   (function(d) {
-     var s = d.createElement("script");
-     s.setAttribute("data-account", "wFuknyxNOi");
-     s.setAttribute("src", "https://cdn.userway.org/widget.js");
-     (d.body || d.head).appendChild(s);
-   })(document)
- </script><noscript>Please ensure Javascript is enabled for purposes of <a href="https://userway.org">website accessibility</a></noscript>
 
- <!-- Google tag (gtag.js) -->
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-8BHW77LG04"></script>
- <script>
-   window.dataLayer = window.dataLayer || [];
+    </div>
+    <div class="container">
 
-   function gtag() {
-     dataLayer.push(arguments);
-   }
-   gtag('js', new Date());
+        <div class="row">
+            <div class=col-md-4>
+                <div class="region region-footer-first">
+                    <div id="block-contacthome"
+                        class="block block-block-content block-block-contentae5dfe71-fdbc-406d-a336-7c074cbff116">
+                        <div class="content footxt">
+                            <img src="{{ asset('assets/frontend/images/nmptlogonew-14n2-en.png') }}" alt="">
+                            <div
+                                class="clearfix  text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+                                Ministry of Ports,Shipping and Waterways<br />
+                                Government of India<br />
+                                Panambur, Mangalore-575010,<br />
+                                D.K. District, Karnataka<br />
+                                Tel:0824-2407341 (24 lines)Fax:2408390<br />
+                                Email: chairman[at]nmpt[dot]gov[dot]in</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=col-md-4>
+                <div class="region region-footer-second">
+                    <div id="block-footerlinks"
+                        class="block block-block-content block-block-contente2614915-cb19-42b5-a37b-972add7fbaa9">
 
-   gtag('config', 'G-8BHW77LG04');
 
-   var app = document.getElementById('app');
+                        <div class="content footlink">
 
-var typewriter = new Typewriter(app, {
-    loop: true
-});
+                            <div
+                                class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
 
-typewriter.typeString('Web Developer')
-    .pauseFor(2500)
-    .deleteAll()
-    .typeString('Web Designer')
-    .pauseFor(2500)
-    .deleteAll()
-    .typeString('<strong>FrontEnd Developer</strong>')
-    .pauseFor(2500)
-    .start();
- </script>
- 
- </body>
+                                <ul>
+                                    <li><a href="/important-links" title="important links">Important Links</a>
+                                    </li>
+                                    <li><a href="/terms-and-condition" title="Terms and Condition">Terms and
+                                            Condition</a></li>
+                                    <li><a href="/hyperlinking-policy" title="Hyperlinking Policy">Hyperlinking
+                                            Policy</a></li>
+                                    <li><a href="/privacy-policy" title="Privacy Policy">Privacy Policy</a>
+                                    </li>
+                                    <li><a href="/disclaimer" title="disclaimer">Disclaimer</a></li>
+                                    <li><a href="/copyright-policy" title="copyright-policy">Copyright
+                                            Policy</a></li>
+                                    <li><a href="/gst-corner" title="GST Corner">GST Corner</a></li>
+                                    <li><a href="/web-information-manager" title="Web Information Manager">Web
+                                            Information Manager</a></li>
+                                    <li><a href="/help" rel=" noopener" target="_blank" title="help">Help</a></li>
+                                </ul>
+                            </div>
 
- </html>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class=col-md-4>
+                <div class="region region-footer-third">
+                    <div id="block-followuson"
+                        class="social block block-block-content block-block-contentef189ab2-3165-4e1a-bcfc-5ccdf7187ccb">
+
+
+                        <div class="content">
+
+                            <div
+                                class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+
+                                <p><strong>Contact Us </strong><br />
+                                    <span class="dial">1800-599-1222</span>
+                                </p>
+
+                                @include('frontend.main.mainsocialmedia')
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="block-hitcounter"
+                        class="block block-block-content block-block-contentd5c3a996-9668-48f9-86ae-57312c908665">
+
+
+                        <div class="content">
+
+                            <div
+                                class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+                                <div
+                                    style="font-size:10px; pointer-events:none; text-align:right; width:30%; color:#333;">
+                                    Hit counter:
+                                    <script type="text/javascript" src="//counter.websiteout.net/js/17/7/5812/1"></script>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</div>
+<!--End: Footer widgets -->
+
+
+<!-- Start: Copyright -->
+<div class="copyright">
+    <div class="container">
+
+        <div class="">
+            <div class="region region-copyright">
+                <div class="views-element-container block block-views block-views-blocklast-updated-time-block-1"
+                    id="block-views-block-last-updated-time-block-1">
+                    <div class="content">
+                        <div>
+                            <div
+                                class="lastupdate js-view-dom-id-a7d550ae47b7c22cf3712390c4112ab3c0c6897cefd3fa6bcf7f1c523cd326d1">
+                                <header>
+                                    Last Updated :
+                                </header>
+                                <div class="views-row">
+                                    <div class="views-field views-field-changed"><span class="field-content">15/05/2024
+                                            - 11:53</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="block-copyright"
+                    class="block block-block-content block-block-content39706c61-abdc-4758-9c26-716e9cc8ca3b">
+                    <div class="content">
+                        <div
+                            class="fotx clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+                            <div class="text-align-center" style="padding-bottom:0px;">Copyright © NEW
+                                MANGALORE PORT
+                                AUTHORITY | All Rights Reserved.
+                                &nbsp; &nbsp; &nbsp; Designed &amp; Developed By <a href="https://www.cdit.org/"
+                                    rel=" noopener" style="color:#fff;" target="_blank" title="CDIT">C-DIT</a></div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<!-- End: Copyright -->

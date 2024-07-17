@@ -29,11 +29,15 @@ class FrontendController extends Controller
             $circulartrades = $this->circulartrade($sessionbil);
 
             $whatwedo = $this->whatwedo($sessionbil);
+            $relatedlinks = $this->relatedlinks($sessionbil);
+            $socialmedia = $this->socialmedia($sessionbil);
+            // dd($mainsubmenus);
 
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo'));
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia'));
         }
 
-    public function mainarticle($articlename,$enarticletypeid)
+    // public function mainarticle($articlename,$enarticletypeid)
+    public function mainarticle($enarticletypeid)
     {
         try{
 
@@ -147,9 +151,35 @@ class FrontendController extends Controller
         }])
         ->where('delet_flag',0)
         ->where('status_id',1)
-        ->orderBy('orderno', 'asc')->get();
+        ->orderBy('orderno', 'asc')->where('linktypeid',10)->get();
 
         return $whatwedo;
+
+    }
+    private function relatedlinks($sessionbil)
+    {
+        $sessionbil   = 1;
+        $relatedlinks =  Link::with(['link_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('delet_flag',0)
+        ->where('status_id',1)
+        ->orderBy('orderno', 'asc')->where('linktypeid',5)->get();
+
+        return $relatedlinks;
+
+    }
+    private function socialmedia($sessionbil)
+    {
+        $sessionbil   = 1;
+        $socialmedia =  Link::with(['link_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('delet_flag',0)
+        ->where('status_id',1)
+        ->orderBy('orderno', 'asc')->where('linktypeid',11)->get();
+
+        return $socialmedia;
 
     }
 }

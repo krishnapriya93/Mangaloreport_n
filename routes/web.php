@@ -20,7 +20,9 @@ use App\Http\Controllers\FrontendController;
 
 //Front end - start
 Route::get('/', [FrontendController::class, 'index'])->name('main.index');
-Route::get('mainarticle/{title}/{id}', [FrontendController::class, 'mainarticle'])->name('mainarticle');
+// Route::get('mainarticle/{title}/{id}', [FrontendController::class, 'mainarticle'])->name('mainarticle');
+Route::get('mainarticle/{articletypeid}', [App\Http\Controllers\FrontendController::class, 'mainarticle'])->name('mainarticle');
+
 //Front end - end
 
 Route::get('loginview', [App\Http\Controllers\Auth\LoginController::class, 'loginview'])->name('loginview');

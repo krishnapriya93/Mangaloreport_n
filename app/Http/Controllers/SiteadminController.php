@@ -5336,7 +5336,7 @@ public function editsubmenu($id)
     $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
     $mainmenu = Mainmenu::with(['mainmenu_sub' => function($query){
         $query->where('languageid',1);
-    }])->where('viewer_id',1)->where('delet_flag',0)->get();
+    }])->where('delet_flag',0)->get();
 
     $breadcrumb = array(
         0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
