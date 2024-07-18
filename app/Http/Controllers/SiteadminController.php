@@ -1230,7 +1230,7 @@ public function statusgallery($id)
    /*Store Gallery*/
       public function storegallery(Request $request)
     {
-
+// dd($request->all());
         try{
         $validator = Validator::make(
             $request->all(),
@@ -1270,48 +1270,48 @@ public function statusgallery($id)
             // dd(count($request->poster));
                 // $imageName = 'logo' . $date . '.' .$filep->poster->extension();
 //////////////////////////////////\
-    if ($request->hiddenval == 'mdj') {
+//     if ($request->hiddenval == 'mdj') {
 
-        return Redirect::back()->withInput()->withErrors('Please crop before save. Only jpg, png, jpeg, webp and svg is accepted');
-    }
-    $image_64 = $request->hiddenval; //your base64 encoded data
+//         return Redirect::back()->withInput()->withErrors('Please crop before save. Only jpg, png, jpeg, webp and svg is accepted');
+//     }
+//     $image_64 = $request->hiddenval; //your base64 encoded data
 
-    $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
-    $valiimgarray = array('jpg', 'png', 'jpeg', 'webp');
-    if (!(in_array($extension, $valiimgarray))) {
-        return Redirect::back()->withInput()->withErrors('Only jpg, png, jpeg, webp and svg is accepted');
-    }
-    if ($validator->fails()) {
-        return Redirect::back()->withInput()->withErrors($validator->errors());
-    }
+//     $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+//     $valiimgarray = array('jpg', 'png', 'jpeg', 'webp');
+//     if (!(in_array($extension, $valiimgarray))) {
+//         return Redirect::back()->withInput()->withErrors('Only jpg, png, jpeg, webp and svg is accepted');
+//     }
+//     if ($validator->fails()) {
+//         return Redirect::back()->withInput()->withErrors($validator->errors());
+//     }
 
 
-    $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+//     $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
 
-    // find substring fro replace here eg: data:image/png;base64,
+//     // find substring fro replace here eg: data:image/png;base64,
 
-    $image = str_replace($replace, '', $image_64);
-    $date = date('dmYH:i:s');
-    $image = str_replace(' ', '+', $image);
+//     $image = str_replace($replace, '', $image_64);
+//     $date = date('dmYH:i:s');
+//     $image = str_replace(' ', '+', $image);
 
-    $imageName =  'Gallerymain' . $date . '.' . $extension;
+//     $imageName =  'Gallerymain' . $date . '.' . $extension;
 
-    Storage::disk('myfile')->put('/assets/backend/uploads/Gallerymain/' . $imageName,  base64_decode($image));
-    $im = imagecreatefromjpeg(public_path('/assets/backend/uploads/Gallerymain/' . $imageName));
-    chmod(public_path('/assets/backend/uploads/Gallerymain/' . $imageName), 0777);
+//     Storage::disk('myfile')->put('/assets/backend/uploads/Gallerymain/' . $imageName,  base64_decode($image));
+//     $im = imagecreatefromjpeg(public_path('/assets/backend/uploads/Gallerymain/' . $imageName));
+//     chmod(public_path('/assets/backend/uploads/Gallerymain/' . $imageName), 0777);
 
-        imagejpeg($im, public_path('/assets/backend/uploads/Gallerymain/'. $imageName));
-////////////////////////////////////
+//         imagejpeg($im, public_path('/assets/backend/uploads/Gallerymain/'. $imageName));
+// ////////////////////////////////////
 
 // dd($imageName);
 
-                // if($request->photo){
-                //     $date = date('dmYH:i:s');
-                //     $imageName = 'Gallerymain'. $date . '.' .$request->photo->extension();
-                //     $filename=$imageName;
-                //     $path = $request->file('photo')->storeAs('/uploads/Gallerymain/', $imageName, 'myfile');
+                if($request->photo){
+                    $date = date('dmYH:i:s');
+                    $imageName = 'Gallerymain'. $date . '.' .$request->photo->extension();
+                    $filename=$imageName;
+                    $path = $request->file('photo')->storeAs('/assets/backend/uploads/Gallerymain/', $imageName, 'myfile');
 
-                // }
+                }
             $storeinfo=new Gallery([
                                 'userid'=>Auth::user()->id,
                                 'delet_flag'=>0,
@@ -1572,69 +1572,75 @@ public function statusgallery($id)
 
         $id=$request->hidden_id;
 
-        if(isset($request->hiddenval)){
-            //maintable start
-            $date = date('dmYH:i:s');
-            if($request->hiddenval){
+        // if(isset($request->hiddenval)){
+        //     //maintable start
+        //     $date = date('dmYH:i:s');
+        //     if($request->hiddenval){
                 // $date = date('dmYH:i:s');
                 // $imageName = 'Gallerymain'. $date . '.' .$request->photo->extension();
                 // $filename=$imageName;
                 // $path = $request->file('photo')->storeAs('/uploads/Gallerymain/', $imageName, 'myfile');
                 //////////////////////////////////\
-    if ($request->hiddenval == 'mdj') {
-        $storeinfo=array(
-            'gallerytypeid'=>$request->gallerytype,
-            'date'=>$request->date,
-            'sbutype_id'=>Auth::user()->sbutype,
-       );
-        // return Redirect::back()->withInput()->withErrors('Please crop before save. Only jpg, png, jpeg, webp and svg is accepted');
-    }else{
-        $image_64 = $request->hiddenval; //your base64 encoded data
+    // if ($request->hiddenval == 'mdj') {
+    //     $storeinfo=array(
+    //         'gallerytypeid'=>$request->gallerytype,
+    //         'date'=>$request->date,
+    //         'sbutype_id'=>Auth::user()->sbutype,
+    //    );
+    //     // return Redirect::back()->withInput()->withErrors('Please crop before save. Only jpg, png, jpeg, webp and svg is accepted');
+    // }else{
+    //     $image_64 = $request->hiddenval; //your base64 encoded data
 
-        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
-        $valiimgarray = array('jpg', 'png', 'jpeg', 'webp');
-        if (!(in_array($extension, $valiimgarray))) {
-            return Redirect::back()->withInput()->withErrors('Only jpg, png, jpeg, webp and svg is accepted');
-        }
-        if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator->errors());
-        }
+    //     $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+    //     $valiimgarray = array('jpg', 'png', 'jpeg', 'webp');
+    //     if (!(in_array($extension, $valiimgarray))) {
+    //         return Redirect::back()->withInput()->withErrors('Only jpg, png, jpeg, webp and svg is accepted');
+    //     }
+    //     if ($validator->fails()) {
+    //         return Redirect::back()->withInput()->withErrors($validator->errors());
+    //     }
 
 
-        $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+    //     $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
 
-        // find substring fro replace here eg: data:image/png;base64,
+    //     // find substring fro replace here eg: data:image/png;base64,
 
-        $image = str_replace($replace, '', $image_64);
+    //     $image = str_replace($replace, '', $image_64);
 
-        $image = str_replace(' ', '+', $image);
+    //     $image = str_replace(' ', '+', $image);
 
-        // $imageName =  'Gallerymain' . '.' . $extension;
+    //     // $imageName =  'Gallerymain' . '.' . $extension;
 
-        $imageName =  'Gallerymain' . $date . '.' . $extension;
-        // dd($imageName);
-        Storage::disk('myfile')->put('/assets/backend/uploads/Gallerymain/' . $imageName,  base64_decode($image));
-        $im = imagecreatefromjpeg(public_path('/assets/backend/uploads/Gallerymain/' . $imageName));
-        chmod(public_path('/assets/backend/uploads/Gallerymain/' . $imageName), 0777);
-            // dd($imageName);
-            imagejpeg($im, public_path('/assets/backend/uploads/Gallerymain'. $imageName));
+    //     $imageName =  'Gallerymain' . $date . '.' . $extension;
+    //     // dd($imageName);
+    //     Storage::disk('myfile')->put('/assets/backend/uploads/Gallerymain/' . $imageName,  base64_decode($image));
+    //     $im = imagecreatefromjpeg(public_path('/assets/backend/uploads/Gallerymain/' . $imageName));
+    //     chmod(public_path('/assets/backend/uploads/Gallerymain/' . $imageName), 0777);
+    //         // dd($imageName);
+    //         imagejpeg($im, public_path('/assets/backend/uploads/Gallerymain'. $imageName));
     ////////////////////////////////////
-
-
+    if($request->photo){
+        $date = date('dmYH:i:s');
+        $imageName = 'Gallerymain'. $date . '.' .$request->photo->extension();
+        $filename=$imageName;
+        $path = $request->file('photo')->storeAs('/assets/backend/uploads/Gallerymain/', $imageName, 'myfile');
         $storeinfo=array(
             'gallerytypeid'=>$request->gallerytype,
             'date'=>$request->date,
             'file' => $imageName,
-            'sbutype_id'=>Auth::user()->sbutype,
         );
-}
+    }else{
+        $storeinfo=array(
+            'gallerytypeid'=>$request->gallerytype,
+            'date'=>$request->date,
+        );
     }
 
+// }
+    // }
 
 
-
-
-        }
+        // }
         // else{
         //     $storeinfo=array(
         //         'gallerytypeid'=>$request->gallerytype,

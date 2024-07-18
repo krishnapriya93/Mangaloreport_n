@@ -15,6 +15,7 @@ use App\Models\Publicrelation;
 use App\Models\Link;
 use App\Models\BOD;
 use App\Models\Tender;
+use App\Models\Gallery;
 
 class FrontendController extends Controller
 {
@@ -34,10 +35,11 @@ class FrontendController extends Controller
             $relatedlinks   = $this->relatedlinks($sessionbil);
             $socialmedia    = $this->socialmedia($sessionbil);
             $bod            = $this->bod($sessionbil);
+            $whatsnew       = $this->whatsnew($sessionbil);
+            $tender         = $this->tender($sessionbil);
+            $gallery        = $this->gallery($sessionbil);
 
-            $tender            = $this->tender($sessionbil);
-
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender'));
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender','whatsnew','gallery'));
         }
 
     // public function mainarticle($articlename,$enarticletypeid)
@@ -212,4 +214,32 @@ class FrontendController extends Controller
         return $tender;
     }
 
+    private function whatsnew($sessionbil)
+    {
+        $whatsnew =  Publicrelation::with(['publicrelsub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('publicreltypeid',2)
+        ->where('status_id',1)
+        ->orderBy('id',  'DESC')
+        ->limit(2)->get();
+
+        return $whatsnew;
+    }
+
+    private function gallery($sessionbil)
+    {
+
+        $gallery =  Gallery::with(['gallery_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        // ->where('sbutype_id', "")
+        ->orderBy('date', 'DESC')
+        ->where('status_id',1)
+        ->where('userid', 2)
+        ->where('gallerytypeid', 3)
+        ->get();
+
+        return $gallery;
+    }
 }

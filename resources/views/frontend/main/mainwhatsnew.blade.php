@@ -13,18 +13,16 @@
                                 class="views_slideshow_cycle_main views_slideshow_main">
                                 <div id="views_slideshow_cycle_teaser_section_whatsnew-block_1"
                                     class="views_slideshow_cycle_teaser_section">
-                                    <div id="views_slideshow_cycle_div_whatsnew-block_1_0"
+
+                                    @foreach ($whatsnew as $whatsnews)
+                                        @foreach ($whatsnews->publicrelsub as $whatsnewsub)
+                                        <div id="views_slideshow_cycle_div_whatsnew-block_1_0"
                                         class="views_slideshow_cycle_slide views_slideshow_slide views-row-1 views-row-odd">
-                                        <div
-                                            class="views-row views-row-0 views-row-odd views-row-first">
+                                        <div class="views-row views-row-0 views-row-odd views-row-first">
                                             <div class="views-field views-field-title">
                                                 <h4 class="field-content"><a
                                                         href="/curtain-raiser-global-maritime-india-summit-2023-held-mumbai-tuesday-18th-july-2023-st-regis-mumbai"
-                                                        hreflang="en">Curtain raiser for
-                                                        Global Maritime
-                                                        India Summit 2023, held in Mumbai on
-                                                        Tuesday,
-                                                        18th July 2023, St. Regis, Mumbai.</a>
+                                                        hreflang="en">{{ $whatsnewsub->title }}</a>
                                                 </h4>
                                             </div>
                                             {{-- <div class="views-field views-field-field-file">
@@ -40,7 +38,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="views_slideshow_cycle_div_whatsnew-block_1_1"
+                                        @endforeach
+                                    @endforeach
+
+                                    {{-- <div id="views_slideshow_cycle_div_whatsnew-block_1_1"
                                         class="views_slideshow_cycle_slide views_slideshow_slide views-row-2 views_slideshow_cycle_hidden views-row-even">
                                         <div class="views-row views-row-1 views-row-even">
                                             <div class="views-field views-field-title">
@@ -57,8 +58,8 @@
                                                 <div class="field-content"></div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div id="views_slideshow_cycle_div_whatsnew-block_1_2"
+                                    </div> --}}
+                                    {{-- <div id="views_slideshow_cycle_div_whatsnew-block_1_2"
                                         class="views_slideshow_cycle_slide views_slideshow_slide views-row-3 views_slideshow_cycle_hidden views-row-odd">
                                         <div
                                             class="views-row views-row-2 views-row-odd views-row-last">
@@ -75,7 +76,7 @@
                                             </div>
                                         </div>
 
-                                    </div>
+                                    </div> --}}
 
                                 </div>
 
