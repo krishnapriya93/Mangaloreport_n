@@ -5,7 +5,7 @@
     <ol class="breadcrumb justify-content-center">
         {!!$breadcrumbarr!!}
     </ol>
-</nav> 
+</nav>
 <div class="container">
     <div class="row justify-content-center">
 
@@ -16,51 +16,51 @@
                 <div class="card-body">
                     @if($errors->any())
                         <div class="alert alert-danger" role="alert">
-                        
+
                             {!! implode(' ', $errors->all('<li><span class="text-danger">:message</span></li>')) !!}
                         </div> <!-- ./alert -->
                     @endif
                    @if(isset($edit_f))
-                    <form id="formiid" method="POST" action="{{ route('admin.updatetendertype') }}" enctype="multipart/form-data">
+                    <form id="formiid" method="POST" action="{{ route('masteradmin.updatetendertype') }}" enctype="multipart/form-data">
                     @else
-                    <form id="formiid" method="POST" action="{{ route('admin.storetendertype') }}" enctype="multipart/form-data">
+                    <form id="formiid" method="POST" action="{{ route('masteradmin.storetendertype') }}" enctype="multipart/form-data">
                     @endif
-    
-                    @csrf 
+
+                    @csrf
                         <input type="hidden" name="hidden_id" value="{{$keydata->id ?? ''}}">
                         <input type="hidden" name="edit_id" value="{{$edit_f ?? ''}}">
                         <div class="row mb-3">
-                            @php 
+                            @php
                               $i=0;
                             @endphp
                             <!-- EDiting Start -->
-                            @if(isset($edit_f)) 
+                            @if(isset($edit_f))
 
                              @if(isset($keydata->id)) @foreach(($keydata->tender_type_sub) as $tender_type_sub)
-                 
+
                              <input type="hidden"  value="{{$tender_type_sub->languageid ?? ''}}" id="sel_lang{{$tender_type_sub->languageid}}" name="sel_lang[]">
 
-                            <div class="col-sm-6 mb-btm" id="div{{$tender_type_sub->id}}"> 
+                            <div class="col-sm-6 mb-btm" id="div{{$tender_type_sub->id}}">
                                 <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Tender type in {{$tender_type_sub->name}} <span class="redalert"> *</span></label>
                                 <input id="title{{$tender_type_sub->id}}" type="text" class="form-control title_validation @error('title') is-invalid @enderror" name="title[]" value="{{ $tender_type_sub->title ?? old('title.'.$i)}}" rel="{{$tender_type_sub->id}}" required autocomplete="title" placeholder="Enter {{$tender_type_sub->name}} here" autofocus  >
                                 <span class="ErrP redalert titleerr1" style="display: none;">Please Check the {{$tender_type_sub->title}} title Entered</span>
                                 <span class="ErrP redalert titleerr2" style="display: none;">Please Check the {{$tender_type_sub->title}} title Entered</span>
                             </div>
                              @endforeach @endif
-                            
+
                             <!-- EDiting End -->
                             @else
                             @foreach($language as $langs)
 
                             <input type="hidden"  value="{{$langs->id ?? ''}}" id="sel_lang{{$langs->id}}" name="sel_lang[]">
 
-                                <div class="col-sm-6 mb-btm" id="div{{$langs->id}}"> 
+                                <div class="col-sm-6 mb-btm" id="div{{$langs->id}}">
                                      <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Tender type in {{$langs->name}} <span class="redalert"> *</span></label>
                                      <input id="title{{$langs->id}}" type="text" class="form-control title_validation @error('title') is-invalid @enderror" name="title[]" value="{{ $keydata->title ?? old('title.'.$i)}}" rel="{{$langs->id}}" required autocomplete="title" placeholder="Enter {{$langs->name}} here" autofocus  >
                                      <span class="ErrP redalert titleerr1" style="display: none;">Please Check the {{$langs->title}} title Entered</span>
                                      <span class="ErrP redalert titleerr2" style="display: none;">Please Check the {{$langs->title}} title Entered</span>
                                 </div>
-                            @php 
+                            @php
                              $i++;
                             @endphp
                             @endforeach
@@ -90,7 +90,7 @@
 </div>
 @endsection
 @section('page_scripts')
-<script>  
+<script>
  $( document ).ready(function() {
 
 
@@ -114,19 +114,19 @@ if($(this).attr('rel')==1)
          $('.titleerr2').hide();
           $('.submitBtn').prop('disabled', false);
      }
-    
-   
+
+
    }else if($(this).attr('rel')==2)
    {
     var testres = maltitle('.title', this.value);
 
        if (!testres) {
-    
+
            $(this).find( ".titleerr2" ).text("Not Allowed/ only malayalam ");
         //    $('.titleerr1').hide();
            $('.submitBtn').prop('disabled', true);
        } else {
-    
+
            $('.titleerr2').hide();
            $('.titleerr1').hide();
             $('.submitBtn').prop('disabled', false);

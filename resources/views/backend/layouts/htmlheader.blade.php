@@ -12,18 +12,18 @@
     <link rel="stylesheet" href="{{asset('/assets/backend/css/bootstrap.min.css')}}" />
     <link rel="stylesheet" href="{{asset('/assets/backend/css/dataTables.min.css')}}" />
     <link rel="stylesheet" href="{{asset('/assets/backend/css/lineicons.css')}}" />
-    <link rel="stylesheet" href="{{asset('/assets/backend/css/main.css')}}" /> 
+    <link rel="stylesheet" href="{{asset('/assets/backend/css/main.css')}}" />
     <link href="{{asset('/assets/backend/css/custom_1.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/backend/css/select2.min.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/backend/css/uppy.min.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="{{asset('assets/backend/sweetalert/sweetalert2.min.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/backend/img_cropper/css/cropper.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/backend/css/custom.css')}}" />
-
+    <link rel="stylesheet" href="{{asset('assets/backend/css/flatpickr.min.css')}}">
 </head>
 
 <body>
-   
+
         <!-- ======== main-wrapper start =========== -->
         <main class="main-wrapper">
              @include('backend.layouts.navbar')
@@ -36,6 +36,5 @@
     @yield('page_scripts')
     @yield('mainscript')
     @include('backend.layouts.htmlfooter_login')
-            
-            
-           
+
+

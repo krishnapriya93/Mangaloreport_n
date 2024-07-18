@@ -83,14 +83,6 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Adminlogin']], funct
     Route::get('/deleteMenulinktype/{id}', [App\Http\Controllers\AdminController::class, 'deleteMenulinktype'])->name('deleteMenulinktype');
     Route::get('/statusmenutype/{id}', [App\Http\Controllers\AdminController::class, 'statusmenutype'])->name('statusmenutype');
 
-    //Tender type
-    Route::get('/admin/tendertype', [App\Http\Controllers\AdminController::class, 'tendertypelist'])->name('admin.tendertype');
-    Route::get('/admin/createtendertype', [App\Http\Controllers\AdminController::class, 'createtendertype'])->name('admin.createtendertype');
-    Route::post('/admin/storetendertype', [App\Http\Controllers\AdminController::class, 'storetendertype'])->name('admin.storetendertype');
-    Route::get('/edittendertype/{id}', [App\Http\Controllers\AdminController::class, 'edittendertype'])->name('admin.edittendertype');
-    Route::post('/updatetendertype', [App\Http\Controllers\AdminController::class, 'updatetendertype'])->name('admin.updatetendertype');
-    Route::get('/deletetendertype/{id}', [App\Http\Controllers\AdminController::class, 'deletetendertype'])->name('admin.deletetendertype');
-
     //Link type
     Route::get('/admin/linktype', [App\Http\Controllers\AdminController::class, 'linktype'])->name('admin.linktype');
     Route::get('/admin/createlinktype', [App\Http\Controllers\AdminController::class, 'createlinktype'])->name('admin.createlinktype');
@@ -255,6 +247,16 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin']],
     Route::get('/masteradmin/editlinktype/{id}', [App\Http\Controllers\MasterController::class, 'editlinktype'])->name('masteradmin.editlinktype');
     Route::post('/masteradmin/updatelinktype', [App\Http\Controllers\MasterController::class, 'updatelinktype'])->name('masteradmin.updatelinktype');
     Route::get('/masteradmin/deletelinktype/{id}', [App\Http\Controllers\MasterController::class, 'deletelinktype'])->name('masteradmin.deletelinktype');
+
+
+    //Tender type
+    Route::get('/masteradmin/tendertypelist', [App\Http\Controllers\MasterController::class, 'tendertypelist'])->name('masteradmin.tendertype');
+    Route::get('/masteradmin/createtendertype', [App\Http\Controllers\MasterController::class, 'createtendertype'])->name('masteradmin.createtendertype');
+    Route::post('/masteradmin/storetendertype', [App\Http\Controllers\MasterController::class, 'storetendertype'])->name('masteradmin.storetendertype');
+    Route::get('/masteradmin/edittendertype/{id}', [App\Http\Controllers\MasterController::class, 'edittendertype'])->name('masteradmin.edittendertype');
+    Route::post('/masteradmin/updatetendertype', [App\Http\Controllers\MasterController::class, 'updatetendertype'])->name('masteradmin.updatetendertype');
+    Route::get('/masteradmin/deletetendertype/{id}', [App\Http\Controllers\MasterController::class, 'deletetendertype'])->name('masteradmin.deletetendertype');
+
 });
 //Master Admin End
 

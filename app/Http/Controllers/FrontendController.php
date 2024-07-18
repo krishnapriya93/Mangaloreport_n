@@ -13,6 +13,8 @@ use App\Models\Socialmedia;
 use App\Models\Banner;
 use App\Models\Publicrelation;
 use App\Models\Link;
+use App\Models\BOD;
+use App\Models\Tender;
 
 class FrontendController extends Controller
 {
@@ -22,18 +24,20 @@ class FrontendController extends Controller
             if (!Session::has('bilingual')) {
                 Session::put('bilingual', 1);
             }
-            $sessionbil = Session::get('bilingual');
-            $mainsubmenus = $this->mainmenu($sessionbil);
+            $sessionbil     = Session::get('bilingual');
+            $mainsubmenus   = $this->mainmenu($sessionbil);
 
-            $mainbanner = $this->mainbanner($sessionbil);
+            $mainbanner     = $this->mainbanner($sessionbil);
             $circulartrades = $this->circulartrade($sessionbil);
 
-            $whatwedo = $this->whatwedo($sessionbil);
-            $relatedlinks = $this->relatedlinks($sessionbil);
-            $socialmedia = $this->socialmedia($sessionbil);
-            // dd($mainsubmenus);
+            $whatwedo       = $this->whatwedo($sessionbil);
+            $relatedlinks   = $this->relatedlinks($sessionbil);
+            $socialmedia    = $this->socialmedia($sessionbil);
+            $bod            = $this->bod($sessionbil);
 
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia'));
+            $tender            = $this->tender($sessionbil);
+
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender'));
         }
 
     // public function mainarticle($articlename,$enarticletypeid)
@@ -137,6 +141,7 @@ class FrontendController extends Controller
         }])
         ->where('delet_flag',0)
         ->where('status_id',1)
+        ->where('publicreltypeid',1)
         ->orderBy('id',  'DESC')
         ->limit(6)->get();
 
@@ -182,4 +187,29 @@ class FrontendController extends Controller
         return $socialmedia;
 
     }
+
+    private function bod($sessionbil)
+    {
+        $bod =  BOD::with(['bodsub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('status',1)
+        ->orderBy('id',  'DESC')
+        ->limit(3)->get();
+
+        return $bod;
+    }
+
+    private function tender($sessionbil)
+    {
+        $tender =  Tender::with(['tender_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('status_id',1)
+        ->orderBy('id',  'DESC')
+        ->limit(2)->get();
+
+        return $tender;
+    }
+
 }

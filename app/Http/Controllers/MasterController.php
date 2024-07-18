@@ -12,6 +12,7 @@ use App\Models\Language;
 use App\Models\Componentpermission;
 use App\Models\Articletypesub;
 use App\Models\BOD;
+use App\Models\BOD_sub;
 use App\Models\Designation;
 use App\Models\Milestone;
 use App\Models\Footermenu;
@@ -22,6 +23,8 @@ use App\Models\Publicrelationtype;
 use App\Models\PublicrelationtypSub;
 use App\Models\Linktype;
 use App\Models\Linktypesub;
+use App\Models\TenderType;
+use App\Models\TenderTypeSub;
 use \Crypt;
 use DB;
 use Redirect;
@@ -734,7 +737,7 @@ public function statusmilestone($id)
 
    public function storeBOD(Request $request)
    {
-       // dd($request->all());
+    //    dd($request->all());
        $validator = Validator::make(
            $request->all(),
            [
@@ -742,7 +745,7 @@ public function statusmilestone($id)
                'description.*'   => 'sometimes|nullable',
                'desig_id1.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
                'alt.*'      => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-               'mobilenumber'=> app('App\Http\Controllers\Commonfunctions')->mobileNum_check_sometimes(),
+               'mobilenumber'=> 'required',
                'officenumber' => app('App\Http\Controllers\Commonfunctions')->officenumber_check(),
                'email' => app('App\Http\Controllers\Commonfunctions')->emailId_check(),
                'photo'      => app('App\Http\Controllers\Commonfunctions')->getImageLTAval(),
@@ -783,7 +786,7 @@ public function statusmilestone($id)
            ]
        );
        //
-       // dd($request->all());
+
        if ($validator->fails()) {
            // dd($validator->errors());
            return back()->withInput()->withErrors($validator->errors());
@@ -801,7 +804,7 @@ public function statusmilestone($id)
                if(isset($request->photo)){
                    $date = date('dmYH:i:s');
                    $imageName = 'bod'.$date . '.' .$request->photo->extension();
-                   $path = $request->file('photo')->storeAs('/uploads/bod/', $imageName, 'myfile');
+                   $path = $request->file('photo')->storeAs('/assets/backend/uploads/bod/', $imageName, 'myfile');
                }else{
                    $imageName = 0;
                }
@@ -845,7 +848,7 @@ public function statusmilestone($id)
                                'languageid'=>$request->sel_lang[$i],
                                'description'=>$request->description[$i],
                                'alt'=>$request->alt[$i],
-                               'desig_id'=>\Crypt::decryptString($request->desig_id[$i])
+                               'desig_id'=>$request->desig_id[$i]
 
                            ]);
                            $res1=$dataarr1->save();
@@ -995,7 +998,7 @@ public function statusmilestone($id)
                                    'languageid'=>$request->sel_lang[$i],
                                    'description'=>$request->description[$i],
                                    'alt'=>$request->alt[$i],
-                                   'desig_id'=>\Crypt::decryptString($request->desig_id[$i])
+                                   'desig_id'=>$request->desig_id[$i]
 
                                );
                                $res=BOD_sub::where('bod_main_id','=',$request->hidden_id)->where('languageid',$request->sel_lang[$i])->update($data_sub);
@@ -2110,4 +2113,204 @@ public function deletelogotype($id)
 //            return back()->withErrors('Not deleted ');
 //        }
 //    }
+/*Tender type*/
+public function tendertypelist()
+{
+    $datas = TenderType::where('delet_flag', 0)->get();
+
+    $breadcrumb = array(
+        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+        1 => array('title' => 'Tender type', 'message' => 'Tender type', 'status' => 1)
+    );
+    $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+    $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+    $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+    return view('backend.masteradmin.TenderType.tendertypelist', compact('datas', 'breadcrumbarr', 'navbar', 'user'));
+}
+public function createtendertype()
+{
+    $breadcrumb = array(
+        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+        1 => array('title' => 'Tender type', 'message' => 'Tender type', 'status' => 1)
+    );
+
+    $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+    $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+    $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+    $usertype = usertype::get();
+
+    $language = Language::where('delet_flag', 0)->orderBy('name')->get();
+
+    return view('backend.masteradmin.TenderType.createtendertype', compact('breadcrumbarr', 'navbar', 'user', 'usertype', 'language'));
+}
+public function storetendertype(Request $request)
+{
+    // dd($request->all());
+
+    $validator = Validator::make(
+        $request->all(),
+        [
+            'sel_lang.*' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+            'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+        ],
+        [
+            'title.required' => 'Title is required',
+            'title.min' => 'Title  minimum lenght is 2',
+            'title.max' => 'Title  maximum lenght is 50',
+            'title.regex' => 'Invalid characters not allowed for Title',
+
+        ]
+    );
+    if ($validator->fails()) {
+        // dd($validator->errors());
+        return back()->withInput()->withErrors($validator->errors());
+    }
+    try {
+
+        $request->input();
+        $role_id = Auth::user()->id;
+
+        $leng = count($request->sel_lang);
+        // dd($leng);
+
+        $storeinfo = new TenderType([
+            'user_id' => Auth::user()->id,
+            'status_id' => 1,
+        ]);
+
+        $res = $storeinfo->save();
+        $tendertypeid = DB::getPdo()->lastInsertId();
+
+        for ($i = 0; $i < $leng; $i++) {
+
+
+            if ($tendertypeid) {
+
+                $store_sub_info = new TenderTypeSub([
+                    'languageid' => $request->sel_lang[$i],
+                    'title' => $request->title[$i],
+                    'tendertypeid' => $tendertypeid,
+                ]);
+                $storedetails_sub = $store_sub_info->save();
+            }
+            // dd($path);
+        } //forloopend
+
+        return redirect()->route('masteradmin.tendertype')->with('success', 'Created successfully');
+    } catch (ModelNotFoundException $exception) {
+        \LogActivity::addToLog($exception->getMessage(), 'error');
+        $data = \LogActivity::logLatestItem();
+        return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+    }
+}
+public function edittendertype($id)
+{
+
+    $id = Crypt::decryptString($id);
+
+    $edit_f = 'E';
+
+    $keydata = TenderType::with(['tender_type_sub' => function ($query) {
+    }])->where('id', $id)->first();
+
+    $error = '';
+
+
+    $language = Language::orderBy('name')->get();
+
+    $breadcrumb = array(
+        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
+        1 => array('title' => 'Tender category', 'message' => 'Tender category', 'status' => 0, 'link' => '/admin/tendercategory'),
+        2 => array('title' => 'Edit Tender category', 'message' => 'Edit Tender category', 'status' => 1)
+    );
+    $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
+    $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+    $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+
+    return view('backend.masteradmin.TenderType.createtendertype', compact('breadcrumbarr', 'navbar', 'user', 'language', 'edit_f', 'keydata'));
+}
+public function updatetendertype(Request $request)
+{
+    // dd($request->all());
+
+    $validator = Validator::make(
+        $request->all(),
+        [
+            'sel_lang.*' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+            'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+        ],
+        [
+            'title.required' => 'Title is required',
+            'title.min' => 'Title  minimum lenght is 2',
+            'title.max' => 'Title  maximum lenght is 50',
+            'title.regex' => 'Invalid characters not allowed for Title',
+
+        ]
+    );
+    if ($validator->fails()) {
+        // dd($validator->errors());
+        return back()->withInput()->withErrors($validator->errors());
+    }
+    try {
+
+        $request->input();
+        $role_id = Auth::user()->id;
+
+        $leng = count($request->sel_lang);
+        // dd($leng);
+
+        $storeinfo = array(
+            'user_id' => Auth::user()->id,
+        );
+
+        $res = TenderType::where('id', $request->hidden_id)->update($storeinfo);
+        $tendertypeid = $request->hidden_id;
+
+        for ($i = 0; $i < $leng; $i++) {
+
+
+            if ($tendertypeid) {
+
+                $store_sub_info = array(
+                    'languageid' => $request->sel_lang[$i],
+                    'title' => $request->title[$i],
+                    'tendertypeid' => $tendertypeid,
+                );
+                $storedetails_sub = TenderTypeSub::where('tendertypeid', $request->hidden_id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);
+            }
+            // dd($path);
+        } //forloopend
+
+        return redirect()->route('masteradmin.tendertypelist')->with('success', 'Updated successfully');
+    } catch (ModelNotFoundException $exception) {
+        \LogActivity::addToLog($exception->getMessage(), 'error');
+        $data = \LogActivity::logLatestItem();
+        return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+    }
+}
+
+
+public function deletetendertype($id)
+{
+    $id = Crypt::decryptString($id);
+    // dd($id);
+    DB::beginTransaction();
+
+    $res_sub = TenderTypeSub::where('tendertypeid', $id)->delete();
+
+    // if($res_sub)
+    // {
+    $res = TenderType::findOrFail($id)->delete();
+
+    // }
+    $edit_f = '';
+    if ($res_sub) {
+        DB::commit();
+        return Redirect('/masteradmin/tendertypelist')->with('success', 'Deleted successfully', ['edit_f' => $edit_f]);
+    } else {
+        DB::rollback();
+        return back()->withErrors('Not deleted ');
+    }
+}
+/*Tender type*/
 }
