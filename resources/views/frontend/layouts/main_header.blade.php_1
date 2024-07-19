@@ -22,10 +22,13 @@
 
     <meta name="lang" content="English">
     <title>New Mangalore Port</title>
-    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/style.css') }}" />
-    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/main.css') }}" />
-    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/custom.css') }}" />
 
+    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/dataTables.bootstrap5.css') }}" />
+
+    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/style.css') }}" />
+    {{-- <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/main.css') }}" /> --}}
+    <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/custom.css') }}" />
     <style>
         .navbar-header {
             background-image: url('{{ asset('/assets/frontend/images/green.jpg') }}');
@@ -208,5 +211,6 @@
 
 
         @yield('content')
-
+        @include('frontend.layouts.mainscript')
+        @yield('page_scripts')
         @include('frontend.layouts.main_footer')

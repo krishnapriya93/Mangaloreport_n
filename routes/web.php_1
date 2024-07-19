@@ -22,10 +22,6 @@ use App\Http\Controllers\FrontendController;
 Route::get('/', [FrontendController::class, 'index'])->name('main.index');
 // Route::get('mainarticle/{title}/{id}', [FrontendController::class, 'mainarticle'])->name('mainarticle');
 Route::get('mainarticle/{articletypeid}', [App\Http\Controllers\FrontendController::class, 'mainarticle'])->name('mainarticle');
-Route::get('milestoneview', [App\Http\Controllers\FrontendController::class, 'milestoneview'])->name('milestoneview');
-Route::get('bodview', [App\Http\Controllers\FrontendController::class, 'bodview'])->name('bodview');
-Route::get('whoswhoview', [App\Http\Controllers\FrontendController::class, 'whoswhoview'])->name('whoswhoview');
-
 
 //Front end - end
 
@@ -181,16 +177,6 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], functi
     Route::get('/siteadmin/deletelink/{id}', [App\Http\Controllers\SiteadminController::class, 'deletelink'])->name('deletelink');
     Route::get('/siteadmin/statuslink/{id}', [App\Http\Controllers\SiteadminController::class, 'statuslink'])->name('statuslink');
     Route::get('/siteadmin/Orderchangelinklist_form', [App\Http\Controllers\SiteadminController::class, 'Orderchangelinklist_form'])->name('Orderchangelinklist_form');
-
-    //Milestone
-    Route::get('/siteadmin/milestone', [App\Http\Controllers\SiteadminController::class, 'milestonelist'])->name('milestone');
-    Route::get('/siteadmin/createmilestone', [App\Http\Controllers\SiteadminController::class, 'createmilestone'])->name('createmilestone');
-    Route::post('/siteadmin/storemilestone', [App\Http\Controllers\SiteadminController::class, 'storemilestone'])->name('storemilestone');
-    Route::get('/siteadmin/editmilestone/{id}', [App\Http\Controllers\SiteadminController::class, 'editmilestone'])->name('editmilestone');
-    Route::post('/siteadmin/updatemilestone', [App\Http\Controllers\SiteadminController::class, 'updatemilestone'])->name('updatemilestone');
-    Route::get('/siteadmin/deletemilestone/{id}', [App\Http\Controllers\SiteadminController::class, 'deletemilestone'])->name('deletemilestone');
-    Route::get('/siteadmin/statusmilestone/{id}', [App\Http\Controllers\SiteadminController::class, 'statusmilestone'])->name('statusmilestone');
-
 });
 
 //Master Admin Start
@@ -236,6 +222,15 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin']],
     Route::post('/masteradmin/updateMenulinktype', [App\Http\Controllers\MasterController::class, 'updateMenulinktype'])->name('updateMenulinktype');
     Route::get('/masteradmin/deleteMenulinktype/{id}', [App\Http\Controllers\MasterController::class, 'deleteMenulinktype'])->name('deleteMenulinktype');
     Route::get('/masteradmin/statusmenutype/{id}', [App\Http\Controllers\MasterController::class, 'statusmenutype'])->name('statusmenutype');
+
+    //Milestone
+    Route::get('/masteradmin/milestonelist', [App\Http\Controllers\MasterController::class, 'milestonelist'])->name('milestone');
+    Route::get('/masteradmin/createmilestone', [App\Http\Controllers\MasterController::class, 'createmilestone'])->name('createmilestone');
+    Route::post('/masteradmin/storemilestone', [App\Http\Controllers\MasterController::class, 'storemilestone'])->name('storemilestone');
+    Route::get('/masteradmin/editmilestone/{id}', [App\Http\Controllers\MasterController::class, 'editmilestone'])->name('editmilestone');
+    Route::post('/masteradmin/updatemilestone', [App\Http\Controllers\MasterController::class, 'updatemilestone'])->name('updatemilestone');
+    Route::get('/masteradmin/deletemilestone/{id}', [App\Http\Controllers\MasterController::class, 'deletemilestone'])->name('deletemilestone');
+    Route::get('/masteradmin/statusmilestone/{id}', [App\Http\Controllers\MasterController::class, 'statusmilestone'])->name('statusmilestone');
 
     //pressrelase type
     Route::get('/masteradmin/publicrelationtype', [App\Http\Controllers\MasterController::class, 'publicrelationtype'])->name('publicrelationtype');

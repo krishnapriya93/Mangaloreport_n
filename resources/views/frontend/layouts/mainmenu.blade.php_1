@@ -140,14 +140,7 @@
                                                        <li class="dropdown menu-z-index-fix"><a href="#">{{ $subitem->title }} <i class="bi bi-chevron-right"></i></a>
                                                         @foreach ($subdata['subsubmenu'] as $subsuitem)
                                                         @endforeach
-                                                      @elseif ($subdata->menulinktype_id == 22)
-                                                      <li><a href="{{ route('milestoneview') }}">{{ $subitem->title }} </a></li>
-                                                      @elseif ($subdata->menulinktype_id == 23)
-                                                      <li><a href="{{ route('bodview') }}">{{ $subitem->title }} </a></li>
-                                                      @elseif ($subdata->menulinktype_id == 24)
-                                                      <li><a href="{{ route('whoswhoview') }}">{{ $subitem->title }} </a></li>
                                                       @endif
-
                                                         @endforeach
                                                         @endforeach
                                                 </ul>
