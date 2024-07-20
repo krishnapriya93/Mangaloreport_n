@@ -43,6 +43,28 @@ class FrontendController extends Controller
 
             return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender','whatsnew','gallery','midwidget'));
         }
+        public function setbilingualvalmal(Request $request)
+        {
+
+            if ($request->ajax()) {
+
+                Session::forget('bilingual');
+                Session::put('bilingual', 2);
+                return response()->json(['success' => 'successfully set']);
+
+            }
+        }
+        public function setbilingualval(Request $request)
+        {
+
+            if ($request->ajax()) {
+
+                Session::forget('bilingual');
+                Session::put('bilingual', 1);
+                return response()->json(['success' => 'successfully set']);
+
+            }
+        }
 
     // public function mainarticle($articlename,$enarticletypeid)
     public function mainarticle($enarticletypeid)
@@ -341,5 +363,33 @@ public function whoswhoview()
     ->get();
 
     return view('frontend.main.whoswhoview',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender','whatsnew','gallery','bod'));
+}
+public function chiefofficers()
+{
+    if (!Session::has('bilingual')) {
+        Session::put('bilingual', 1);
+    }
+    $sessionbil     = Session::get('bilingual');
+    $mainsubmenus   = $this->mainmenu($sessionbil);
+
+    $mainbanner     = $this->mainbanner($sessionbil);
+    $circulartrades = $this->circulartrade($sessionbil);
+
+    $whatwedo       = $this->whatwedo($sessionbil);
+    $relatedlinks   = $this->relatedlinks($sessionbil);
+    $socialmedia    = $this->socialmedia($sessionbil);
+    $bod            = $this->bod($sessionbil);
+    $whatsnew       = $this->whatsnew($sessionbil);
+    $tender         = $this->tender($sessionbil);
+    $gallery        = $this->gallery($sessionbil);
+
+        //BOARD OF DIRECTORS
+    $bod =  BOD::with(['bodsub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])->orderBy('order_num', 'DESC')
+    ->where('status',1)
+    ->get();
+
+    return view('frontend.main.chiefofficers',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender','whatsnew','gallery','bod'));
 }
 }

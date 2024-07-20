@@ -172,8 +172,17 @@
                                             <label for="exampleFormControlSelect2"></label>
                                             <br>
                                             <input type="checkbox" class="form-check-input" name="desig_flag"
-                                                id="desig_flag" value="1">
+                                                id="desig_flag" value="{{ $keydata->desig_flag }}" {{isset($keydata->desig_flag)?'checked':''}}>
                                             <label class="form-check-label" for="exampleCheck1">Home page</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 mb-btm">
+                                        <div class="form-group form-check">
+                                            <label for="exampleFormControlSelect2"></label>
+                                            <br>
+                                            <input type="checkbox" class="form-check-input" name="chief_officers"
+                                                id="chief_officers" value="{{ $keydata->chief_officers_flag }}" {{isset($keydata->chief_officers_flag)?'checked':''}}>
+                                            <label class="form-check-label" for="exampleCheck1">Chief officers</label>
                                         </div>
                                     </div>
 

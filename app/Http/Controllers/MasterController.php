@@ -777,6 +777,11 @@ public function statusmilestone($id)
                 }else{
                     $desig_flag=1;
             }
+            if(empty($request->chief_officers)){
+                $chief_officers=0;
+                 }else{
+                     $chief_officers=1;
+             }
         $chekrows_bod = BOD::where('email', $request->email)->orWhere('mobilenumber',$request->mobilenumber)->exists() ? 1 : 0;
 
         $leng=count($request->sel_lang);
@@ -792,6 +797,7 @@ public function statusmilestone($id)
                     'officenumber'=>$request->officenumber,
                     'mobilenumber'=>$request->mobilenumber,
                     'desig_flag'=>$desig_flag,
+                    'chief_officers_flag'=>$chief_officers,
                     'photo'=>$imageName,
                     'user_id'=>Auth::user()->id,
                     'status'=>1
@@ -854,6 +860,7 @@ public function statusmilestone($id)
                     'officenumber'=>$request->officenumber,
                     'mobilenumber'=>$request->mobilenumber,
                     'desig_flag'=>$desig_flag,
+                    'chief_officers_flag'=>$chief_officers,
                     'user_id'=>Auth::user()->id,
                     'status'=>1
                 ]);
@@ -1022,6 +1029,11 @@ public function statusmilestone($id)
                    }else{
                        $desig_flag=1;
                    }
+                   if(empty($request->chief_officers)){
+                    $chief_officers=0;
+                }else{
+                    $chief_officers=1;
+                }
 
 
                    $lang=Language::where('status_id',1)->get();
@@ -1038,7 +1050,7 @@ public function statusmilestone($id)
                                    'languageid'=>$request->sel_lang[$i],
                                    'description'=>$request->description[$i],
                                    'alt'=>$request->alt[$i],
-                                   'desig_id'=>$request->desig_id[$i]
+                                   'desig_id'=>$request->desig_id[$i],
 
                                );
                                $res=BOD_sub::where('bod_main_id','=',$request->hidden_id)->where('languageid',$request->sel_lang[$i])->update($data_sub);
@@ -1058,6 +1070,7 @@ public function statusmilestone($id)
                            'officenumber'=>$request->officenumber,
                            'mobilenumber'=>$request->mobilenumber,
                            'desig_flag'=>$desig_flag,
+                           'chief_officers_flag'=>$chief_officers,
                            'photo'=>$imageName,
                        );
                        $res_main=BOD::where('id','=',$request->hidden_id)->update($data_main);
@@ -1069,6 +1082,7 @@ public function statusmilestone($id)
                            'officenumber'=>$request->officenumber,
                            'mobilenumber'=>$request->mobilenumber,
                            'desig_flag'=>$desig_flag,
+                           'chief_officers_flag'=>$chief_officers,
                        );
                        $res_main=BOD::where('id','=',$request->hidden_id)->update($data_main);
 

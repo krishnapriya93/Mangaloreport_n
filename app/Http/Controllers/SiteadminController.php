@@ -5046,84 +5046,112 @@ public function OrderchangeMainmenu_form(Request $request)
 /*Submenu*/
 public function submenu()
 {
+    $data = Submenu::with([
+        'lang_sel' => function ($query) {
+            $query->where('delet_flag', 0);
+        },
+    ])
+        ->with([
+            'submenusub' => function ($query1) {
+                // $query1->where('delet_flag',0);
+            },
+        ])
+        ->with([
+            'menu_link_types' => function ($query2) {
+                $query2->where('delet_flag', 0)->get();
+            },
+        ])
+        ->with([
+            'mainmenu_sub_selected' => function ($query3) {
+                $query3->where('languageid', 1);
+            },
+        ])
+        ->where('delet_flag', 0)
+        ->orderBy('orderno', 'asc')
+        ->get();
+    // dd($data[0]->mainmenu_sub_selected[0]->title);
 
-
-    $data = Submenu::with(['lang_sel' => function($query){
-        $query->where('delet_flag',0);
-    }])->with(['submenusub' =>function($query1){
-        // $query1->where('delet_flag',0);
-    }])->with(['menu_link_types' =>function($query2){
-        $query2->where('delet_flag',0)->get();
-    }])->with(['mainmenu_sub_selected' => function($query3){
-        $query3->where('languageid',1);
-    }])->where('delet_flag',0)->orderBy('orderno','asc')->get();
-// dd($data[0]->mainmenu_sub_selected[0]->title);
-
-    $lang = Language::where('delet_flag',0)->orderBy('name')->get();
-    $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
+    $lang = Language::where('delet_flag', 0)->orderBy('name')->get();
+    $Menulinktype = Menulinktype::where('delet_flag', 0)->orderBy('name')->get();
     // $Mainmenu=Mainmenu::where('delet_flag',0)->get();
-    $Mainmenu = Mainmenu::with(['mainmenu_sub' => function($query){
-        $query->where('languageid',1);
-    }])->where('delet_flag',0)->get();
+    $Mainmenu = Mainmenu::with([
+        'mainmenu_sub' => function ($query) {
+            $query->where('languageid', 1);
+        },
+    ])
+        ->where('delet_flag', 0)
+        ->get();
 
-    $breadcrumb = array(
-        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'),
-        1 => array('title' => 'Submenu', 'message' => 'Submenu', 'status' => 1)
-     );
+    $breadcrumb = [
+        0 => ['title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/masteradminhome'],
+        1 => ['title' => 'Submenu', 'message' => 'Submenu', 'status' => 1],
+    ];
     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-    $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-    $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-    return view('backend.siteadmin.Submenu.submenu',compact('data','breadcrumbarr','lang','Menulinktype','Mainmenu','navbar','user'));
+    $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+    $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+    return view('backend.siteadmin.Submenu.submenu', compact('data', 'breadcrumbarr', 'lang', 'Menulinktype', 'Mainmenu', 'navbar', 'user'));
 }
-
 
 /*Submenu create*/
 public function createsubmenu()
 {
-
-    $language = Language::where('delet_flag',0)->orderBy('name')->get();
-    $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
-    $mainmenu = Mainmenu::with(['mainmenu_sub' => function($query){
-        $query->where('languageid',1);
-    }])->where('delet_flag',0)->get();
-// dd($mainmenu);
-    $breadcrumb = array(
-        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-        1 => array('title' => 'Submenu', 'message' => 'Submenu', 'status' => 0, 'link' => '/siteadmin/submenu'),
-        2 => array('title' => 'Create Submenu', 'message' => 'Create Submenu', 'status' => 1)
-     );
+    $language = Language::where('delet_flag', 0)->orderBy('name')->get();
+    $Menulinktype = Menulinktype::where('delet_flag', 0)->orderBy('name')->get();
+    $mainmenu = Mainmenu::with([
+        'mainmenu_sub' => function ($query) {
+            $query->where('languageid', 1);
+        },
+    ])
+        ->where('delet_flag', 0)
+        ->get();
+    // dd($mainmenu);
+    $breadcrumb = [
+        0 => ['title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'],
+        1 => ['title' => 'Submenu', 'message' => 'Submenu', 'status' => 0, 'link' => '/siteadmin/submenu'],
+        2 => ['title' => 'Create Submenu', 'message' => 'Create Submenu', 'status' => 1],
+    ];
     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
-    $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-    $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
+    $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+    $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
     $url = url()->previous();
     $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
-    $Navid=Componentpermission::where('url','/'.$route)->select('id')->first();
+    $Navid = Componentpermission::where('url', '/' . $route)
+        ->select('id')
+        ->first();
 
-    $arttype =   Articletype::with(['articletype_sub'=>function($query){
-        $query->where('languageid', 1);
-    }])->where('status_id',1)->where('delet_flag',0)->get();
+    $arttype = Articletype::with([
+        'articletype_sub' => function ($query) {
+            $query->where('languageid', 1);
+        },
+    ])
+        ->where('status_id', 1)
+        ->where('delet_flag', 0)
+        ->get();
     $orderno = Submenu::max('orderno');
 
-    $orderno_val ='';
-    if($orderno == NULL)
-    {
-
-       $orderno_val =1;
-    }else{
-       $orderno_val =$orderno+1;
+    $orderno_val = '';
+    if ($orderno == null) {
+        $orderno_val = 1;
+    } else {
+        $orderno_val = $orderno + 1;
     }
 
-    return view('backend.siteadmin.Submenu.createsubmenu',compact('breadcrumbarr','language','navbar','user','Menulinktype','mainmenu','Navid','arttype','orderno_val'));
+    return view('backend.siteadmin.Submenu.createsubmenu', compact('breadcrumbarr', 'language', 'navbar', 'user', 'Menulinktype', 'mainmenu', 'Navid', 'arttype', 'orderno_val'));
 }
 
 /**=sbuwisemainmenu */
 public function sbuwisemainmenu(Request $request)
 {
     // dd($request->all());
-    $mainmenu_sbu = Mainmenu::with(['mainmenu_sub' => function($query){
-          $query->where('languageid',1);
-    }])->where('sbu_type',$request->sbu_id)->where('delet_flag',0)->get();
-// dd($mainmenu_sbu);
+    $mainmenu_sbu = Mainmenu::with([
+        'mainmenu_sub' => function ($query) {
+            $query->where('languageid', 1);
+        },
+    ])
+        ->where('sbu_type', $request->sbu_id)
+        ->where('delet_flag', 0)
+        ->get();
+    // dd($mainmenu_sbu);
 
     return response()->json($mainmenu_sbu);
 }
@@ -5131,26 +5159,23 @@ public function sbuwisemainmenu(Request $request)
 /*store submenu*/
 public function storesubmenu(Request $request)
 {
-
     $validator = Validator::make(
         $request->all(),
         [
-            'icon_class'    => 'sometimes',
-            'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-            'menulinktype'  => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
-            'mainmenuid'    => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
-            'file_type'     => app('App\Http\Controllers\Commonfunctions')->getFileval()
-
+            'icon_class' => 'sometimes',
+            'title.*' => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+            'menulinktype' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+            'mainmenuid' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
+            'file_type' => app('App\Http\Controllers\Commonfunctions')->getFileval(),
         ],
         [
             'title.required' => 'Title is required',
-            'title.regex'    => 'The title format is invalid',
-            'title.min'      => 'Title  minimum length is 3',
-            'title.max'      => 'Title  maximum length is 150',
+            'title.regex' => 'The title format is invalid',
+            'title.min' => 'Title  minimum length is 3',
+            'title.max' => 'Title  maximum length is 150',
 
-            'file_type.mimes'   => 'Invalid image format',
-
-        ]
+            'file_type.mimes' => 'Invalid image format',
+        ],
     );
     //
 
@@ -5159,243 +5184,254 @@ public function storesubmenu(Request $request)
         return back()->withInput()->withErrors($validator->errors());
     }
 
-    try{
-           $request->input();
-           $article_id=0;
+    try {
+        $request->input();
+        $article_id = 0;
         $role_id = Auth::user()->id;
-         if($request->Anchor)
-                {
-                    $menulinktype_data=$request->Anchor;
-                }
-                elseif($request->url)
-                {
-                    $menulinktype_data=$request->url;
-                }
-                elseif($request->forms)
-                {
-                    $menulinktype_data=$request->forms;
-                }  elseif($request->menulinktype==17)
-                {
-                    $menulinktype_data='';
-                    $article_id=0;
-                }elseif(($request->menulinktype==14) || ($request->menulinktype==20))
-                {
-                    $menulinktype_data=$request->articletype;
-                    $article_id=$request->articletype;
-                    // $url_name='/planning/articledetail/';
-                    // $menulinktype_data=$url_name.$request->articletype;
-                }elseif($request->menulinktype==13){
+        if ($request->Anchor) {
+            $menulinktype_data = $request->Anchor;
+        } elseif ($request->url) {
+            $menulinktype_data = $request->url;
+        } elseif ($request->forms) {
+            $menulinktype_data = $request->forms;
+        } elseif ($request->menulinktype == 17) {
+            $menulinktype_data = '';
+            $article_id = 0;
+        } elseif ($request->menulinktype == 14 || $request->menulinktype == 20) {
+            $menulinktype_data = $request->articletype;
+            $article_id = $request->articletype;
+            // $url_name='/planning/articledetail/';
+            // $menulinktype_data=$url_name.$request->articletype;
+        } elseif ($request->menulinktype == 13) {
+            $date = date('dmYH:i:s');
+            $imageName = $request->title[0] . $date . '.' . $request->file_type->extension();
+            $filename = $imageName;
+            $path = $request->file('file_type')->storeAs('/uploads/Submenu/', $imageName, 'myfile');
+            $menulinktype_data = $filename;
+        } elseif ($request->menulinktype == 21) {
+            $menulinktype_data = $request->downloadtype;
+        } elseif ($request->menulinktype == 22) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 23) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 24) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 25) {
+            $menulinktype_data = '';
+        }
 
-                            $date = date('dmYH:i:s');
-                            $imageName = $request->title[0]. $date . '.' .$request->file_type->extension();
-                            $filename=$imageName;
-                            $path = $request->file('file_type')->storeAs('/uploads/Submenu/', $imageName, 'myfile');
-                            $menulinktype_data=$filename;
+        if ($request->sbu_user == null) {
+            $sbu_user = 0;
+        } else {
+            $sbu_user = $request->sbu_user;
+        }
+        if ($request->icon_class == null) {
+            $icon_class = 0;
+        } else {
+            $icon_class = $request->icon_class;
+        }
 
-                }elseif($request->menulinktype==21)
-                {
-                    $menulinktype_data=$request->downloadtype;
-                }
+        if ($request->menulinktype != 13) {
+            //Anchor|| URL || Form || Article
+            $leng = count($request->sel_lang);
 
-                    if($request->sbu_user==null)
-                    {
-                        $sbu_user= 0;
-                    }else{
-                        $sbu_user= $request->sbu_user;
-                    }
-                    if($request->icon_class==null)
-                    {
-                        $icon_class= 0;
-                    }else{
-                        $icon_class= $request->icon_class;
-                    }
+            $storeinfo = new Submenu([
+                'users_id' => $role_id,
+                'mainmenu_id' => $request->mainmenuid,
+                'iconclass' => $icon_class,
+                'orderno' => $request->ord_num,
+                'menulinktype_id' => $request->menulinktype,
+                'menulinktype_data' => $menulinktype_data,
+                'articletype_id' => $article_id,
+                'delet_flag' => 0,
+                'status_id' => 1,
+            ]);
+            // dd($storeinfo);
+            $res = $storeinfo->save();
+            $Submenusub = DB::getPdo()->lastInsertId();
 
+            $leng = count($request->sel_lang);
 
-         if ($request->menulinktype != 13) //Anchor|| URL || Form || Article
-            {
-                    $leng=count($request->sel_lang);
-
-                    $storeinfo=new Submenu([
-                            'users_id'=>$role_id,
-                            'mainmenu_id'=>$request->mainmenuid,
-                            'iconclass'=>$icon_class,
-                            'orderno'=>$request->ord_num,
-                            'menulinktype_id'=>$request->menulinktype,
-                            'menulinktype_data'=>$menulinktype_data,
-                            'articletype_id'=>$article_id,
-                            'delet_flag'=>0,
-                            'status_id'=>1,
-                        ]);
-             // dd($storeinfo);
-                    $res = $storeinfo->save();
-                    $Submenusub = DB::getPdo()->lastInsertId();
-
-                    $leng=count($request->sel_lang);
-
-                 if($res)
-                 {
-                   for($i=0;$i<$leng;$i++){
-
-                        $storeinfo_sub=new Submenusub([
-                            'userid'=>$role_id,
-                            'languageid'=>$request->sel_lang[$i],
-                            'title' =>$request->title[$i],
-                            'submenuid'=>$Submenusub,
-
-                        ]);
-                        // dd($storeinfo_sub);
-                        $res_su = $storeinfo_sub->save();
-                            DB::commit();
-
-                      }//endfor
-                 }//ifres
-
-
-            }//endif 13!=
-            else if($request->menulinktype == 13)
-             {
-                // dd(true);
-                $leng=count($request->sel_lang);
-
-                $storeinfo=new Submenu([
-                        'users_id'=>$role_id,
-                        'mainmenu_id'=>$request->mainmenuid,
-                        'iconclass'=>$icon_class,
-                        'orderno'=>$request->ord_num,
-                        'menulinktype_id'=>$request->menulinktype,
-                        'menulinktype_data'=>$menulinktype_data,
-                        'articletype_id'=>$article_id,
-                        'delet_flag'=>0,
-                        'status_id'=>1,
-                    ]);
-         // dd($storeinfo);
-                $res = $storeinfo->save();
-                $Submenusub = DB::getPdo()->lastInsertId();
-// dd($Submenusub);
-                $leng=count($request->sel_lang);
-
-             if($res)
-             {
-               for($i=0;$i<$leng;$i++){
-
-                    $storeinfo_sub=new Submenusub([
-                        'userid'=>$role_id,
-                        'languageid'=>$request->sel_lang[$i],
-                        'title' =>$request->title[$i],
-                        'submenuid'=>$Submenusub,
-
+            if ($res) {
+                for ($i = 0; $i < $leng; $i++) {
+                    $storeinfo_sub = new Submenusub([
+                        'userid' => $role_id,
+                        'languageid' => $request->sel_lang[$i],
+                        'title' => $request->title[$i],
+                        'submenuid' => $Submenusub,
                     ]);
                     // dd($storeinfo_sub);
                     $res_su = $storeinfo_sub->save();
-                        DB::commit();
+                    DB::commit();
+                } //endfor
+            } //ifres
+        }
+        //endif 13!=
+        elseif ($request->menulinktype == 13) {
+            // dd(true);
+            $leng = count($request->sel_lang);
 
-                  }//endfor
-             }//ifres
+            $storeinfo = new Submenu([
+                'users_id' => $role_id,
+                'mainmenu_id' => $request->mainmenuid,
+                'iconclass' => $icon_class,
+                'orderno' => $request->ord_num,
+                'menulinktype_id' => $request->menulinktype,
+                'menulinktype_data' => $menulinktype_data,
+                'articletype_id' => $article_id,
+                'delet_flag' => 0,
+                'status_id' => 1,
+            ]);
+            // dd($storeinfo);
+            $res = $storeinfo->save();
+            $Submenusub = DB::getPdo()->lastInsertId();
+            // dd($Submenusub);
+            $leng = count($request->sel_lang);
 
+            if ($res) {
+                for ($i = 0; $i < $leng; $i++) {
+                    $storeinfo_sub = new Submenusub([
+                        'userid' => $role_id,
+                        'languageid' => $request->sel_lang[$i],
+                        'title' => $request->title[$i],
+                        'submenuid' => $Submenusub,
+                    ]);
+                    // dd($storeinfo_sub);
+                    $res_su = $storeinfo_sub->save();
+                    DB::commit();
+                } //endfor
+            } //ifres
+        }
 
-             }
-
-
-           // $storedetails=$storeinfo->save();
-           return redirect()->route('submenu')->with('success','created successfully');
-
+        // $storedetails=$storeinfo->save();
+        return redirect()->route('submenu')->with('success', 'created successfully');
     } catch (ModelNotFoundException $exception) {
-        \LogActivity::addToLog($exception->getMessage(),'error');
+        \LogActivity::addToLog($exception->getMessage(), 'error');
         $data = \LogActivity::logLatestItem();
-        return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+        return Redirect::back()
+            ->withInput()
+            ->withErrors('Please contact admin; the error code is ERROR' . $data->id);
     }
-
 }
-
-
 
 /*edit mainmenu*/
 
 public function editsubmenu($id)
 {
-
-    $id= Crypt::decryptString($id);
+    $id = Crypt::decryptString($id);
     // dd($id);
     $edit_f = 'E';
 
     $error = '';
 
-    $data = Submenu::with(['lang_sel' => function($query){
-        $query->where('delet_flag',0);
-    }])->with(['submenusub' =>function($query1){
-        // $query1->where('delet_flag',0);
-    }])->with(['menu_link_types' =>function($query2){
-        $query2->where('delet_flag',0)->get();
-    }])->with(['mainmenu_sub_selected' => function($query3){
-        $query3->where('languageid',1);
-    }])->where('delet_flag',0)->get();
+    $data = Submenu::with([
+        'lang_sel' => function ($query) {
+            $query->where('delet_flag', 0);
+        },
+    ])
+        ->with([
+            'submenusub' => function ($query1) {
+                // $query1->where('delet_flag',0);
+            },
+        ])
+        ->with([
+            'menu_link_types' => function ($query2) {
+                $query2->where('delet_flag', 0)->get();
+            },
+        ])
+        ->with([
+            'mainmenu_sub_selected' => function ($query3) {
+                $query3->where('languageid', 1);
+            },
+        ])
+        ->where('delet_flag', 0)
+        ->get();
 
-    $keydata = Submenu::with(['lang_sel' => function($query){
-        $query->where('delet_flag',0);
-    }])->with(['submenusub' =>function($query1){
-        // $query1->where('delet_flag',0);
-    }])->with(['menu_link_types' =>function($query2){
-        $query2->where('delet_flag',0)->get();
-    }])->with(['mainmenu_sub_selected' => function($query3){
-        $query3->where('languageid',1);
-    }])->where('id',$id)->where('delet_flag',0)->first();
+    $keydata = Submenu::with([
+        'lang_sel' => function ($query) {
+            $query->where('delet_flag', 0);
+        },
+    ])
+        ->with([
+            'submenusub' => function ($query1) {
+                // $query1->where('delet_flag',0);
+            },
+        ])
+        ->with([
+            'menu_link_types' => function ($query2) {
+                $query2->where('delet_flag', 0)->get();
+            },
+        ])
+        ->with([
+            'mainmenu_sub_selected' => function ($query3) {
+                $query3->where('languageid', 1);
+            },
+        ])
+        ->where('id', $id)
+        ->where('delet_flag', 0)
+        ->first();
 
-    $language = Language::where('delet_flag',0)->orderBy('name')->get();
-    $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
-    $mainmenu = Mainmenu::with(['mainmenu_sub' => function($query){
-        $query->where('languageid',1);
-    }])->where('delet_flag',0)->get();
+    $language = Language::where('delet_flag', 0)->orderBy('name')->get();
+    $Menulinktype = Menulinktype::where('delet_flag', 0)->orderBy('name')->get();
+    $mainmenu = Mainmenu::with([
+        'mainmenu_sub' => function ($query) {
+            $query->where('languageid', 1);
+        },
+    ])
+        ->where('delet_flag', 0)
+        ->get();
 
-    $breadcrumb = array(
-        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-        1 => array('title' => 'Sub menu', 'message' => 'Sub menu', 'status' => 0, 'link' => '/siteadmin/submenu'),
-        2 => array('title' => 'Edit Sub menu', 'message' => 'Edit Sub menu', 'status' => 1)
-     );
+    $breadcrumb = [
+        0 => ['title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'],
+        1 => ['title' => 'Sub menu', 'message' => 'Sub menu', 'status' => 0, 'link' => '/siteadmin/submenu'],
+        2 => ['title' => 'Edit Sub menu', 'message' => 'Edit Sub menu', 'status' => 1],
+    ];
     $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
 
-    $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-    $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-    $arttype =   Articletype::with(['articletype_sub'=>function($query){
-        $query->where('languageid', 1);
-    }])->where('status_id',1)->where('delet_flag',0)->get();
+    $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+    $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+    $arttype = Articletype::with([
+        'articletype_sub' => function ($query) {
+            $query->where('languageid', 1);
+        },
+    ])
+        ->where('status_id', 1)
+        ->where('delet_flag', 0)
+        ->get();
     // dd($arttype);
-    return view('backend.siteadmin.Submenu.createsubmenu', compact('arttype','data','edit_f', 'error','keydata','breadcrumbarr','language','Menulinktype','navbar','user','mainmenu'));
+    return view('backend.siteadmin.Submenu.createsubmenu', compact('arttype', 'data', 'edit_f', 'error', 'keydata', 'breadcrumbarr', 'language', 'Menulinktype', 'navbar', 'user', 'mainmenu'));
 }
-
 
 /*Submenu update*/
 
 public function updatesubmenu(Request $request)
 {
     // dd($request->all());
-    try{
-
+    try {
         $validator = Validator::make(
             $request->all(),
             [
-                'icon_class'    => 'sometimes',
+                'icon_class' => 'sometimes',
                 'menulinktype' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
                 'mainmenuid' => app('App\Http\Controllers\Commonfunctions')->getsel2valreq(),
-                'file_type'     => app('App\Http\Controllers\Commonfunctions')->getFileval(),
-                'sbu_user'      => 'sometimes',
-                'sbu_type'        => 'sometimes',
+                'file_type' => app('App\Http\Controllers\Commonfunctions')->getFileval(),
             ],
             [
                 'title.required' => 'Title is required',
-                'title.regex'    => 'The title format is invalid',
-                'title.min'      => 'Title  minimum length is 3',
-                'title.max'      => 'Title  maximum length is 150',
+                'title.regex' => 'The title format is invalid',
+                'title.min' => 'Title  minimum length is 3',
+                'title.max' => 'Title  maximum length is 150',
 
                 'icon_class.required' => 'Icon Class is required',
-                'icon_class.regex'    => 'The icon class format is invalid',
-                'icon_class.min'      => 'Icon Class  minimum length is 3',
-                'icon_class.max'      => 'Icon Class  maximum length is 30',
+                'icon_class.regex' => 'The icon class format is invalid',
+                'icon_class.min' => 'Icon Class  minimum length is 3',
+                'icon_class.max' => 'Icon Class  maximum length is 30',
 
-                'menulinktype.required'  => 'menu type reuired',
-                'menulinktype.regex'    => 'menu type format is invalid',
-                'menulinktype.min'      => 'menu type  minimum length is 3',
-                'menulinktype.max'      => 'menu type  maximum length is 30',
-            ]
+                'menulinktype.required' => 'menu type reuired',
+                'menulinktype.regex' => 'menu type format is invalid',
+                'menulinktype.min' => 'menu type  minimum length is 3',
+                'menulinktype.max' => 'menu type  maximum length is 30',
+            ],
         );
 
         if ($validator->fails()) {
@@ -5405,144 +5441,119 @@ public function updatesubmenu(Request $request)
 
         $role_id = Auth::user()->id;
         $date = date('dmYH:i:s');
-        $article_id=0;
-                if($request->Anchor)
-                {
-                    $menulinktype_data=$request->Anchor;
-                }
-                elseif($request->url)
-                {
-                    $menulinktype_data=$request->url;
-                }
-                elseif($request->route)
-                {
-                    $menulinktype_data=$request->route;
-                }
-                elseif($request->forms)
-                {
-                    $menulinktype_data=$request->forms;
-                }  elseif($request->menulinktype==17)
-                {
-                    $menulinktype_data='';
+        $article_id = 0;
+        if ($request->Anchor) {
+            $menulinktype_data = $request->Anchor;
+        } elseif ($request->url) {
+            $menulinktype_data = $request->url;
+        } elseif ($request->route) {
+            $menulinktype_data = $request->route;
+        } elseif ($request->forms) {
+            $menulinktype_data = $request->forms;
+        } elseif ($request->menulinktype == 17) {
+            $menulinktype_data = '';
+        } elseif ($request->menulinktype == 14 || $request->menulinktype == 20) {
+            $menulinktype_data = $request->articletype;
+            $article_id = $request->articletype;
+            // $url_name='/planning/articledetail/';
+            // $menulinktype_data=$url_name.$request->articletype;
+        } elseif ($request->menulinktype == 21) {
+            $menulinktype_data = $request->downloadtype;
+        } elseif ($request->menulinktype == 22) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 23) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 24) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 25) {
+            $menulinktype_data = '';
+        }
 
-                }elseif(($request->menulinktype==14) || ($request->menulinktype==20))
-                {
-                    $menulinktype_data=$request->articletype;
-                    $article_id=$request->articletype;
-                    // $url_name='/planning/articledetail/';
-                    // $menulinktype_data=$url_name.$request->articletype;
-                }elseif($request->menulinktype==21)
-                {
-                    $menulinktype_data=$request->downloadtype;
-                }
-            if($request->sbu_user==null)
-            {
-                $sbu_user= 0;
-            }else{
-                $sbu_user= $request->sbu_user;
+
+        if ($request->icon_class == null) {
+            $icon_class = 0;
+        } else {
+            $icon_class = $request->icon_class;
+        }
+
+        // dd($sbu_user);
+        if ($request->menulinktype != 13) {
+            //Anchor|| URL || Form || Article
+            $uparr = [
+                'users_id' => $role_id,
+                'mainmenu_id' => $request->mainmenuid,
+                'iconclass' => $icon_class,
+                'orderno' => $request->ord_num,
+                'menulinktype_id' => $request->menulinktype,
+                'menulinktype_data' => $menulinktype_data,
+                'articletype_id' => $article_id,
+            ];
+
+            $res = Submenu::where('id', $request->hidden_id)->update($uparr);
+            //    dd($res);
+            // dd($request->sel_lang);
+            $leng = count($request->sel_lang);
+            $role_id = Auth::user()->id;
+            if ($res) {
+                for ($i = 0; $i < $leng; $i++) {
+                    $storeinfo_sub = [
+                        'languageid' => $request->sel_lang[$i],
+                        'title' => $request->title[$i],
+                        'submenuid' => $request->hidden_id,
+                    ];
+                    // dd($storeinfo_sub);
+                    $res = Submenusub::where('submenuid', $request->hidden_id)
+                        ->where('languageid', $request->sel_lang[$i])
+                        ->update($storeinfo_sub);
+                    DB::commit();
+                } //endfor
+            } //ifres
+        } else {
+            if (isset($request->file_type)) {
+                $date = date('dmYH:i:s');
+                $imageName = $request->title[0] . $date . '.' . $request->file_type->extension();
+                $filename = $imageName;
+                $path = $request->file('file_type')->storeAs('/uploads/Submenu/', $imageName, 'myfile');
+                $menulinktype_data = $filename;
+                $uparr = [
+                    'users_id' => $role_id,
+                    'mainmenu_id' => $request->mainmenuid,
+                    'iconclass' => $icon_class,
+                    'orderno' => $request->ord_num,
+                    'menulinktype_id' => $request->menulinktype,
+                    'menulinktype_data' => $menulinktype_data,
+                    'viewer_id' => $request->sbu_id,
+                ];
+            } else {
+                $uparr = [
+                    'users_id' => $role_id,
+                    'mainmenu_id' => $request->mainmenuid,
+                    'iconclass' => $icon_class,
+                    'orderno' => $request->ord_num,
+                    'menulinktype_id' => $request->menulinktype,
+                ];
             }
-            if($request->icon_class==null)
-            {
-                $icon_class= 0;
-            }else{
-                $icon_class= $request->icon_class;
-            }
 
-// dd($sbu_user);
-          if ($request->menulinktype != 13) //Anchor|| URL || Form || Article
-            {
-
-                $uparr=array(
-                           'users_id'=>$role_id,
-                            'mainmenu_id'=>$request->mainmenuid,
-                            'iconclass'=>$icon_class,
-                            'orderno'=>$request->ord_num,
-                            'menulinktype_id'=>$request->menulinktype,
-                            'menulinktype_data'=>$menulinktype_data,
-                            'viewer_id'=>$request->sbu_id,
-                            'sbu_type'=>$sbu_user,
-                            'articletype_id'=>$article_id,
-                   );
-
-
-                   $res=Submenu::where('id',$request->hidden_id)->update($uparr);
-                //    dd($res);
-// dd($request->sel_lang);
-                    $leng=count($request->sel_lang);
-                    $role_id = Auth::user()->id;
-                 if($res)
-                 {
-                   for($i=0;$i<$leng;$i++){
-
-                        $storeinfo_sub=array(
-                                'languageid'=>$request->sel_lang[$i],
-                                'title' =>$request->title[$i],
-                                'submenuid'=>$request->hidden_id
-
-                        );
-                        // dd($storeinfo_sub);
-                        $res=Submenusub::where('submenuid',$request->hidden_id)->where('languageid',$request->sel_lang[$i])->update($storeinfo_sub);
-                            DB::commit();
-
-                      }//endfor
-                 }//ifres
-
-
-
-            }else{
-                if(isset($request->file_type)){
-                    $date = date('dmYH:i:s');
-                    $imageName = $request->title[0]. $date . '.' .$request->file_type->extension();
-                    $filename=$imageName;
-                    $path = $request->file('file_type')->storeAs('/uploads/Submenu/', $imageName, 'myfile');
-                    $menulinktype_data=$filename;
-                    $uparr=array(
-                        'users_id'=>$role_id,
-                         'mainmenu_id'=>$request->mainmenuid,
-                         'iconclass'=>$icon_class,
-                         'orderno'=>$request->ord_num,
-                         'menulinktype_id'=>$request->menulinktype,
-                         'menulinktype_data'=>$menulinktype_data,
-                         'viewer_id'=>$request->sbu_id,
-                         'sbu_type'=>$sbu_user,
-                );
-                }else{
-                    $uparr=array(
-                        'users_id'=>$role_id,
-                         'mainmenu_id'=>$request->mainmenuid,
-                         'iconclass'=>$icon_class,
-                         'orderno'=>$request->ord_num,
-                         'menulinktype_id'=>$request->menulinktype,
-                         'viewer_id'=>$request->sbu_id,
-                         'sbu_type'=>$sbu_user,
-                );
-                }
-
-
-
-            $res=Submenu::where('id',$request->hidden_id)->update($uparr);
-         //    dd($res);
-// dd($request->sel_lang);
-             $leng=count($request->sel_lang);
-             $role_id = Auth::user()->id;
-          if($res)
-          {
-            for($i=0;$i<$leng;$i++){
-
-                 $storeinfo_sub=array(
-                         'languageid'=>$request->sel_lang[$i],
-                         'title' =>$request->title[$i],
-                         'submenuid'=>$request->hidden_id
-
-                 );
-                 // dd($storeinfo_sub);
-                 $res=Submenusub::where('submenuid',$request->hidden_id)->where('languageid',$request->sel_lang[$i])->update($storeinfo_sub);
-                     DB::commit();
-
-               }//endfor
-          }//ifres
-
-            }
+            $res = Submenu::where('id', $request->hidden_id)->update($uparr);
+            //    dd($res);
+            // dd($request->sel_lang);
+            $leng = count($request->sel_lang);
+            $role_id = Auth::user()->id;
+            if ($res) {
+                for ($i = 0; $i < $leng; $i++) {
+                    $storeinfo_sub = [
+                        'languageid' => $request->sel_lang[$i],
+                        'title' => $request->title[$i],
+                        'submenuid' => $request->hidden_id,
+                    ];
+                    // dd($storeinfo_sub);
+                    $res = Submenusub::where('submenuid', $request->hidden_id)
+                        ->where('languageid', $request->sel_lang[$i])
+                        ->update($storeinfo_sub);
+                    DB::commit();
+                } //endfor
+            } //ifres
+        }
         //     else if($request->menulinktype == 13)
         //      {
 
@@ -5572,7 +5583,6 @@ public function updatesubmenu(Request $request)
 
         //             $date = date('dmYH:i:s');
 
-
         //                      $storeinfo_sub=new Mainmenusub([
         //                         'userid'=>$role_id,
         //                         'languageid'=>$request->sel_lang[$i],
@@ -5582,7 +5592,6 @@ public function updatesubmenu(Request $request)
         //                         'status_id'=>1,
         //                     ]);
 
-
         //                     $res_sub = $storeinfo_sub->save();
         //                     DB::commit(); DB::rollback();
         //                 // }
@@ -5591,111 +5600,106 @@ public function updatesubmenu(Request $request)
         // }
 
         //      }
-       // }else{
-       //    DB::rollback();
-       //   return redirect()->back()->withInput()->with('error','Not valid');
-       // }
+        // }else{
+        //    DB::rollback();
+        //   return redirect()->back()->withInput()->with('error','Not valid');
+        // }
 
-           // $storedetails=$storeinfo->save();
-             $edit_f ='';
-             if($res){
-                 return Redirect('submenu')->with('success','Updated successfully',['edit_f' => $edit_f]);
-             }else{
-                 return back()->withErrors('Not Updated ');
-             }
+        // $storedetails=$storeinfo->save();
+        $edit_f = '';
+        if ($res) {
+            return Redirect('/siteadmin/submenu')->with('success', 'Updated successfully', ['edit_f' => $edit_f]);
+        } else {
+            return back()->withErrors('Not Updated ');
+        }
     } catch (ModelNotFoundException $exception) {
-        \LogActivity::addToLog($exception->getMessage(),'error');
+        \LogActivity::addToLog($exception->getMessage(), 'error');
         $data = \LogActivity::logLatestItem();
-        return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
+        return Redirect::back()
+            ->withInput()
+            ->withErrors('Please contact admin; the error code is ERROR' . $data->id);
     }
-
 }
 
 /*Submenu delete*/
 public function deletesubmenu($id)
 {
-    $id= Crypt::decryptString($id);
+    $id = Crypt::decryptString($id);
 
-        DB::beginTransaction();
-        // $uparr=array(
-        //     'delet_flag'=>1,
-        //      );
-        // $res=Mainmenu::where('id',$id)->update($uparr);
-         $res_sub= Submenusub::where('submenuid',$id)->delete();
+    DB::beginTransaction();
+    // $uparr=array(
+    //     'delet_flag'=>1,
+    //      );
+    // $res=Mainmenu::where('id',$id)->update($uparr);
+    $res_sub = Submenusub::where('submenuid', $id)->delete();
 
-        if($res_sub)
-        {
-         $res= Submenu::findOrFail($id)->delete();
-            // $res_sub=Mainmenusub::where('mainmenuid',$id)->update($uparr);
-        }
-        $edit_f ='';
-             if($res_sub){
-                DB::commit();
-                 return Redirect('submenu')->with('success','Deleted successfully',['edit_f' => $edit_f]);
-             }else{
-                DB::rollback();
-                 return back()->withErrors('Not deleted ');
-             }
+    if ($res_sub) {
+        $res = Submenu::findOrFail($id)->delete();
+        // $res_sub=Mainmenusub::where('mainmenuid',$id)->update($uparr);
+    }
+    $edit_f = '';
+    if ($res_sub) {
+        DB::commit();
+        return Redirect('submenu')->with('success', 'Deleted successfully', ['edit_f' => $edit_f]);
+    } else {
+        DB::rollback();
+        return back()->withErrors('Not deleted ');
+    }
 }
-
-
 
 /*Subnmenu Status*/
 public function statussubmenu($id)
 {
-    $id= Crypt::decryptString($id);
+    $id = Crypt::decryptString($id);
 
-        DB::beginTransaction();
-        $status=Submenu::where('id',$id)->value('status_id');
+    DB::beginTransaction();
+    $status = Submenu::where('id', $id)->value('status_id');
 
-        if($status==1)
-        {
-            $uparr=array(
-                'status_id'=>0,
-                 );
-        }else{
-            $uparr=array(
-                'status_id'=>1,
-                 );
-        }
+    if ($status == 1) {
+        $uparr = [
+            'status_id' => 0,
+        ];
+    } else {
+        $uparr = [
+            'status_id' => 1,
+        ];
+    }
 
-
-        $res=Submenu::where('id',$id)->update($uparr);
-        // dd($res);
-        $edit_f ='';
-             if($res){
-                DB::commit();
-                 return Redirect('submenu')->with('success','Status updated successfully',['edit_f' => $edit_f]);
-             }else{
-                DB::rollback();
-                 return back()->withErrors('Not deleted ');
-             }
+    $res = Submenu::where('id', $id)->update($uparr);
+    // dd($res);
+    $edit_f = '';
+    if ($res) {
+        DB::commit();
+        return Redirect('submenu')->with('success', 'Status updated successfully', ['edit_f' => $edit_f]);
+    } else {
+        DB::rollback();
+        return back()->withErrors('Not deleted ');
+    }
 }
 
 public function OrderchangeSubmenu_form(Request $request)
 {
     try {
-        $id= Crypt::decryptString($request->id);/*dd($request->val);*/
+        $id = Crypt::decryptString($request->id); /*dd($request->val);*/
         $res = Submenu::where('id', '=', $id)->update(['orderno' => $request->val]);
         //
     } catch (\Exception $exception) {
         /*\LogActivity::addToLog($exception->getMessage());
-        $data = \LogActivity::logLatestItem();
-        $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
-        return view('Siteadmin.dashboard', compact('error'));*/
+    $data = \LogActivity::logLatestItem();
+    $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
+    return view('Siteadmin.dashboard', compact('error'));*/
     } catch (\Throwable $exception) {
         /*\LogActivity::addToLog($exception->getMessage());
-        $data = \LogActivity::logLatestItem();
-        $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
-        return view('Siteadmin.dashboard', compact('error'));*/
+    $data = \LogActivity::logLatestItem();
+    $error = array('er' => 'Please contact admin; the error code is ERROR' . $data->id);
+    return view('Siteadmin.dashboard', compact('error'));*/
     } catch (\Illuminate\Database\QueryException $exception) {
-
         /*\LogActivity::addToLog($exception->getMessage());
-        $data = \LogActivity::logLatestItem();
-        return back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);*/
+    $data = \LogActivity::logLatestItem();
+    return back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);*/
     }
     if ($res) {
-        $success = "Status Updated!";
+        $success = 'Status Updated!';
         return response()->json(['html' => $success]);
     } else {
         $error = 'Not updated status';

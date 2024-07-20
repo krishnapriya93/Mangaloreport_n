@@ -165,9 +165,9 @@
                                         <div class="text-align-center lang"
                                             style="float:right; width:110px; right:0px;">
                                             <a aria-label="NMPA English website " class="active"
-                                                href="https://newmangaloreport.gov.in/"
+                                                href="{{ route('main.index') }}"
                                                 title="NMPA English website">English</a>&nbsp; |&nbsp;
-                                            <a aria-label="NMPA Hindi website" href="https://newmangaloreport.gov.in/hi"
+                                            <a aria-label="NMPA Hindi website" href="{{ route('main.index') }}"
                                                 style=""title="NMPA Hindi website">Hindi</a>
                                         </div>
                                     </div>

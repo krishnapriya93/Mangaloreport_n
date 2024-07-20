@@ -172,6 +172,15 @@
                                         <label class="form-check-label" for="exampleCheck1">Home page</label>
                                     </div>
                                 </div>
+                                <div class="col-sm-6 mb-btm">
+                                    <div class="form-group form-check">
+                                        <label for="exampleFormControlSelect2"></label>
+                                        <br>
+                                        <input type="checkbox" class="form-check-input" name="chief_officers"
+                                            id="chief_officers" value="1">
+                                        <label class="form-check-label" for="exampleCheck1">Chief officers</label>
+                                    </div>
+                                </div>
                                 <br />
                             </div>
 

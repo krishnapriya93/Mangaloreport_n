@@ -15,8 +15,9 @@ class BOD extends Model
         'photo',
         'order_num',
         'desig_flag',
-        'status',        
-        'user_id'
+        'status',
+        'user_id',
+        'chief_officers_flag'
     ];
     public function bodsub(){
         return $this->hasMany(BOD_sub::class, 'bod_main_id', 'id');

@@ -146,6 +146,8 @@
                                                       <li><a href="{{ route('bodview') }}">{{ $subitem->title }} </a></li>
                                                       @elseif ($subdata->menulinktype_id == 24)
                                                       <li><a href="{{ route('whoswhoview') }}">{{ $subitem->title }} </a></li>
+                                                      @elseif ($subdata->menulinktype_id == 25)
+                                                      <li><a href="{{ route('chiefofficers') }}">{{ $subitem->title }} </a></li>
                                                       @endif
 
                                                         @endforeach
