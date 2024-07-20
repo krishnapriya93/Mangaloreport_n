@@ -165,7 +165,7 @@
                       </div>
 
                   </div>
-                  <div class=col-md-6>
+                  {{-- <div class=col-md-6>
                       <div class="region region-bottom-second">
                           <div class="views-element-container block block-views block-views-blockvideos-block-1"
                               id="block-views-block-videos-block-1">
@@ -257,7 +257,7 @@
 
                       </div>
 
-                  </div>
+                  </div> --}}
 
               </div>
           </div>

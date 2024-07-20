@@ -20,6 +20,7 @@ use App\Http\Controllers\FrontendController;
 
 //Front end - start
 Route::get('/', [FrontendController::class, 'index'])->name('main.index');
+Route::get('/malhome/{id}', [FrontendController::class, 'index'])->name('main.malhome');
 Route::get('/setbilingualval', [FrontendController::class, 'setbilingualval'])->name('setbilingualval');
 Route::get('/setbilingualvalmal', [App\Http\Controllers\FrontendController::class, 'setbilingualvalmal'])->name('setbilingualvalmal');
 

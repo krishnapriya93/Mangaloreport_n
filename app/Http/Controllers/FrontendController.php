@@ -21,12 +21,18 @@ use App\Models\Milestone;
 class FrontendController extends Controller
 {
 //
-        public function index()
+        public function index($langid = null)
         {
             if (!Session::has('bilingual')) {
                 Session::put('bilingual', 1);
             }
-            $sessionbil     = Session::get('bilingual');
+            if($langid==null)
+            {
+                $sessionbil     = Session::get('bilingual');
+            }else{
+                $sessionbil     = 2;
+            }
+
             $mainsubmenus   = $this->mainmenu($sessionbil);
 
             $mainbanner     = $this->mainbanner($sessionbil);
@@ -116,7 +122,7 @@ class FrontendController extends Controller
     }
     private function mainmenu($sessionbil)
     {
-        $sessionbil   = 1;
+        $sessionbil   = $sessionbil;
         $mainsubmenu  = Mainmenu::with(['sub_menu' => function ($query) use($sessionbil){
                 $query->with(['submenusub' => function ($query1) use($sessionbil) {
                     $query1->where('languageid',$sessionbil);

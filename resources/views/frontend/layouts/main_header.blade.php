@@ -167,7 +167,7 @@
                                             <a aria-label="NMPA English website " class="active"
                                                 href="{{ route('main.index') }}"
                                                 title="NMPA English website">English</a>&nbsp; |&nbsp;
-                                            <a aria-label="NMPA Hindi website" href="{{ route('main.index') }}"
+                                            <a aria-label="NMPA Hindi website" href="{{ route('main.malhome', ['id' => 2]) }}"
                                                 style=""title="NMPA Hindi website">Hindi</a>
                                         </div>
                                     </div>

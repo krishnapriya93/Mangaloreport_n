@@ -1380,7 +1380,7 @@
                             <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
                                 <div style="font-size:10px; pointer-events:none; text-align:right; width:30%; color:#333;">
                                     Hit counter:
-                                    <script type="text/javascript" src="//counter.websiteout.net/js/17/7/5812/1"></script>
+                                    <script type="text/javascript" src=""></script>
                                 </div>
                             </div>
 
