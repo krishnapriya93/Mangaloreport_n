@@ -31,11 +31,14 @@ use Redirect;
 
 class MediaadminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
         $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
-        return view('backend.mediaadmin.mediahome', compact('navbar', 'user'));
+        $userIp   = $request->ip();
+        $carddata = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+
+        return view('backend.mediaadmin.mediahome', compact('navbar', 'user','userIp','carddata'));
     }
 
     /*Public relation*/
@@ -72,10 +75,10 @@ class MediaadminController extends Controller
     }
 
     /*Status Status*/
-    public function statusgallery($id)
+    public function statuspublicrelation($id)
     {
         $id = Crypt::decryptString($id);
-        $status = Galleries::where('id', $id)->value('status_id');
+        $status = Publicrelation::where('id', $id)->value('status_id');
 
         DB::beginTransaction();
         if ($status == 1) {
@@ -88,17 +91,12 @@ class MediaadminController extends Controller
             );
         }
 
-        $res = Galleries::where('id', $id)->update($uparr);
+        $res = Publicrelation::where('id', $id)->update($uparr);
 
         $edit_f = '';
         if ($res) {
             DB::commit();
-            if (Auth::user()->role_id == 5) //SBU admin
-            {
-                return redirect()->route('sbu.gallerylist')->with('success', 'status change successfully');
-            } else if (Auth::user()->role_id == 2) { //Site admin
-                return redirect()->route('siteadmin.gallerylist')->with('success', 'status change successfully');
-            }
+            return redirect()->route('publicrelation')->with('success', 'status change successfully');
         } else {
             DB::rollback();
             return back()->withErrors('Not deleted ');

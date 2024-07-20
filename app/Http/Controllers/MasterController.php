@@ -25,17 +25,21 @@ use App\Models\Linktype;
 use App\Models\Linktypesub;
 use App\Models\TenderType;
 use App\Models\TenderTypeSub;
+use Illuminate\Support\Facades\Storage;
+
 use \Crypt;
 use DB;
 use Redirect;
 
 class MasterController extends Controller
 {
-   public function index()
+   public function index(Request $request)
    {
       $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
       $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
-      return view('backend.masteradmin.masterhome',compact('navbar','user'));
+      $userIp   = $request->ip();
+      $carddata = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+      return view('backend.masteradmin.masterhome',compact('navbar','user','userIp','carddata'));
    }
 
    /*Article type*/
@@ -725,7 +729,7 @@ public function statusmilestone($id)
        $data       = BOD::with(['bodsub'=>function($query){
 
        }])->get();
-       // dd($data);
+
        $designation=Designation::with(['des_sub'=>function($query){
 
        }])->get();
@@ -737,142 +741,179 @@ public function statusmilestone($id)
 
    public function storeBOD(Request $request)
    {
-    //    dd($request->all());
        $validator = Validator::make(
-           $request->all(),
-           [
-               'name.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-               'description.*'   => 'sometimes|nullable',
-               'desig_id1.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-               'alt.*'      => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
-               'mobilenumber'=> 'required',
-               'officenumber' => app('App\Http\Controllers\Commonfunctions')->officenumber_check(),
-               'email' => app('App\Http\Controllers\Commonfunctions')->emailId_check(),
-               'photo'      => app('App\Http\Controllers\Commonfunctions')->getImageLTAval(),
+        $request->all(),
+        [
+            'title.*'       => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+            'con_title.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg_ckedit(),
+            // 'description.*'   => app('App\Http\Controllers\Commonfunctions')->getEntitlereg_ckedit(),
+            //'poster.*'      => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
+            'alt_title.*'      => app('App\Http\Controllers\Commonfunctions')->getEntitlereg(),
 
+        ],
+        [
+            'title.required' => 'Title is required',
+            'title.regex'    => 'The title format is invalid',
+            'title.min'      => 'Title  minimum length is 3',
+            'title.max'      => 'Title  maximum length is 150',
 
-           ],
-           [
-               'name.required' => 'name is required',
-               'name.regex'    => 'The name format is invalid',
-               'name.min'      => 'name  minimum length is 3',
-               'name.max'      => 'name  maximum length is 150',
+            'sub_title.required' => 'Sub Title is required',
+            'sub_title.regex'    => 'The Sub Title format is invalid',
+            'sub_title.min'      => 'Sub Title  minimum length is 3',
+            'sub_title.max'      => 'Sub Title  maximum length is 150',
+        ]
+    );
+    //
 
-               'description.required' => 'description is required',
-               'description.regex'    => 'The description format is invalid',
-               'description.min'      => 'description  minimum length is 3',
-               'description.max'      => 'description  maximum length is 150',
-
-               'mobilenumber' => 'mobilenumber is required',
-               'mobilenumber.regex'    => 'The mobilenumber format is invalid',
-               'mobilenumber.min'      => 'mobilenumber  minimum length is 3',
-               'mobilenumber.max'      => 'mobilenumber  maximum length is 150',
-
-               'officenumber'=> 'officenumber is required',
-               'officenumber.regex'    => 'The officenumber format is invalid',
-               'officenumber.min'      => 'officenumber  minimum length is 3',
-               'officenumber.max'      => 'officenumber  maximum length is 150',
-
-               'email' => 'email is required',
-               'email.regex'    => 'The email format is invalid',
-               'email.min'      => 'email  minimum length is 3',
-               'email.max'      => 'email  maximum length is 150',
-
-               'photo' => 'photo is required',
-               'photo.regex'    => 'The photo format is invalid',
-               'photo.min'      => 'photo  minimum length is 3',
-               'photo.max'      => 'photo  maximum length is 150',
-
-           ]
-       );
-       //
-
-       if ($validator->fails()) {
-           // dd($validator->errors());
-           return back()->withInput()->withErrors($validator->errors());
-       }
+    if ($validator->fails()) {
+        // dd($validator->errors());
+        return back()->withInput()->withErrors($validator->errors());
+    }
        try{
+        DB::beginTransaction();
 
-           // dd($request->poster);
-
-
-
-               // print_r($request->file('poster')[$i]);
-           //    dd($filep->poster[$i]->extension());
-           // dd(count($request->poster));
-               // $imageName = 'logo' . $date . '.' .$filep->poster->extension();
-               if(isset($request->photo)){
-                   $date = date('dmYH:i:s');
-                   $imageName = 'bod'.$date . '.' .$request->photo->extension();
-                   $path = $request->file('photo')->storeAs('/assets/backend/uploads/bod/', $imageName, 'myfile');
-               }else{
-                   $imageName = 0;
-               }
-               $leng=count($request->sel_lang);
-
-           // dd(true);
-           // if($chekrows==0){
-           //   dd($filename);
            if(empty($request->desig_flag)){
                $desig_flag=0;
-           }else{
-               $desig_flag=1;
-           }
-           // dd($desig_flag);
-           $chekrows_bod = BOD::where('email', $request->email)->orWhere('mobilenumber',$request->mobilenumber)->exists() ? 1 : 0;
-           // dd($chekrows_bod);
-           if($chekrows_bod==0){
-               $dataarr=new BOD([
-                   'email'=>$request->email,
-                   'officenumber'=>$request->officenumber,
-                   'mobilenumber'=>$request->mobilenumber,
-                   'desig_flag'=>$desig_flag,
-                   'photo'=>$imageName,
-                   'user_id'=>Auth::user()->id,
-                   'status'=>1
-               ]);
+                }else{
+                    $desig_flag=1;
+            }
+        $chekrows_bod = BOD::where('email', $request->email)->orWhere('mobilenumber',$request->mobilenumber)->exists() ? 1 : 0;
 
-               $res=$dataarr->save();
-               if($res){
-                   $bod_main_id=$dataarr->id;
-                   $lang=Language::where('status_id',1)->get();
-                   $i=0;
-                   // foreach($lang as $lng){
-                       for($i=0;$i<$leng;$i++){
-                       // dd(count($lang));
-                       $chekrows = BOD_sub::where('name', $request->name[$i])->exists() ? 1 : 0;
-                       if($chekrows==0){
-                           $dataarr1=new BOD_sub([
-                               'bod_main_id'=>$bod_main_id,
-                               'name'=>$request->name[$i],
-                               'languageid'=>$request->sel_lang[$i],
-                               'description'=>$request->description[$i],
-                               'alt'=>$request->alt[$i],
-                               'desig_id'=>$request->desig_id[$i]
+        $leng=count($request->sel_lang);
 
-                           ]);
-                           $res1=$dataarr1->save();
-                           // if($i<count($lang)){
-                           //     $i++;
-                           // }
-                       }else{
-                           return back()->withInput()->with('error',"Already existing");
+        if(isset($request->photo))
+        {
+            $date = date('dmYH:i:s');
+            $imageName = 'bod'.$date . '.' .$request->photo->extension();
+            $path = $request->file('photo')->storeAs('/assets/backend/uploads/bod/', $imageName, 'myfile');
+            if($chekrows_bod==0){
+                $dataarr=new BOD([
+                    'email'=>$request->email,
+                    'officenumber'=>$request->officenumber,
+                    'mobilenumber'=>$request->mobilenumber,
+                    'desig_flag'=>$desig_flag,
+                    'photo'=>$imageName,
+                    'user_id'=>Auth::user()->id,
+                    'status'=>1
+                ]);
 
-                       }
+            $res=$dataarr->save();
+            if($res){
+                $bod_main_id=$dataarr->id;
+                $lang=Language::where('status_id',1)->get();
+                $i=0;
+                // foreach($lang as $lng){
+                    for($i=0;$i<$leng;$i++){
+                    // dd(count($lang));
+                    $chekrows = BOD_sub::where('name', $request->name[$i])->exists() ? 1 : 0;
+                    if($chekrows==0){
+                        $dataarr1=new BOD_sub([
+                            'bod_main_id'=>$bod_main_id,
+                            'name'=>$request->name[$i],
+                            'languageid'=>$request->sel_lang[$i],
+                            'description'=>$request->description[$i],
+                            'alt'=>$request->alt[$i],
+                            'desig_id'=>$request->desig_id[$i]
+
+                        ]);
+                        $res1=$dataarr1->save();
+                        // if($i<count($lang)){
+                        //     $i++;
+                        // }
+                    }else{
+                        DB::rollback();
+
+                        return back()->withInput()->with('error',"Already existing");
+
+                    }
 
 
 
-                   }
-                   $success="Saved successfully";
-                   return redirect('masteradmin/BODlist')->with(['success' => $success]);
+                }
+
+                $success="Saved successfully";
+                DB::commit();
+
+                return redirect('masteradmin/BODlist')->with(['success' => $success]);
 
 
-               }else{
-                   return back()->withInput()->with('error',"Error while saving");
-               }
-           }else{
-               return back()->withInput()->with('error',"Email/Mobile already existing");
-           }
+            }else{
+                DB::rollback();
+
+                return back()->withInput()->with('error',"Error while saving");
+            }
+        }else{
+            DB::rollback();
+
+            return back()->withInput()->with('error',"Email/Mobile already existing");
+        }
+        }else{
+            if($chekrows_bod==0){
+                $dataarr=new BOD([
+                    'email'=>$request->email,
+                    'officenumber'=>$request->officenumber,
+                    'mobilenumber'=>$request->mobilenumber,
+                    'desig_flag'=>$desig_flag,
+                    'user_id'=>Auth::user()->id,
+                    'status'=>1
+                ]);
+
+            $res=$dataarr->save();
+            if($res){
+                $bod_main_id=$dataarr->id;
+                $lang=Language::where('status_id',1)->get();
+                $i=0;
+                // foreach($lang as $lng){
+                    for($i=0;$i<$leng;$i++){
+                    // dd(count($lang));
+                    $chekrows = BOD_sub::where('name', $request->name[$i])->exists() ? 1 : 0;
+                    if($chekrows==0){
+                        $dataarr1=new BOD_sub([
+                            'bod_main_id'=>$bod_main_id,
+                            'name'=>$request->name[$i],
+                            'languageid'=>$request->sel_lang[$i],
+                            'description'=>$request->description[$i],
+                            'alt'=>$request->alt[$i],
+                            'desig_id'=>$request->desig_id[$i]
+
+                        ]);
+                        $res1=$dataarr1->save();
+                        // if($i<count($lang)){
+                        //     $i++;
+                        // }
+                    }else{
+                        DB::rollback();
+
+                        return back()->withInput()->with('error',"Already existing");
+
+                    }
+
+
+
+                }
+                DB::commit();
+
+                $success="Saved successfully";
+                return redirect('masteradmin/BODlist')->with(['success' => $success]);
+
+
+            }else{
+                DB::rollback();
+
+                return back()->withInput()->with('error',"Error while saving");
+            }
+        }else{
+            DB::rollback();
+
+            return back()->withInput()->with('error',"Email/Mobile already existing");
+        }
+        }
+
+
+
+
+
+
 
            // }
        }catch(Exception $e){
@@ -922,7 +963,6 @@ public function statusmilestone($id)
 
      public function updateBOD(Request $request)
      {
-
          $validator = Validator::make(
              $request->all(),
              [
@@ -1012,7 +1052,7 @@ public function statusmilestone($id)
                    if(isset($request->photo)){
                        $date = date('dmYH:i:s');
                        $imageName = 'bod'.$date . '.' .$request->photo->extension();
-                       $path = $request->file('photo')->storeAs('/uploads/bod/', $imageName, 'myfile');
+                       $path = $request->file('photo')->storeAs('/assets/backend/uploads/bod/', $imageName, 'myfile');
                        $data_main=array(
                            'email'=>$request->email,
                            'officenumber'=>$request->officenumber,
@@ -1035,7 +1075,7 @@ public function statusmilestone($id)
                        }
 
                        $success="Updated successfully";
-                       return redirect('planning/BODlist')->with(['success' => $success]);
+                       return redirect('/masteradmin/BODlist')->with(['success' => $success]);
                    }
          }catch(Exception $e){
              return back()->withInput()->with('error',$e);
@@ -1050,13 +1090,13 @@ public function statusmilestone($id)
        try{
            $imageName = BOD::where('id', $id)->select('photo')->first();
            // foreach($imageName as $img){
-               Storage::disk('myfile')->delete('/uploads/bod/' . $imageName->photo);
+               Storage::disk('myfile')->delete('/assets/backend/uploads/bod/' . $imageName->photo);
            // }
 
            $dataartSub=BOD_sub::where('bod_main_id',$id)->delete();
            $dataEdit=BOD::destroy($id);
            $msg="Deleted successfully";
-           return redirect('planning/BODlist')->with(['delete' => $msg ]);
+           return redirect('masteradmin/BODlist')->with(['delete' => $msg ]);
        }catch(Exception $e){
            return back()->withInput()->with('error',$e);
        }
@@ -1568,7 +1608,8 @@ public function updatelogotype(Request $request)
              $res=Logotype::where('id',$request->hidden_id)->update($uparr);
              $edit_f ='';
              if($res){
-                 return Redirect('logotype')->with('success','Updated successfully',['edit_f' => $edit_f]);
+
+                 return redirect()->route('logotype')->with('success','Updated successfully',['edit_f' => $edit_f]);
              }else{
                  return back()->withErrors('Not Updated ');
              }
@@ -1595,7 +1636,7 @@ public function deletelogotype($id)
         $edit_f ='';
              if($res){
                 DB::commit();
-                 return Redirect('logotype')->with('success','Deleted successfully',['edit_f' => $edit_f]);
+                return redirect()->route('logotype')->with('success','Deleted successfully',['edit_f' => $edit_f]);
              }else{
                 DB::rollback();
                  return back()->withErrors('Not deleted ');

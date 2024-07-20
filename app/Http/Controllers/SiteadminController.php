@@ -70,13 +70,15 @@ class SiteadminController extends Controller
 {
 
       /*Siteadmin dashboard*/
-    public function siteadminhome()
+    public function siteadminhome(Request $request)
     {
         $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
         $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
         $role_id = Auth::user()->id;
+        $userIp   = $request->ip();
+        $carddata = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
 
-        return view('backend.siteadmin.siteadminhome',compact('navbar','user'));
+        return view('backend.siteadmin.siteadminhome',compact('navbar','user','userIp','carddata'));
     }
 
 
@@ -105,7 +107,7 @@ class SiteadminController extends Controller
     //    }])->get();
         $data       = Article::with(['articleval_sub'=>function($query){
 
-        }])->where('users_id',Auth::user()->id)->get();
+        }])->get();
         // $widgetPosition=Widgetposition::get();
         $keywordtags=Keywordtag::with(['keytag_sub'=>function($query){}])->get();
         $usertype = usertype::where('delet_flag',0)->whereIn('id',[8,9])->where('status_id',1)->get();
@@ -355,7 +357,7 @@ class SiteadminController extends Controller
         }])->get();
 
         $editF='E';
-        $widgetPosition=Widgetposition::get();
+
         $keywordtags=Keywordtag::with(['keytag_sub'=>function($query){}])->get();
 
         $role_type=Auth::user()->role_id;
@@ -365,7 +367,7 @@ class SiteadminController extends Controller
         }])->where('status_id',1)->where('delet_flag',0)->get();
 
 
-        return view('backend.siteadmin.Article.createarticle',compact('breadcrumbarr','navbar','user','language','data','arttype','widgetPosition','usertype','keywordtags','dataEdit','editF'));
+        return view('backend.siteadmin.Article.createarticle',compact('breadcrumbarr','navbar','user','language','data','arttype','usertype','keywordtags','dataEdit','editF'));
     }
     public function updatearticle(Request $request)
     {
@@ -1185,7 +1187,7 @@ public function statusgallery($id)
     $edit_f ='';
         if($res){
             DB::commit();
-            return redirect()->route('sbu.gallerylist')->with('success','status change successfully');
+            return redirect()->route('siteadmin.gallerylist')->with('success','status change successfully');
         }else{
             DB::rollback();
             return back()->withErrors('Not deleted ');
@@ -4015,7 +4017,7 @@ public function statuspressrelase($id)
         $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
         $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
 
-        return view('Siteadmin.Logo.Logolist',compact('data','breadcrumbarr','language','navbar','user'));
+        return view('backend.siteadmin.Logo.Logolist',compact('data','breadcrumbarr','language','navbar','user'));
     }
 
     /*create logo*/
@@ -5917,10 +5919,10 @@ public function OrderchangeSubmenu_form(Request $request)
       }])->where('delet_flag',0)->get();
       $Menulinktype= Menulinktype::where('delet_flag',0)->orderBy('name')->get();
       $breadcrumb = array(
-          0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-          1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/links'),
-          2 => array('title' => 'Create Link ', 'message' => 'Create Link ', 'status' => 2)
-       );
+        0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
+        1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/siteadmin/links'),
+        2 => array('title' => 'Edit Link ', 'message' => 'Edit Link ', 'status' => 2)
+     );
       $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
       $navbar=app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
       $user=app('App\Http\Controllers\Commonfunctions')->userinfo();
@@ -6080,7 +6082,7 @@ public function OrderchangeSubmenu_form(Request $request)
 
           $breadcrumb = array(
               0 => array('title' => 'Home', 'message' => 'Home', 'status' => 0, 'link' => '/siteadminhome'),
-              1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/links'),
+              1 => array('title' => 'Link  list', 'message' => 'Link  list', 'status' => 1, 'link' => '/siteadmin/links'),
               2 => array('title' => 'Edit Link ', 'message' => 'Edit Link ', 'status' => 2)
            );
           $breadcrumbarr = app('App\Http\Controllers\Commonfunctions')->bread_crump_maker($breadcrumb);
@@ -6265,7 +6267,7 @@ public function statuslink($id)
       $edit_f ='';
       if($res){
           DB::commit();
-          return Redirect('links')->with('success','Status updated successfully',['edit_f' => $edit_f]);
+          return redirect()->route('links')->with('success','Status updated successfully',['edit_f' => $edit_f]);
       }else{
           DB::rollback();
           return back()->withErrors('Not deleted ');

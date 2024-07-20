@@ -26,7 +26,6 @@ Route::get('milestoneview', [App\Http\Controllers\FrontendController::class, 'mi
 Route::get('bodview', [App\Http\Controllers\FrontendController::class, 'bodview'])->name('bodview');
 Route::get('whoswhoview', [App\Http\Controllers\FrontendController::class, 'whoswhoview'])->name('whoswhoview');
 
-
 //Front end - end
 
 Route::get('loginview', [App\Http\Controllers\Auth\LoginController::class, 'loginview'])->name('loginview');
@@ -35,7 +34,7 @@ Route::get('refreshCaptcha', [App\Http\Controllers\Auth\LoginController::class, 
 Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::post('/articleckimageupload', [App\Http\Controllers\CkeditorController::class, 'articleckimageupload'])->name('articleckimageupload');
 
-Route::group(['middleware' => ['auth', 'App\Http\Middleware\Adminlogin']], function () {
+Route::group(['middleware' => ['auth', 'App\Http\Middleware\Adminlogin','prevent-back-history', 'CORS', 'XSS']], function () {
     //Dashboard
     Route::get('masteradminhome', [App\Http\Controllers\AdminController::class, 'masteradminhome'])->name('masteradminhome');
 
@@ -96,7 +95,7 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Adminlogin']], funct
     Route::get('/admin/deletelinktype/{id}', [App\Http\Controllers\AdminController::class, 'deletelinktype'])->name('admin.deletelinktype');
 });
 
-Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], function () {
+Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin','prevent-back-history', 'CORS', 'XSS']], function () {
     //Dashboard
     Route::get('siteadminhome', [App\Http\Controllers\SiteadminController::class, 'siteadminhome'])->name('siteadminhome');
 
@@ -191,10 +190,17 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Siteadmin']], functi
     Route::get('/siteadmin/deletemilestone/{id}', [App\Http\Controllers\SiteadminController::class, 'deletemilestone'])->name('deletemilestone');
     Route::get('/siteadmin/statusmilestone/{id}', [App\Http\Controllers\SiteadminController::class, 'statusmilestone'])->name('statusmilestone');
 
+    //Logo
+    Route::get('/siteadmin/logo', [App\Http\Controllers\SiteadminController::class, 'logo'])->name('logo');
+    Route::get('/siteadmin/createlogo', [App\Http\Controllers\SiteadminController::class, 'createlogo'])->name('createlogo');
+    Route::post('/siteadmin/storelogo', [App\Http\Controllers\SiteadminController::class, 'storelogo'])->name('storelogo');
+    Route::get('/siteadmin/editlogo/{id}', [App\Http\Controllers\SiteadminController::class, 'editlogo'])->name('editlogo');
+    Route::post('/siteadmin/updatelogo', [App\Http\Controllers\SiteadminController::class, 'updatelogo'])->name('updatelogo');
+    Route::get('/siteadmin/deletelogo/{id}', [App\Http\Controllers\SiteadminController::class, 'deletelogo'])->name('deletelogo');
 });
 
 //Master Admin Start
-Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin']], function () {
+Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin','prevent-back-history', 'CORS', 'XSS']], function () {
     //Dashboard
     Route::get('masterhome', [App\Http\Controllers\MasterController::class, 'index'])->name('masterhome');
 
@@ -253,7 +259,6 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin']],
     Route::post('/masteradmin/updatelinktype', [App\Http\Controllers\MasterController::class, 'updatelinktype'])->name('masteradmin.updatelinktype');
     Route::get('/masteradmin/deletelinktype/{id}', [App\Http\Controllers\MasterController::class, 'deletelinktype'])->name('masteradmin.deletelinktype');
 
-
     //Tender type
     Route::get('/masteradmin/tendertypelist', [App\Http\Controllers\MasterController::class, 'tendertypelist'])->name('masteradmin.tendertype');
     Route::get('/masteradmin/createtendertype', [App\Http\Controllers\MasterController::class, 'createtendertype'])->name('masteradmin.createtendertype');
@@ -261,12 +266,11 @@ Route::group(['middleware' => ['auth', 'App\Http\Middleware\Masteradminlogin']],
     Route::get('/masteradmin/edittendertype/{id}', [App\Http\Controllers\MasterController::class, 'edittendertype'])->name('masteradmin.edittendertype');
     Route::post('/masteradmin/updatetendertype', [App\Http\Controllers\MasterController::class, 'updatetendertype'])->name('masteradmin.updatetendertype');
     Route::get('/masteradmin/deletetendertype/{id}', [App\Http\Controllers\MasterController::class, 'deletetendertype'])->name('masteradmin.deletetendertype');
-
 });
 //Master Admin End
 
 //Media Admin Start
-Route::group(['middleware' => ['auth', 'App\Http\Middleware\Mediaadminlogin']], function () {
+Route::group(['middleware' => ['auth', 'App\Http\Middleware\Mediaadminlogin','prevent-back-history', 'CORS', 'XSS']], function () {
     //Dashboard
     Route::get('mediaadminhome', [App\Http\Controllers\MediaadminController::class, 'index'])->name('mediaadminhome');
 

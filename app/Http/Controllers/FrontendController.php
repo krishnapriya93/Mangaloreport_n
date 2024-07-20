@@ -39,8 +39,9 @@ class FrontendController extends Controller
             $whatsnew       = $this->whatsnew($sessionbil);
             $tender         = $this->tender($sessionbil);
             $gallery        = $this->gallery($sessionbil);
+            $midwidget      = $this->midwidget($sessionbil);
 
-            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender','whatsnew','gallery'));
+            return view('frontend.main.mainpage',compact('sessionbil','mainsubmenus','mainbanner','circulartrades','whatwedo','relatedlinks','socialmedia','bod','tender','whatsnew','gallery','midwidget'));
         }
 
     // public function mainarticle($articlename,$enarticletypeid)
@@ -188,6 +189,19 @@ class FrontendController extends Controller
         ->orderBy('orderno', 'asc')->where('linktypeid',11)->get();
 
         return $socialmedia;
+
+    }
+    private function midwidget($sessionbil)
+    {
+        $sessionbil   = 1;
+        $midwidget =  Link::with(['link_sub' =>function($query) use($sessionbil){
+            $query->where('languageid',$sessionbil);
+        }])
+        ->where('delet_flag',0)
+        ->where('status_id',1)
+        ->orderBy('orderno', 'asc')->where('linktypeid',12)->get();
+
+        return $midwidget;
 
     }
 

@@ -31,16 +31,21 @@
                             {!! implode(' ', $errors->all('<span class="text-danger">:message</span>')) !!}
                         </div> <!-- ./alert -->
                     @endif
-                    
-                    
+
+
                    @if(isset($edit_f))
                     <form id="formiid" method="POST" action="{{ route('updatecomponentperm') }}" enctype="multipart/form-data">
                     @else
                     <form id="formiid" method="POST" action="{{ route('storecomponentpermi') }}" enctype="multipart/form-data">
                     @endif
-    
-                    @csrf 
+
+                    @csrf
                         <input type="hidden" name="hidden_id" value="{{$keydata->id ?? ''}}">
+                        <div class="alerts-wrapper">
+                            <div class="card-style mb-30">
+                                <span class="redalert"> * This module used to allow module permission to user.</span>
+                            </div>
+                        </div>
                         <div class="row mb-3">
                             <label for="component" class="col-sm-2 col-form-label">Component Type<span class="redalert"> *</span></label>
                             <div class="col-sm-10">
@@ -49,7 +54,7 @@
                             @foreach($component as $components)
                                 <option value="{{$components->id}}" @if(isset($edit_f))  {{($components->id == $keydata->component->id) ? 'selected' : ''}} @endif>{{$components->name}}</option>
                             @endforeach
-                            </select>    
+                            </select>
                             <span class="ErrP alert-danger titleerr redalert" style="display: none;">Please Check the Component Entered</span>
                             <span class="redalert">@error('usertype'){{$message}} @enderror</span>
                             </div>
@@ -63,7 +68,7 @@
                             @foreach($usertype as $usertypes)
                                 <option value="{{$usertypes->id}}" @if(isset($edit_f))  {{($usertypes->id == $keydata->usertype->id) ? 'selected' : ''}} @endif>{{$usertypes->usertype}}</option>
                             @endforeach
-                            </select>    
+                            </select>
                             <span class="ErrP alert-danger titleerr redalert" style="display: none;">Please Check the usertype Entered</span>
                             <span class="redalert">@error('usertype'){{$message}} @enderror</span>
                             </div>
@@ -77,7 +82,7 @@
                             <span class="redalert">@error('path'){{$message}} @enderror</span>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-10 offset-sm-2">
                                @if($edit_f ?? '')
@@ -96,10 +101,10 @@
        <br>
             <div class="card">
                 <div class="card-header text-white card-header-main">{{ __('List of Component') }}</div>
-                 
+
                 <div class="card-body">
                     <table id="datatable_view" class="table table-striped">
-                    <thead>    
+                    <thead>
                     <tr>
                         <th>No</th>
                         <th>Component</th>
@@ -127,11 +132,11 @@
                             <a class="btn btn-primary btn-sm" href="{{ route('editcomponentper',\Crypt::encryptString($result->id)) }}">Edit</a>
                             <a class="btn btn-danger btn-sm" href="{{ route('deletecomponentper',\Crypt::encryptString($result->id)) }}"  onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
                         </td>
-                    </tr>   
-                    @endforeach    
-                    </tbody>    
-                    </table>    
-  
+                    </tr>
+                    @endforeach
+                    </tbody>
+                    </table>
+
                 </div>
             </div> <!--card2 -->
 
@@ -140,12 +145,12 @@
 </div>
 @endsection
 @section('mainscript')
-<script>  
+<script>
  $( document ).ready(function() {
 
  //PATH
 
-        $('.formselect').on('keyup',function(e){   
+        $('.formselect').on('keyup',function(e){
         var testres=pathcheck('#path',this.value);
         if(!testres){
             $('.patherr').text('Allowed only Alphabets and /');
@@ -155,6 +160,6 @@
         }
     });
 
-});        
+});
 </script>
 @endsection

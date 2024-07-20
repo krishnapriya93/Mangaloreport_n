@@ -35,12 +35,14 @@ class AdminController extends Controller
 {
 
     /*master dashboard*/
-    public function masteradminhome()
+    public function masteradminhome(Request $request)
     {
-        $navbar = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
-        $user = app('App\Http\Controllers\Commonfunctions')->userinfo();
+        $navbar   = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
+        $user     = app('App\Http\Controllers\Commonfunctions')->userinfo();
+        $userIp   = $request->ip();
+        $carddata = app('App\Http\Controllers\Commonfunctions')->componentpermissionsetng();
 
-        return view('backend.admin.masterhome', compact('navbar', 'user'));
+        return view('backend.admin.masterhome', compact('navbar', 'user','userIp','carddata'));
     }
 
     /*Log activites*/
