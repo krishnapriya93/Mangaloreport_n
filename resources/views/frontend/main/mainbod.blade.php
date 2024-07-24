@@ -1,5 +1,7 @@
 <!-- Start: Top widget -->
 <div class="topwidget" id="topwidget">
+    <img class="port3" src="{{ asset('assets/frontend/images/section-bg-09.png') }}" alt="">
+    <img class="portx" src="{{ asset('assets/frontend/images/section-bg-08.png') }}" alt="">
     <div class="container">
 
         <div class="row topwidget-list clearfix">

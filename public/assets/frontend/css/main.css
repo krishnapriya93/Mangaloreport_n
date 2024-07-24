@@ -17186,7 +17186,7 @@ abbr.ajax-changed {
 
 .header {
     text-align: left;
-    background: url(../img/header-bg.jpg) repeat scroll center top #318E00;
+    /* background: url({{ asset('assets/') }}) repeat scroll center top #318E00; */
     border-bottom: 1px solid #e8e8e9;
 }
 
@@ -19241,6 +19241,10 @@ ul.sf-menu.sf-navbar.sf-shadow ul ul {
 }
 .sag-logo{
     width: 150px;
+}
+.jub-logo{
+    width: 100px;
+    padding-top: 19px;
 }
 .logos {
     display: flex;

@@ -2,6 +2,7 @@
   <div class="header">
       <div class="headbg">
           <div class="container-fluid">
+
               <div class="row">
                   <div class="navbar-header col-md-12 ">
                       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navigation">
@@ -34,6 +35,8 @@
                                   class="site-branding block block-system block-system-branding-block">
                                   <div class="brand logo">
                                       <a href="/index.php/" title="Home" rel="home" class="site-branding__logo">
+                                        <img src="{{ asset('assets/frontend/images/gj_copy.png') }}"
+                                        class="jub-logo" alt="Home" />
                                           <img src="{{ asset('assets/frontend/images/sagarmala-new.png') }}"
                                               class="sag-logo" alt="Home" />
                                       </a>

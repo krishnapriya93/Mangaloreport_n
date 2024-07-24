@@ -136,18 +136,16 @@
                                 <h2 class="visually-hidden" id="block-topmenu-menu">Topmenu</h2>
                                 <ul class="menu">
                                     <li class="menu-item">
-                                        <a href="/index.php/sitemap" title="Sitemap"
-                                            data-drupal-link-system-path="node/519">Sitemap</a>
+                                        <a href="{{ route('sitemap') }}" title="Sitemap">Sitemap</a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="/index.php/screen-reader-access" title="Screen Reader"
-                                            data-drupal-link-system-path="node/95">Screen Reader</a>
+                                        <a href="{{ route('screenreader') }}" title="Screen Reader">Screen Reader</a>
                                     </li>
                                     <li class="menu-item">
                                         <a href="#skmc" title="Skip to main content">Skip to main content</a>
                                     </li>
                                     <li class="menu-item">
-                                        <a href="/index.php/contact" target="_blank" title="Feedback"
+                                        <a href="{{ route('feedback') }}" target="_blank" title="Feedback"
                                             data-drupal-link-system-path="contact">Feedback</a>
                                     </li>
                                 </ul>
@@ -162,7 +160,7 @@
                                 <div class="content">
                                     <div
                                         class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
-                                        <div class="text-align-center lang"
+                                        <div class="text-align-center mr-2 lang"
                                             style="float:right; width:110px; right:0px;">
                                             <a aria-label="NMPA English website " class="active"
                                                 href="{{ route('main.index') }}"

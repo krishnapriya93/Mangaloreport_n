@@ -30,6 +30,10 @@ Route::get('milestoneview', [App\Http\Controllers\FrontendController::class, 'mi
 Route::get('bodview', [App\Http\Controllers\FrontendController::class, 'bodview'])->name('bodview');
 Route::get('whoswhoview', [App\Http\Controllers\FrontendController::class, 'whoswhoview'])->name('whoswhoview');
 Route::get('chiefofficers', [App\Http\Controllers\FrontendController::class, 'chiefofficers'])->name('chiefofficers');
+Route::get('sitemap', [App\Http\Controllers\FrontendController::class, 'sitemap'])->name('sitemap');
+Route::get('screenreader', [App\Http\Controllers\FrontendController::class, 'screenreader'])->name('screenreader');
+Route::get('feedback', [App\Http\Controllers\FrontendController::class, 'feedback'])->name('feedback');
+Route::post('feedbacksubmit', [App\Http\Controllers\FrontendsubController::class, 'feedbacksubmit'])->name('feedbacksubmit');
 
 //Front end - end
 
