@@ -162,7 +162,7 @@ hr {
 
 h1,
 h2,
-h3,
+/* h3, */
 h4,
 h5,
 h6 {
@@ -449,13 +449,13 @@ template {
 
 .h1,
 .h2,
-.h3,
+/* .h3, */
 .h4,
 .h5,
 .h6,
 h1,
 h2,
-h3,
+/* h3, */
 h4,
 h5,
 h6 {
@@ -476,10 +476,10 @@ h2 {
     font-size: 2rem;
 }
 
-.h3,
+/* .h3,
 h3 {
     font-size: 1.75rem;
-}
+} */
 
 .h4,
 h4 {
@@ -9968,17 +9968,19 @@ a.text-dark:hover {
     }
 
     h2,
-    h3,
+    /* h3, */
     p {
         orphans: 3;
         widows: 3;
     }
 
-    h2,
+    /* h2,
     h3 {
         page-break-after: avoid;
+    } */
+    h2 {
+        page-break-after: avoid;
     }
-
     @page {
         size: a3;
     }
@@ -16645,11 +16647,11 @@ h1,
 h2,
 .h2,
 h3,
-.h3,
+/* .h3, */
 h4,
 .h4 {
     font-family: "Source Sans 3", sans-serif;
-    color: #001659;
+    /* color: #001659; */
     font-weight: 400;
     margin: 10px 0;
     line-height: 120%
@@ -16684,12 +16686,12 @@ em {
     font-style: italic
 }
 
-strong,
+/* strong,
 b {
     font-weight: 600;
     color: #989898;
     font-size: 15px;
-}
+} */
 
 .custom-block-title {
     margin: 20px 0;

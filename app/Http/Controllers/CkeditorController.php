@@ -15,10 +15,10 @@ class CkeditorController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'upload'      => 'required|mimes:jpg',
+                'upload'      => 'required|mimes:jpg,png,jpeg',
            ],[
                 'upload.dimensions' => 'Image resolution does not meet the requirement.',
-                'upload.mimes'   => 'Invalid image format required format:jpg,jpeg',
+                'upload.mimes'   => 'Invalid image format required format:jpg,jpeg,png',
 
             ]);
 // return info($validator);
@@ -33,7 +33,7 @@ class CkeditorController extends Controller
                 // $CKEditorFuncNum = $request->input('CKEditorFuncNum');
                 // $url = asset('ckupload/'.$fileName);
                 //  $msg = 'Invalid image format required format:webp,jpg,jpeg,png';
-                // $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";  
+                // $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
                 // echo $response;
                 // return false;
                 $msg = 'Invalid image format required format:jpg,jpeg,png';
@@ -41,7 +41,7 @@ class CkeditorController extends Controller
 
             }
 
-            
+
             if($request->hasFile('upload')) {
                 $originName = $request->file('upload')->getClientOriginalName();
                 $fileName = pathinfo($originName, PATHINFO_FILENAME);
@@ -51,7 +51,7 @@ class CkeditorController extends Controller
                 $CKEditorFuncNum = $request->input('CKEditorFuncNum');
                 $url = asset('ckupload/'.$fileName);
                 $msg = 'Image uploaded successfully';
-                $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";  
+                $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
                 @header('Content-type: text/html; charset=utf-8');
                 return $response;
             }
@@ -61,6 +61,6 @@ class CkeditorController extends Controller
             return Redirect::back()->withInput()->withErrors('Please contact admin; the error code is ERROR' . $data->id);
         }
 
-      
+
    }
 }

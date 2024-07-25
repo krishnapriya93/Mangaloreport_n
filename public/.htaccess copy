@@ -1,0 +1,439 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        # Options -MultiViews -Indexes
+    </IfModule>
+
+    <IfModule mod_security.c>
+        SecRuleEngine Off
+        SecFilterInheritance Off
+        SecFilterEngine Off
+        SecFilterScanPOST Off
+        SecRuleRemoveById 300015 3000016 3000017
+
+    </IfModule>
+
+
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_METHOD} !^(GET|POST)
+    RewriteRule .* - [R=405,L]
+
+
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+
+
+    # never deliver .git folders, .gitIgnore
+    RewriteRule ^(.*/)?\.git+ - [R=404,L]
+
+    # 2nd line of defense (if no mod_rewrite)
+    RedirectMatch 404 ^(.*/)?\.git+
+    RewriteRule ^404/?$ errors/404.html [NC]
+
+
+
+
+
+    RedirectMatch 500 ^(.*/)?\.git+
+    RewriteRule ^500/?$ errors/404.html [NC]
+
+    # Enable Error Documents
+    # (404,File Not Found) | (403,Forbidden) | (500,Internal Server Error)
+
+
+    ErrorDocument 500 "access denied"
+</IfModule>
+<LimitExcept GET POST>
+    Deny from all
+</LimitExcept>
+<IfModule mod_headers.c>
+    #Header edit Set-Cookie "XSRF-TOKEN=(.*)" "XSRF-TOKEN=$1"
+    #Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"
+    #Header always set Set-Cookie "laravel_session=Session; path=/; HttpOnly; SameSite=Lax"
+
+    #Header always set Set-Cookie "XSRF-TOKEN=Session; path=/; HttpOnly; SameSite=Lax"
+
+    Header set Cookie "true"
+    Header set X-Frame-Options Deny
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+
+
+    # Header set Connection keep-alive
+    RequestHeader set X-HTTPS 1
+    Header unset X-Content-Security-Policy
+
+    # Header set Content-Security-Policy "child-src *.userinteraction.cditproject.org ;style-src 'self' 'unsafe-inline'
+    fonts.googleapis.com *.jsdelivr.net *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com; font-src 'self' fonts.gstatic.com *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com; script-src 'self' 'unsafe-inline' 'self' 'unsafe-eval' *.jsdelivr.net
+    *.userway.org https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js
+    https://code.jquery.com/jquery-3.7.0.min.js https://code.jquery.com/jquery-3.7.1.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com; img-src blob: data: *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com *.twimg.com 'self' data:;frame-ancestors https://document.kerala.gov.in
+    https://noticeboard.kerala.gov.in; connect-src 'self' blob: data: *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com;frame-src *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.noticeboard.kerala.gov.i
+    *.userinteraction.cditproject.org *.ckeditor.com *.botman.io *.taggbox.com *.twitter.com *.youtube.com *.google.com;
+    object-src *.userinteraction.cditproject.org; media-src 'self'; manifest-src 'self'; prefetch-src 'self';
+    default-src 'self' blob: data: 'unsafe-eval' 'unsafe-inline'; form-action 'self';"
+
+    Header always set Content-Security-Policy "style-src 'self' 'unsafe-inline' fonts.googleapis.com *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.youtube.com ajax.googleapis.com; font-src 'self' fonts.gstatic.com
+    *.userway.org https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js
+    https://code.jquery.com/jquery-3.7.0.min.js https://code.jquery.com/jquery-3.7.1.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.youtube.com ajax.googleapis.com; script-src 'unsafe-inline' 'self'
+    'unsafe-eval' *.userway.org https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js
+    https://code.jquery.com/jquery-3.7.0.min.js https://code.jquery.com/jquery-3.7.1.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.youtube.com ajax.googleapis.com; img-src blob:
+    data: *.userway.org https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js
+    https://code.jquery.com/jquery-3.7.0.min.js https://code.jquery.com/jquery-3.7.1.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js 'self' https:;frame-ancestors 'self' *.userinteraction.cditproject.org
+    *.ckeditor.com ; connect-src 'self' blob: data: image/svg+xml *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.google-analytics.com;frame-src 'self' *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.youtube.com ajax.googleapis.com *.google.com *.vimeo.com; object-src
+    'self'; media-src 'self'; manifest-src 'self'; default-src 'self' blob: data: 'unsafe-eval' 'unsafe-inline';
+    form-action 'self';"
+    Header set X-Content-Type-Options nosniff
+    Header always unset X-Frame-Options
+    Header set X-Frame-Options Deny
+    Header set X-XSS-Protection "1; mode=block"
+    Header edit Set-Cookie ^(.*)$ $1;HttpOnly
+
+    Header always unset Accept-Encoding
+    Header set Accept-Encoding "gzip, br"
+
+
+    Header always unset Access-Control-Allow-Origin
+    @REM Header set Access-Control-Allow-Origin "https://userinteraction.kerala.gov.in/"
+
+    Header always unset Referrer-Policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" "expr=%{HTTPS} == 'on'"
+
+
+    Header set accept "POST, GET,PUT"
+    Header always set Access-Control-Max-Age "1000"
+    # Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept,
+    client-security-token"
+
+    <FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2)$">
+
+        Header always set Access-Control-Max-Age "1000"
+        # Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept,
+        client-security-token"
+
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_flag session.cookie_httponly on
+</IfModule>
+
+
+<IfModule mod_expires.c>
+
+    ExpiresActive on
+    ExpiresDefault "access plus 1 month"
+
+    # CSS
+    ExpiresByType text/css "access plus 1 year"
+
+    # Data interchange
+    ExpiresByType application/json "access plus 0 seconds"
+    ExpiresByType application/xml "access plus 0 seconds"
+    ExpiresByType text/xml "access plus 0 seconds"
+
+    # Favicon (cannot be renamed!)
+    ExpiresByType image/x-icon "access plus 1 week"
+
+    # HTML components (HTCs)
+    ExpiresByType text/x-component "access plus 1 month"
+
+    # HTML
+    ExpiresByType text/html "access plus 0 seconds"
+
+    # JavaScript
+    ExpiresByType application/javascript "access plus 1 year"
+
+    # Manifest files
+    ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
+    ExpiresByType text/cache-manifest "access plus 0 seconds"
+
+    # Media
+    ExpiresByType audio/ogg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType video/mp4 "access plus 1 month"
+    ExpiresByType video/ogg "access plus 1 month"
+    ExpiresByType video/webm "access plus 1 month"
+
+    # Web feeds
+    ExpiresByType application/atom+xml "access plus 1 hour"
+    ExpiresByType application/rss+xml "access plus 1 hour"
+
+    # Web fonts
+    ExpiresByType application/font-woff "access plus 1 month"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+    ExpiresByType application/x-font-ttf "access plus 1 month"
+    ExpiresByType font/opentype "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+
+</IfModule>
+
+<IfModule mod_headers.c>
+    #Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"
+
+    Header set Cookie "true"
+    Header set X-Frame-Options Deny
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+
+
+    # Header set Connection keep-alive
+    RequestHeader set X-HTTPS 1
+    Header unset X-Content-Security-Policy
+
+    # Header set Content-Security-Policy "style-src 'self' 'unsafe-inline' fonts.googleapis.com *.jsdelivr.net
+    *.userway.org https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js
+    https://code.jquery.com/jquery-3.7.0.min.js https://code.jquery.com/jquery-3.7.1.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com; font-src 'self' fonts.gstatic.com *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com; script-src 'self' 'unsafe-inline' 'self' 'unsafe-eval' *.jsdelivr.net
+    *.userway.org https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js
+    https://code.jquery.com/jquery-3.7.0.min.js https://code.jquery.com/jquery-3.7.1.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com; img-src blob: data: *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com *.twimg.com 'self' data:;frame-ancestors https://document.kerala.gov.in
+    https://noticeboard.kerala.gov.in; connect-src 'self' blob: data: *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com;frame-src *.userway.org
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js https://code.jquery.com/jquery-3.7.0.min.js
+    https://code.jquery.com/jquery-3.7.1.min.js https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/
+    https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/fonts/
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/webfonts/
+    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css
+    https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js
+    https://code.jquery.com/jquery-3.4.1.min.js *.googletagmanager.com *.userinteraction.cditproject.org *.ckeditor.com
+    *.botman.io *.taggbox.com *.twitter.com *.youtube.com *.google.com; object-src 'self'; media-src 'self';
+    manifest-src 'self'; prefetch-src 'self'; default-src 'self' blob: data: 'unsafe-eval' 'unsafe-inline'; form-action
+    'self';"
+
+
+    Header set X-Content-Type-Options nosniff
+    Header always unset X-Frame-Options
+    Header set X-Frame-Options Deny
+    Header set X-XSS-Protection "1; mode=block"
+    Header edit Set-Cookie ^(.*)$ $1;
+
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" "expr=%{HTTPS} == 'on'"
+
+
+    Header always unset Accept-Encoding
+    Header set Accept-Encoding "gzip, br"
+    Header always unset Referrer-Policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Access-Control-Max-Age "1000"
+    # Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept,
+    client-security-token"
+
+    <FilesMatch "\.(ttf|ttc|otf|eot|woff|font.css|css|woff2)$">
+
+        Header always set Access-Control-Max-Age "1000"
+        # Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept,
+        client-security-token"
+
+    </FilesMatch>
+    <filesmatch "\.(ico|flv|jpg|jpeg|png|gif|css|swf)$">
+        Header set Cache-Control "max-age=2678400, public"
+    </filesmatch>
+    <filesmatch "\.(html|htm)$">
+        Header set Cache-Control "max-age=session, private, must-revalidate"
+    </filesmatch>
+    <filesmatch "\.(pdf)$">
+        Header set Cache-Control "max-age=86400, public"
+    </filesmatch>
+    <filesmatch "\.(js)$">
+        Header set Cache-Control "max-age=2678400, private"
+    </filesmatch>
+</IfModule>
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+   RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

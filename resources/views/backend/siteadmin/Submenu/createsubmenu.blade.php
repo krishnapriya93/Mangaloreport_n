@@ -457,6 +457,20 @@
         $('#div_form').hide();
         $('#div_article').hide();
         $('#div_download').hide();
+    }else if(menulinktype_id_edit ==25){
+        $('#div_anchor').hide();
+        $('#div_url').hide();
+        $('#div_file').hide();
+        $('#div_form').hide();
+        $('#div_article').hide();
+        $('#div_download').hide();
+    }else if(menulinktype_id_edit ==26){
+        $('#div_anchor').hide();
+        $('#div_url').hide();
+        $('#div_file').hide();
+        $('#div_form').hide();
+        $('#div_article').hide();
+        $('#div_download').hide();
     }
     $('.card-main').hide();
 
@@ -710,6 +724,20 @@ $('.div_lan2').hide();
         $('#div_article').hide();
         $('#div_download').hide();
     }else if(menutype =='Whoswho'){
+        $('#div_anchor').hide();
+        $('#div_url').hide();
+        $('#div_file').hide();
+        $('#div_form').hide();
+        $('#div_article').hide();
+        $('#div_download').hide();
+    }else if(menutype =='Whatweoffer'){
+        $('#div_anchor').hide();
+        $('#div_url').hide();
+        $('#div_file').hide();
+        $('#div_form').hide();
+        $('#div_article').hide();
+        $('#div_download').hide();
+    }else if(menutype =='Chief-officers'){
         $('#div_anchor').hide();
         $('#div_url').hide();
         $('#div_file').hide();

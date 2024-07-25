@@ -172,41 +172,10 @@
 
     <section class="breadcrumbs team section-bg" id="team">
         <div class="container" data-aos="fade-up">
-            <div class="one text-col px-5 mt-5">
-                <h1>Board Members</h1>
+            <div class="one text-col px-2 mt-3">
+                <h1>What We Offer</h1>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        @foreach ($bod as $bods)
-                            @foreach ($bods->bodsub as $bodsub)
-                                <div class="col-md-4 wedo mt-3 mr-2" data-aos="zoom-in" data-aos-delay="100">
-                                    <div class="member d-flex align-items-start">
-                                        <div class="pic">
-                                            <img alt="shipping-minister" data-entity-type="file" data-entity-uuid="52346b63-9af0-4d1b-9054-ba79e5495957" height="185" src="{{ asset('/assets/backend/uploads/bod/'.$bods->photo) }}" style="margin:30px auto 15px auto;" width="154" class="align-center" loading="lazy" />
-                                        </div>
-                                        <div class="member-info">
-                                            <h4>{{ $bodsub->name }}</h4>
-                                            <span>{{ $bodsub->desig_id }}</span>
-                                            <p>{{ strip_tags($bodsub->alt) }}</p>
-                                            <div class="social">
-                                                <p>
-                                                          <span>Mobile (O): {{ $bods->mobilenumber }}</spanr>
-                                                           <span class="mr-2">Mobile (R):  {{ $bods->officenumber }}</span>
-                                                           <span class="mr-2">Email:  {{ $bods->email }}</span>
-                                                </p>
-                                                {{-- <a href=""><i class="bi bi-telephone"></i></a>
-                                                <a href=""><i class="ri-instagram-fill"></i></a>
-                                                <a href=""><i class="ri-linkedin-box-fill"></i></a> --}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+
 
         </div>
     </section>

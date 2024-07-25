@@ -1,4 +1,5 @@
 @extends('frontend.layouts.main_header')
+@section('content')
 <style>
     /* === BASE HEADING === */
 
@@ -59,8 +60,9 @@
     .bs-example{
       margin: 20px;
       }
+
 </style>
-@section('content')
+
     <!-- Start: Articles -->
 
     <section class="breadcrumbs">

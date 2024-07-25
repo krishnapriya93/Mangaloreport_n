@@ -90,11 +90,9 @@
 
                                                 @php  $enarticletype_id = \Crypt::encryptString($menuitem->articletype_id) @endphp
 
-                                                @if(isset($ensbutypeid))
-                                                        <li><a class="nav-link" href="{{ route('article', [$ensbutypeid ,$enarticletype_id]) }}"><span><i class="{{ $menuitem->iconclass ?? '' }}"></i> &nbsp; {{ $maindata->title }}</span></a></li>
-                                                @else
-                                                        <li><a class="nav-link" href="{{ route('mainarticle' , $enarticletype_id) }}"><span><i class="{{ $menuitem->iconclass ?? '' }}"></i> &nbsp; {{ $maindata->title }}</span></a></li>
-                                                @endif
+
+                                                    <li><a class="nav-link" href="{{ route('mainarticle' , $enarticletype_id) }}"><span><i class="{{ $menuitem->iconclass ?? '' }}"></i> &nbsp; {{ $maindata->title }}</span></a></li>
+
                                                 @elseif($menuitem->menulinktype_id == 16)
                                                 {{-- route --}}
 
@@ -113,14 +111,16 @@
                                                         @if($subdata->menulinktype_id == 14)
                                                         {{-- article --}}
 
-                                                        @php  $enarticletype_id = \Crypt::encryptString($subdata->articletype_id) @endphp
+                                                        @php
+                                                        $enarticletype_id = \Crypt::encryptString($subdata->articletype_id);
+                                                        $cleanTitle = strtolower(str_replace([' ', '/'], '_', $subitem->title));
+                                                        // $cleanTitle = preg_replace('/[^A-Za-z0-9 ]/', '', $subitem->title);
+                                                        @endphp
 
                                                         {{-- <li><a class="nav-link" href="{{ route('article', [$ensbutypeid ,$enarticletype_id]) }}"><span><i class="{{ $menuitem->iconclass ?? '' }}"></i> &nbsp; {{ $maindata->title }}</span></a></li> --}}
-                                                        @if(isset($ensbutypeid))
-                                                          <li><a href="{{ route('article', [$ensbutypeid ,$enarticletype_id]) }}">{{ $subitem->title }}</a></li>
-                                                        @else
-                                                          <li><a href="{{ route('mainarticle' , $enarticletype_id) }}">{{ $subitem->title }} </a></li>
-                                                        @endif
+
+                                                          <li><a href="{{ route('mainarticle' , [$cleanTitle,$enarticletype_id]) }}">{{ $subitem->title }} </a></li>
+
                                                         {{-- <li><a href="{{ route('article', [$ensbutypeid ,$enarticletype_id]) }}">{{ $subitem->title }}</a></li> --}}
 
                                                       @elseif($subdata->menulinktype_id == 12)
@@ -151,6 +151,8 @@
                                                       <li><a href="{{ route('whoswhoview') }}">{{ $subitem->title }} </a></li>
                                                       @elseif ($subdata->menulinktype_id == 25)
                                                       <li><a href="{{ route('chiefofficers') }}">{{ $subitem->title }} </a></li>
+                                                      @elseif ($subdata->menulinktype_id == 26)
+                                                      <li><a href="{{ route('whatweoffer') }}">{{ $subitem->title }} </a></li>
                                                       @endif
 
                                                         @endforeach

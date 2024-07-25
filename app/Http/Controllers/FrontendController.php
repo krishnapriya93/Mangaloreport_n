@@ -67,7 +67,7 @@ class FrontendController extends Controller
     }
 
     // public function mainarticle($articlename,$enarticletypeid)
-    public function mainarticle($enarticletypeid)
+    public function mainarticle($articletypeid,$enarticletypeid)
     {
         try {
             $articletypeid = Crypt::decryptString($enarticletypeid);
@@ -78,13 +78,7 @@ class FrontendController extends Controller
             $language = Language::where('delet_flag', 0)->orderBy('name')->get();
 
             //social media
-            $socialmedia = Socialmedia::with([
-                'socialmedia_sub' => function ($query) use ($sessionbil) {
-                    $query->where('delet_flag', 0)->where('languageid', $sessionbil);
-                },
-            ])
-                ->where('delet_flag', 0)
-                ->get();
+            $socialmedia = $this->socialmedia($sessionbil);
 
             $mainsubmenus = $this->mainmenu($sessionbil);
             // $footerquicklinks       = $this->footerQuickLinks($sessionbil);
@@ -542,5 +536,36 @@ class FrontendController extends Controller
             ->get();
 
         return view('frontend.main.feedback', compact('sessionbil', 'mainsubmenus', 'mainbanner', 'circulartrades', 'whatwedo', 'relatedlinks', 'socialmedia', 'bod', 'tender', 'whatsnew', 'gallery', 'bod'));
+    }
+    public function whatweoffer()
+    {
+        if (!Session::has('bilingual')) {
+            Session::put('bilingual', 1);
+        }
+        $sessionbil = Session::get('bilingual');
+        $mainsubmenus = $this->mainmenu($sessionbil);
+
+        $mainbanner = $this->mainbanner($sessionbil);
+        $circulartrades = $this->circulartrade($sessionbil);
+
+        $whatwedo = $this->whatwedo($sessionbil);
+        $relatedlinks = $this->relatedlinks($sessionbil);
+        $socialmedia = $this->socialmedia($sessionbil);
+        $bod = $this->bod($sessionbil);
+        $whatsnew = $this->whatsnew($sessionbil);
+        $tender = $this->tender($sessionbil);
+        $gallery = $this->gallery($sessionbil);
+
+        //BOARD OF DIRECTORS
+        $bod = BOD::with([
+            'bodsub' => function ($query) use ($sessionbil) {
+                $query->where('languageid', $sessionbil);
+            },
+        ])
+            ->orderBy('order_num', 'DESC')
+            ->where('status', 1)
+            ->get();
+
+        return view('frontend.main.whatweoffer', compact('sessionbil', 'mainsubmenus', 'mainbanner', 'circulartrades', 'whatwedo', 'relatedlinks', 'socialmedia', 'bod', 'tender', 'whatsnew', 'gallery', 'bod'));
     }
 }

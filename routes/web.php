@@ -25,7 +25,7 @@ Route::get('/setbilingualval', [FrontendController::class, 'setbilingualval'])->
 Route::get('/setbilingualvalmal', [App\Http\Controllers\FrontendController::class, 'setbilingualvalmal'])->name('setbilingualvalmal');
 
 // Route::get('mainarticle/{title}/{id}', [FrontendController::class, 'mainarticle'])->name('mainarticle');
-Route::get('mainarticle/{articletypeid}', [App\Http\Controllers\FrontendController::class, 'mainarticle'])->name('mainarticle');
+Route::get('mainarticle/{articletypename}/{articletypeid}', [App\Http\Controllers\FrontendController::class, 'mainarticle'])->name('mainarticle');
 Route::get('milestoneview', [App\Http\Controllers\FrontendController::class, 'milestoneview'])->name('milestoneview');
 Route::get('bodview', [App\Http\Controllers\FrontendController::class, 'bodview'])->name('bodview');
 Route::get('whoswhoview', [App\Http\Controllers\FrontendController::class, 'whoswhoview'])->name('whoswhoview');

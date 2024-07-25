@@ -10,4 +10,8 @@ class PublicrelationtypSub extends Model
     use HasFactory;
     protected $table = 'publicrelationtypesubs';
     protected $guarded = [];
+    public function lang()
+    {
+        return $this->belongsTo(Language::class, 'languageid', 'id');
+    }
 }

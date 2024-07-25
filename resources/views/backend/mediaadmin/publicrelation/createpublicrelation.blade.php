@@ -49,7 +49,7 @@
                                             @foreach($pulicreltype as $ptype)
 
                                                 @foreach($ptype->ptypesub as $psub)
-                                                    <option value="{{$ptype->id}}" @if(isset($edit_f)) {{ $ptype->tid == $keydata->publicreltypeid ? 'selected' : '' }} @endif  >{{$psub->title}}</option>
+                                                    <option value="{{$ptype->id}}" @if(isset($edit_f)) {{ $ptype->id == $keydata->publicreltypeid ? 'selected' : '' }} @endif  >{{$psub->title}}</option>
                                                 @endforeach
 
                                             @endforeach
@@ -84,7 +84,7 @@
 
                                 @if(isset($edit_f))
 
-                                @if(isset($keydata->id)) @foreach(($keydata->publicrel_sub) as $publicrel_sub)
+                                @if(isset($keydata->id)) @foreach(($keydata->publicrelsub) as $publicrel_sub)
                                 <input type="hidden" value="{{$publicrel_sub->languageid ?? ''}}" id="sel_lang{{$publicrel_sub->languageid}}" name="sel_lang[]">
                                 <div class="row div_lan1 mb-3 pt-3">
                                     <div class="col-sm-12 mb-btm" id="div{{$publicrel_sub->id}}">

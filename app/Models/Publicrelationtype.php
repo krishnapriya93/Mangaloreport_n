@@ -15,4 +15,5 @@ class Publicrelationtype extends Model
     {
         return $this->hasMany(PublicrelationtypSub::class, 'publicrelationtypeid', 'id');
     }
+
 }

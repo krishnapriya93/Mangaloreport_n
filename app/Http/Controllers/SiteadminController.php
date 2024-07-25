@@ -5218,6 +5218,8 @@ public function storesubmenu(Request $request)
             $menulinktype_data = '';
         }elseif ($request->menulinktype == 25) {
             $menulinktype_data = '';
+        }elseif ($request->menulinktype == 26) {
+            $menulinktype_data = '';
         }
 
         if ($request->sbu_user == null) {
@@ -5466,6 +5468,8 @@ public function updatesubmenu(Request $request)
         }elseif ($request->menulinktype == 24) {
             $menulinktype_data = '';
         }elseif ($request->menulinktype == 25) {
+            $menulinktype_data = '';
+        }elseif ($request->menulinktype == 26) {
             $menulinktype_data = '';
         }
 

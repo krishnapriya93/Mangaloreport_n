@@ -410,7 +410,10 @@ class MediaadminController extends Controller
 
             // dd($usertype_id);
 
-            $pulicreltype = Publicrelationtype::where('delet_flag', 0)->orderBy('name')->get();
+            $pulicreltype = Publicrelationtype::with(['ptypesub' => function ($query) {
+                $query->where('languageid', 1)->orderBy('title');
+            }])->where('delet_flag', 0)->get();
+
             $departments = Department::where('langcode', 1)->where('status', 1)->where('vid', 'departments')->orderBy('name')->get();
 
             $keydata = Publicrelation::with(['publicrelsub' => function ($query) {

@@ -286,7 +286,7 @@ $enc_id = Crypt::encrypt($galdet['id']);
             inline: true,
             target: '#drag-drop-area',
             showProgressDetails: true,
-            note: '.jpg, .jpeg, .png, .mp4,.pdf, .webm file formats only, 1–5 files, up to 2 MB',
+            note: '.jpg, .jpeg,.pdf, .png, .mp4,.pdf, .webm file formats only, 1–5 files, up to 2 MB',
             // height: 470,
 
             metaFields: [{

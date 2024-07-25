@@ -52,15 +52,15 @@
         }
 
         /*
-                .team .member {
-                    position: relative;
-                    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-                    padding: 30px;
-                    border-radius: 5px;
-                    background: #fff;
-                    transition: 0.5s;
-                    height: 100%;
-                } */
+                    .team .member {
+                        position: relative;
+                        box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+                        padding: 30px;
+                        border-radius: 5px;
+                        background: #fff;
+                        transition: 0.5s;
+                        height: 100%;
+                    } */
 
         .team .member .pic {
             overflow: hidden;
@@ -159,12 +159,13 @@
             border: none;
             margin-right: 0.5rem;
         }
+
         .col-md-4 {
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 33.666%;
-        flex: 0 0 32.666%;
-        max-width: 33.666%;
-    }
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 33.666%;
+            flex: 0 0 32.666%;
+            max-width: 33.666%;
+        }
     </style>
     <section id="team" class="team section-bg">
         <div class="container" data-aos="fade-up">
@@ -180,7 +181,11 @@
                                 <div class="col-md-4 wedo mt-3 mr-2" data-aos="zoom-in" data-aos-delay="100">
                                     <div class="member d-flex align-items-start">
                                         <div class="pic">
-                                            <img alt="shipping-minister" data-entity-type="file" data-entity-uuid="52346b63-9af0-4d1b-9054-ba79e5495957" height="185" src="{{ asset('/assets/backend/uploads/bod/'.$bods->photo) }}" style="margin:30px auto 15px auto;" width="154" class="align-center" loading="lazy" />
+                                            <img alt="shipping-minister" data-entity-type="file"
+                                                data-entity-uuid="52346b63-9af0-4d1b-9054-ba79e5495957" height="185"
+                                                src="{{ asset('/assets/backend/uploads/bod/' . $bods->photo) }}"
+                                                style="margin:30px auto 15px auto;" width="154" class="align-center"
+                                                loading="lazy" />
                                         </div>
                                         <div class="member-info">
                                             <h4>{{ $bodsub->name }}</h4>
@@ -188,9 +193,9 @@
                                             <p>{{ strip_tags($bodsub->alt) }}</p>
                                             <div class="social">
                                                 <p>
-                                                          <span>Mobile (O): {{ $bods->mobilenumber }}</spanr>
-                                                           <span class="mr-2">Mobile (R):  {{ $bods->officenumber }}</span>
-                                                           <span class="mr-2">Email:  {{ $bods->email }}</span>
+                                                    <span>Mobile (O): {{ $bods->mobilenumber }}</spanr>
+                                                        <span class="mr-2">Mobile (R): {{ $bods->officenumber }}</span>
+                                                        <span class="mr-2">Email: {{ $bods->email }}</span>
                                                 </p>
                                                 {{-- <a href=""><i class="bi bi-telephone"></i></a>
                                                 <a href=""><i class="ri-instagram-fill"></i></a>
@@ -205,6 +210,7 @@
                 </div>
             </div>
         </div>
+        </div><!--END - dialog-off-canvas-main-canvas-->
     </section>
     <!-- End Team Section -->
 @endsection

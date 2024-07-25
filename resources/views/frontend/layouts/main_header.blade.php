@@ -8,20 +8,34 @@
     <link rel="canonical" href="https://newmangaloreport.gov.in/" />
     <meta name="robots" content="index, follow" />
     <link rel="shortlink" href="https://newmangaloreport.gov.in/" />
-    <meta name="news_keywords" content="New Mangalore Port, Mangalore Port, Mangalore, State of Karnataka" />
-    <meta name="description"
-        content="New Mangalore Port situated in Panambur, Mangalore in the state of Karnataka is run and governed new Mangalore trust." />
-    <meta name="keywords" content="New Mangalore Port, Mangalore Port, Mangalore, State of Karnataka" />
+
     <link rel="alternate" hreflang="en" href="https://www.newmangaloreport.gov.in/" />
     <link rel="alternate" hreflang="hi" href="https://www.newmangaloreport.gov.in/hi" />
     <meta name="MobileOptimized" content="width" />
     <meta name="HandheldFriendly" content="true" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+    {{-- <link rel="icon" href="favicon.ico" type="image/png" /> --}}
+    <link id="favicon" rel="icon" href="favicon.ico" type="image/x-icon" />
+
     <link rel="alternate" type="application/rss+xml" title="" href="https://newmangaloreport.gov.in/rss.xml" />
 
     <meta name="lang" content="English">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    @if (isset($articledetails))
+        @foreach ($articledetails['articleval_sub'] as $details)
+        <meta name="title" content="{{ strip_tags($details->title ?? '') }} - Mangalore Port" >
+        <meta name="description" content="{{ strip_tags($details->subtitle ?? '') }}" >
+        <meta name="keywords" content="{{ strip_tags($details->subtitle ?? '') }},New Mangalore Port, Mangalore Port, Mangalore, State of Karnataka" >
+        <title>{{ strip_tags($details->title ?? '') }} - Mangalore Port</title>
+        @endforeach
+    @else
+    <meta name="news_keywords" content="New Mangalore Port, Mangalore Port, Mangalore, State of Karnataka" />
+    <meta name="description"
+        content="New Mangalore Port situated in Panambur, Mangalore in the state of Karnataka is run and governed new Mangalore trust." />
+    <meta name="keywords" content="New Mangalore Port, Mangalore Port, Mangalore, State of Karnataka" />
     <title>New Mangalore Port</title>
+    @endif
+
     <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/style.css') }}" />
     <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/main.css') }}" />
     <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/custom.css') }}" />
@@ -85,36 +99,39 @@
             box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
             border: none;
         }
-        #search-block-form input.form-submit {
-    background: url({{ asset('/assets/frontend/images/search.png') }}) no-repeat center;
-    font-size: 0;
-    width: 100%;
-    height: 30px;
-    padding: 0 20px;
-    vertical-align: top;
-}
-.wave:nth-of-type(3) {
-    bottom: 0;
-    animation: wave 20s -1s linear infinite;
-    opacity: 0.5;
-    z-index: 102;
-}
 
-.wave {
-    /* background: url(data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23003F7C'/%3E%3C/svg%3E); */
-    background: url({{ asset('/assets/frontend/images/sea1.svg') }});
-    position: absolute;
-    width: 200%;
-    height: 100%;
-    animation: wave 10s -3s linear infinite;
-    transform: translate3d(0, 0, 0);
-    opacity: 0.8;
-}
-.bottombg {
-    background: url({{ asset('/assets/frontend/images/551.jpg') }});
-    background-attachment: fixed;
-    background-size: cover;
-}
+        #search-block-form input.form-submit {
+            background: url({{ asset('/assets/frontend/images/search.png') }}) no-repeat center;
+            font-size: 0;
+            width: 100%;
+            height: 30px;
+            padding: 0 20px;
+            vertical-align: top;
+        }
+
+        .wave:nth-of-type(3) {
+            bottom: 0;
+            animation: wave 20s -1s linear infinite;
+            opacity: 0.5;
+            z-index: 102;
+        }
+
+        .wave {
+            /* background: url(data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23003F7C'/%3E%3C/svg%3E); */
+            background: url({{ asset('/assets/frontend/images/sea1.svg') }});
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            animation: wave 10s -3s linear infinite;
+            transform: translate3d(0, 0, 0);
+            opacity: 0.8;
+        }
+
+        .bottombg {
+            background: url({{ asset('/assets/frontend/images/551.jpg') }});
+            background-attachment: fixed;
+            background-size: cover;
+        }
     </style>
 
 </head>
@@ -165,7 +182,8 @@
                                             <a aria-label="NMPA English website " class="active"
                                                 href="{{ route('main.index') }}"
                                                 title="NMPA English website">English</a>&nbsp; |&nbsp;
-                                            <a aria-label="NMPA Hindi website" href="{{ route('main.malhome', ['id' => 2]) }}"
+                                            <a aria-label="NMPA Hindi website"
+                                                href="{{ route('main.malhome', ['id' => 2]) }}"
                                                 style=""title="NMPA Hindi website">Hindi</a>
                                         </div>
                                     </div>
@@ -207,4 +225,5 @@
 
         @yield('content')
 
+        @include('frontend.layouts.included_script')
         @include('frontend.layouts.main_footer')
