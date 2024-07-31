@@ -18,4 +18,9 @@ class publicrelationsub extends Model
     {
         return $this->belongsTo(Language::class, 'languageid', 'id');
     }
+    public function publicrelation()
+    {
+        return $this->belongsTo(publicrelation::class, 'publicrelationid');
+    }
+
 }

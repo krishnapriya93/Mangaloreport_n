@@ -13,8 +13,8 @@ class Publicrelationitem extends Model
 
     protected $fillable = ['publicrelationid', 'image', 'alternate_text', 'status_id', 'user_id'];
 
-    public function galleries()
+    public function publicrelation()
     {
-        return $this->belongsTo(Gallery::class,'publicrelationid','id');
+        return $this->belongsTo(publicrelation::class, 'publicrelationid');
     }
 }

@@ -33,6 +33,10 @@ Route::get('chiefofficers', [App\Http\Controllers\FrontendController::class, 'ch
 Route::get('sitemap', [App\Http\Controllers\FrontendController::class, 'sitemap'])->name('sitemap');
 Route::get('screenreader', [App\Http\Controllers\FrontendController::class, 'screenreader'])->name('screenreader');
 Route::get('feedback', [App\Http\Controllers\FrontendController::class, 'feedback'])->name('feedback');
+Route::get('projects', [App\Http\Controllers\FrontendController::class, 'projects'])->name('projects');
+Route::get('projectdetailview/{id}', [App\Http\Controllers\FrontendController::class, 'projectdetailview'])->name('projectdetailview');
+Route::get('search/{id}', [App\Http\Controllers\FrontendsubController::class, 'search'])->name('search');
+
 Route::post('feedbacksubmit', [App\Http\Controllers\FrontendsubController::class, 'feedbacksubmit'])->name('feedbacksubmit');
 
 //Front end - end

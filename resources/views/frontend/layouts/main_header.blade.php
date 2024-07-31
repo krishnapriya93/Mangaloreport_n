@@ -39,6 +39,8 @@
     <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/style.css') }}" />
     <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/main.css') }}" />
     <link rel="stylesheet" media="all" href="{{ asset('assets/frontend/css/custom.css') }}" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
 
     <style>
         .navbar-header {
@@ -218,7 +220,6 @@
                 </div>
             </div>
         </div>
-
         @include('frontend.layouts.mainmenu')
 
 

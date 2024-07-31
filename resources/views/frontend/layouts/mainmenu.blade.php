@@ -50,6 +50,7 @@
                       <div class="region region-primary-menu expan">
                           <div id="block-mainnavigation-3" class="block block-superfish block-superfishmain">
                               <div class="content">
+
                                   <ul id="superfish-main"
                                       class="menu sf-menu sf-main sf-horizontal sf-style-none sf-expanded">
 
@@ -152,7 +153,7 @@
                                                       @elseif ($subdata->menulinktype_id == 25)
                                                       <li><a href="{{ route('chiefofficers') }}">{{ $subitem->title }} </a></li>
                                                       @elseif ($subdata->menulinktype_id == 26)
-                                                      <li><a href="{{ route('whatweoffer') }}">{{ $subitem->title }} </a></li>
+                                                      <li><a href="{{ route('projects') }}">{{ $subitem->title }} </a></li>
                                                       @endif
 
                                                         @endforeach

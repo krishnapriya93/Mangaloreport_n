@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\FrontendController;
 
 use Illuminate\Http\Request;
 use Session;
@@ -117,7 +118,7 @@ class FrontendController extends Controller
                 ->withErrors('Please contact admin; the error code is ERROR' . $data->id);
         }
     }
-    private function mainmenu($sessionbil)
+    public function mainmenu($sessionbil)
     {
         $sessionbil = $sessionbil;
         $mainsubmenu = Mainmenu::with([
@@ -154,7 +155,7 @@ class FrontendController extends Controller
 
         return $mainsubmenu;
     }
-    private function mainbanner($sessionbil)
+    public function mainbanner($sessionbil)
     {
         $mainbanner = Banner::with([
             'banner_sub' => function ($query) use ($sessionbil) {
@@ -170,7 +171,7 @@ class FrontendController extends Controller
         return $mainbanner;
     }
 
-    private function circulartrade($sessionbil)
+    public function circulartrade($sessionbil)
     {
         $circulartrade = publicrelation::with([
             'publicrelsub' => function ($query) use ($sessionbil) {
@@ -192,7 +193,7 @@ class FrontendController extends Controller
         return $circulartrade;
     }
 
-    private function whatwedo($sessionbil)
+    public function whatwedo($sessionbil)
     {
         $sessionbil = 1;
         $whatwedo = Link::with([
@@ -208,7 +209,7 @@ class FrontendController extends Controller
 
         return $whatwedo;
     }
-    private function relatedlinks($sessionbil)
+    public function relatedlinks($sessionbil)
     {
         $sessionbil = 1;
         $relatedlinks = Link::with([
@@ -224,7 +225,7 @@ class FrontendController extends Controller
 
         return $relatedlinks;
     }
-    private function socialmedia($sessionbil)
+    public function socialmedia($sessionbil)
     {
         $sessionbil = 1;
         $socialmedia = Link::with([
@@ -240,7 +241,7 @@ class FrontendController extends Controller
 
         return $socialmedia;
     }
-    private function midwidget($sessionbil)
+    public function midwidget($sessionbil)
     {
         $sessionbil = 1;
         $midwidget = Link::with([
@@ -257,7 +258,7 @@ class FrontendController extends Controller
         return $midwidget;
     }
 
-    private function bod($sessionbil)
+    public function bod($sessionbil)
     {
         $bod = BOD::with([
             'bodsub' => function ($query) use ($sessionbil) {
@@ -272,7 +273,7 @@ class FrontendController extends Controller
         return $bod;
     }
 
-    private function tender($sessionbil)
+    public function tender($sessionbil)
     {
         $tender = Tender::with([
             'tender_sub' => function ($query) use ($sessionbil) {
@@ -287,7 +288,7 @@ class FrontendController extends Controller
         return $tender;
     }
 
-    private function whatsnew($sessionbil)
+    public function whatsnew($sessionbil)
     {
         $whatsnew = Publicrelation::with([
             'publicrelsub' => function ($query) use ($sessionbil) {
@@ -303,7 +304,7 @@ class FrontendController extends Controller
         return $whatsnew;
     }
 
-    private function gallery($sessionbil)
+    public function gallery($sessionbil)
     {
         $gallery = Gallery::with([
             'gallery_sub' => function ($query) use ($sessionbil) {
@@ -537,7 +538,7 @@ class FrontendController extends Controller
 
         return view('frontend.main.feedback', compact('sessionbil', 'mainsubmenus', 'mainbanner', 'circulartrades', 'whatwedo', 'relatedlinks', 'socialmedia', 'bod', 'tender', 'whatsnew', 'gallery', 'bod'));
     }
-    public function whatweoffer()
+    public function projects()
     {
         if (!Session::has('bilingual')) {
             Session::put('bilingual', 1);
@@ -555,17 +556,58 @@ class FrontendController extends Controller
         $whatsnew = $this->whatsnew($sessionbil);
         $tender = $this->tender($sessionbil);
         $gallery = $this->gallery($sessionbil);
-
-        //BOARD OF DIRECTORS
-        $bod = BOD::with([
-            'bodsub' => function ($query) use ($sessionbil) {
+$keyword='';
+        $projects = publicrelation::with([
+            'publicrelsub' => function ($query) use ($sessionbil) {
                 $query->where('languageid', $sessionbil);
             },
         ])
-            ->orderBy('order_num', 'DESC')
-            ->where('status', 1)
+            // ->with([
+            //     // 'publicrelationtype' => function ($query2) {
+            //     //     $query2->where('id', 3);
+            //     // },
+            // ])
+            ->where('delet_flag', 0)
+            ->where('status_id', 1)
+            ->where('publicreltypeid', 3)
+            ->orderBy('id', 'DESC')
+            ->limit(6)
             ->get();
 
-        return view('frontend.main.whatweoffer', compact('sessionbil', 'mainsubmenus', 'mainbanner', 'circulartrades', 'whatwedo', 'relatedlinks', 'socialmedia', 'bod', 'tender', 'whatsnew', 'gallery', 'bod'));
+        return view('frontend.main.projectview', compact('sessionbil', 'mainsubmenus', 'mainbanner', 'circulartrades', 'whatwedo', 'relatedlinks', 'socialmedia', 'bod', 'tender', 'whatsnew', 'gallery', 'projects','keyword'));
+    }
+    public function projectdetailview($id)
+    {
+        if (!Session::has('bilingual')) {
+            Session::put('bilingual', 1);
+        }
+
+        $sessionbil = Session::get('bilingual');
+        $mainsubmenus = $this->mainmenu($sessionbil);
+        $projectid = Crypt::decryptString($id);
+
+        $mainbanner = $this->mainbanner($sessionbil);
+        $circulartrades = $this->circulartrade($sessionbil);
+
+        $whatwedo = $this->whatwedo($sessionbil);
+        $relatedlinks = $this->relatedlinks($sessionbil);
+        $socialmedia = $this->socialmedia($sessionbil);
+        $bod = $this->bod($sessionbil);
+        $whatsnew = $this->whatsnew($sessionbil);
+        $tender = $this->tender($sessionbil);
+        $gallery = $this->gallery($sessionbil);
+
+        $projects = publicrelation::with(['publicrelationitem' =>function($q2) use ($projectid){
+            $q2->where('publicrelationid', $projectid);
+        }])->with([
+                'publicrelsub' => function ($query) use ($sessionbil, $projectid) {
+                    $query->where('languageid', $sessionbil);
+                }])->with([
+                    'publicreldep' => function ($query) use ($sessionbil, $projectid) {
+                        $query->where('langcode', $sessionbil);
+                    }])
+                ->where('id', $projectid)->first();
+
+        return view('frontend.main.projectdetailview', compact('sessionbil', 'mainsubmenus', 'mainbanner', 'circulartrades', 'whatwedo', 'relatedlinks', 'socialmedia', 'bod', 'tender', 'whatsnew', 'gallery', 'projects'));
     }
 }

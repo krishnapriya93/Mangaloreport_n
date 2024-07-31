@@ -191,7 +191,7 @@ class MediaadminController extends Controller
                             'languageid' => $request->sel_lang[$i],
                             'title' => $request->title[$i],
                             'content' => $request->con_title[$i],
-                            'image' => $request->poster[$i],
+                            'image' => $imageName,
                             'publicrelationid' => $publicrel_id,
 
                         ]);
@@ -486,7 +486,7 @@ class MediaadminController extends Controller
                         'languageid' => $request->sel_lang[$i],
                         'title' => $request->title[$i],
                         'content' => $request->con_title[$i],
-                        'image' => $request->poster[$i],
+                        'image' => $imageName,
                         'publicrelationid' =>  $request->hidden_id,
                     );
                     $storedetails_sub = publicrelationsub::where('publicrelationid', $id)->where('languageid', $request->sel_lang[$i])->update($store_sub_info);

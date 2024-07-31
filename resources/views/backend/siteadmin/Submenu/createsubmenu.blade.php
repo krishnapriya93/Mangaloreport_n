@@ -730,7 +730,7 @@ $('.div_lan2').hide();
         $('#div_form').hide();
         $('#div_article').hide();
         $('#div_download').hide();
-    }else if(menutype =='Whatweoffer'){
+    }else if(menutype =='projects'){
         $('#div_anchor').hide();
         $('#div_url').hide();
         $('#div_file').hide();

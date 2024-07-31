@@ -114,7 +114,7 @@
 
                                         </div>
                                         <div class="col-sm-3 mb-btm mb-3 preview_poster">
-                                            <img id="preview-image-before-upload{{$publicrel_sub->id}}" src="{{ asset('/assets/backend/uploads/publicrelationitems/'.$publicrel_sub->image) }}" rel="{{$publicrel_sub->id}}" class="preview-image-before-upload imgstamp" alt="preview image">
+                                            <img id="preview-image-before-upload{{$publicrel_sub->id}}" src="{{ asset('/assets/backend/uploads/publicrelation/'.$publicrel_sub->image) }}" rel="{{$publicrel_sub->id}}" class="preview-image-before-upload imgstamp" alt="preview image">
                                             <!-- <br><span class="redalert">selected image</span> -->
                                         </div><br />
 

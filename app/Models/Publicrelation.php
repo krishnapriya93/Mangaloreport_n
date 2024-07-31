@@ -13,13 +13,23 @@ class Publicrelation extends Model
 
     protected $guarded = [];
 
-    public function publicrelsub()
-    {
-        return $this->hasMany(publicrelationsub::class, 'publicrelationid', 'id');
-    }
 
     public function publicrelationtype()
     {
         return $this->belongsTo(Publicrelationtype::class, 'publicreltypeid', 'id');
+    }
+    public function publicrelationitem()
+    {
+        return $this->hasMany(Publicrelationitem::class, 'publicrelationid');
+    }
+
+    public function publicrelsub()
+    {
+        return $this->hasMany(publicrelationsub::class, 'publicrelationid');
+    }
+
+    public function publicreldep()
+    {
+        return $this->hasMany(Department::class, 'tid', 'departmentid');
     }
 }
